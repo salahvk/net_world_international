@@ -1,0 +1,179 @@
+import 'package:flutter/material.dart';
+import 'package:net_world_international/core/color_manager.dart';
+import 'package:net_world_international/core/routes_manager.dart';
+import 'package:net_world_international/core/styles_manager.dart';
+
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(35, 0, 15, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
+                child: Text(
+                  "Profile",
+                  style: getMediumtStyle(color: Colors.black, fontSize: 10),
+                ),
+              ),
+              const SizedBox(),
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade300,
+                          spreadRadius: 1,
+                          blurRadius: 3,
+                          offset: const Offset(4, 4.5),
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 40,
+                          child: Image.asset(
+                            'assets/man_image.png',
+                          ),
+                        ),
+                        Positioned(
+                            right: 0,
+                            bottom: 3,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.shade300,
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: const Offset(2, 2.5),
+                                  ),
+                                ],
+                              ),
+                              child: Material(
+                                shape: const CircleBorder(),
+                                color: Colors.white,
+                                child: InkWell(
+                                  splashColor: Colormanager.primary,
+                                  customBorder: const CircleBorder(),
+                                  enableFeedback: true,
+                                  excludeFromSemantics: true,
+                                  onTap: () {},
+                                  child: const CircleAvatar(
+                                    radius: 10,
+                                    backgroundColor: Colors.transparent,
+                                    child: Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 12,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ))
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 30,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "John Robert",
+                        style:
+                            getMediumtStyle(color: Colors.black, fontSize: 17),
+                      ),
+                      Text(
+                        "johnrob@gmail.com",
+                        style: getLightStyle(color: Colors.black, fontSize: 11),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, Routes.editProfile);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colormanager.primary,
+                              borderRadius: BorderRadius.circular(5)),
+                          width: 80,
+                          height: 25,
+                          child: Center(
+                            child: Text(
+                              "Edit Profile",
+                              style: getLightStyle(
+                                  color: Colors.white, fontSize: 11),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.changePassword);
+                },
+                child: Row(
+                  children: [
+                    Image.asset(
+                      "assets/icon _edit.png",
+                      width: 20,
+                      height: 20,
+                    ),
+                    Text(
+                      "Change Password",
+                      style: getRegularStyle(
+                          color: Colormanager.textColor, fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.getHelp);
+                },
+                child: Text(
+                  "Get Help",
+                  style: getRegularStyle(
+                      color: Colormanager.textColor, fontSize: 14),
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Text(
+                "Log Out",
+                style: getRegularStyle(
+                    color: Colormanager.textColor, fontSize: 14),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

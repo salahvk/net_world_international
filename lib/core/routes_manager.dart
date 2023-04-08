@@ -1,0 +1,54 @@
+import 'package:flutter/material.dart';
+import 'package:net_world_international/presentation/screens/change_password.dart';
+import 'package:net_world_international/presentation/screens/edit_profile.dart';
+import 'package:net_world_international/presentation/screens/get_help.dart';
+import 'package:net_world_international/presentation/screens/login_page.dart';
+import 'package:net_world_international/presentation/screens/main_screen.dart';
+import 'package:net_world_international/presentation/screens/make_payment.dart';
+import 'package:net_world_international/presentation/screens/splash_screen.dart';
+
+class Routes {
+  static const String splashScreen = '/';
+  static const String paymentScreen = '/paymentScreen';
+  static const String loginPage = '/loginPage';
+  static const String mainScreen = '/mainScreen';
+  static const String editProfile = '/editProfile';
+  static const String changePassword = '/changePassword';
+  static const String getHelp = '/getHelp';
+}
+
+class RouteGenerator {
+  static Route<dynamic> getRoute(RouteSettings routeSettings) {
+    switch (routeSettings.name) {
+      case Routes.splashScreen:
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
+      case Routes.paymentScreen:
+        return MaterialPageRoute(builder: (_) => const MakePaymentScreen());
+      case Routes.loginPage:
+        return MaterialPageRoute(builder: (_) => const LoginPage());
+      case Routes.mainScreen:
+        return MaterialPageRoute(builder: (_) => const MainScreen());
+      case Routes.editProfile:
+        return MaterialPageRoute(builder: (_) => const EditProfileScreen());
+      case Routes.changePassword:
+        return MaterialPageRoute(builder: (_) => const ChangePassword());
+      case Routes.getHelp:
+        return MaterialPageRoute(builder: (_) => const GetHelpScreen());
+      default:
+        return unDefinedRoute();
+    }
+  }
+
+  static Route<dynamic> unDefinedRoute() {
+    return MaterialPageRoute(
+      builder: (_) => Scaffold(
+        appBar: AppBar(
+          title: const Text("No Route Found"),
+        ),
+        body: const Center(
+          child: Text("No Route Found"),
+        ),
+      ),
+    );
+  }
+}
