@@ -37,8 +37,9 @@ class MakePaymentScreen extends StatelessWidget {
                   width: size.width * .6,
                   child: Text(
                     "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate.",
-                    style: getMediumtStyle(
+                    style: getLightStyle(
                         color: Colormanager.subTextColor, fontSize: 9),
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 const SizedBox(

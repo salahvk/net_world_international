@@ -31,21 +31,32 @@ class _ChangePasswordState extends State<ChangePassword> {
         index: 1,
         height: 60.0,
         items: <Widget>[
-          Image.asset(
-            "assets/homeIcon.png",
-            width: 30,
-            height: 30,
-            color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Image.asset(
+              "assets/homeIcon.png",
+              width: 25,
+              height: 25,
+              color: Colors.white,
+            ),
           ),
-          const Icon(
-            Icons.person_outline,
-            size: 30,
-            color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Image.asset(
+              "assets/icon_user.png",
+              width: 25,
+              height: 25,
+              color: Colors.white,
+            ),
           ),
-          const Icon(
-            Icons.menu,
-            size: 30,
-            color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Image.asset(
+              "assets/option.png",
+              width: 25,
+              height: 25,
+              color: Colors.white,
+            ),
           ),
         ],
         color: Colormanager.primary,
@@ -72,15 +83,27 @@ class _ChangePasswordState extends State<ChangePassword> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Change Password",
-                              style: getMediumtStyle(
-                                  color: Colors.black, fontSize: 10),
-                            ),
-                          ],
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.arrow_back_ios,
+                                size: 10,
+                                color: Colors.black,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Change Password",
+                                style: getMediumtStyle(
+                                    color: Colors.black, fontSize: 10),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Row(
@@ -98,7 +121,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                       Text(
                         "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying ",
                         style: getLightStyle(
-                            color: Colormanager.textColor, fontSize: 10),
+                            color: Colormanager.mainTextColor, fontSize: 10),
                       ),
                       const SizedBox(
                         height: 30,

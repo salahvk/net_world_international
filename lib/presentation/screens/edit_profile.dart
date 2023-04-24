@@ -1,7 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/color_manager.dart';
+import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/styles_manager.dart';
+import 'package:net_world_international/domain/core/api_endPoint.dart';
 import 'package:net_world_international/presentation/screens/home_screen.dart';
 import 'package:net_world_international/presentation/screens/option_screen.dart';
 import 'package:net_world_international/presentation/screens/profile_screen.dart';
@@ -65,24 +69,55 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           : SingleChildScrollView(
               child: SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(35, 0, 35, 0),
+                  padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 30),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Edit Profile",
-                              style: getMediumtStyle(
-                                  color: Colors.black, fontSize: 10),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.arrow_back_ios,
+                                    size: 10,
+                                    color: Colors.black,
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    "Edit Profile",
+                                    style: getMediumtStyle(
+                                        color: Colors.black, fontSize: 10),
+                                  ),
+                                ],
+                              ),
                             ),
-                            const Icon(
-                              Icons.done,
-                              size: 15,
-                              color: Colormanager.primary,
+                            InkWell(
+                              onTap: () {
+                                if (EditProfileControllers
+                                    .firstController.text.isNotEmpty) {
+                                  BlocProvider.of<LoginBloc>(context).add(
+                                    UpdateNameEvent(),
+                                  );
+                                }
+                              },
+                              child: const SizedBox(
+                                width: 100,
+                                height: 40,
+                                child: Icon(
+                                  Icons.done,
+                                  size: 15,
+                                  color: Colormanager.primary,
+                                ),
+                              ),
                             )
                           ],
                         ),
@@ -103,52 +138,80 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                               ],
                             ),
-                            child: Stack(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  radius: 40,
-                                  child: Image.asset(
-                                    'assets/man_image.png',
-                                  ),
-                                ),
-                                Positioned(
-                                    right: 0,
-                                    bottom: 3,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade300,
-                                            spreadRadius: 1,
-                                            blurRadius: 3,
-                                            offset: const Offset(2, 2.5),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Material(
-                                        shape: const CircleBorder(),
-                                        color: Colors.white,
-                                        child: InkWell(
-                                          splashColor: Colormanager.primary,
-                                          customBorder: const CircleBorder(),
-                                          enableFeedback: true,
-                                          excludeFromSemantics: true,
-                                          onTap: () {},
-                                          child: const CircleAvatar(
-                                            radius: 10,
-                                            backgroundColor: Colors.transparent,
-                                            child: Icon(
-                                              Icons.camera_alt_outlined,
-                                              size: 12,
-                                              color: Colors.black,
-                                            ),
+                            child: BlocBuilder<LoginBloc, LoginState>(
+                              builder: (context, state) {
+                                if (state is LoggedIn) {
+                                  return Stack(
+                                    children: [
+                                      // CircleAvatar(
+                                      //   backgroundColor: Colors.white,
+                                      //   radius: 53,
+                                      //   child: Image.asset(
+                                      //     'assets/man_image.png',
+                                      //   ),
+                                      // ),
+                                      Container(
+                                        width: 106,
+                                        height: 106,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                                "$endPoint/${state.userModel?.photoPath}"),
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
                                       ),
-                                    ))
-                              ],
+                                      Positioned(
+                                          right: 0,
+                                          bottom: 3,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.shade300,
+                                                  spreadRadius: 1,
+                                                  blurRadius: 3,
+                                                  offset: const Offset(2, 2.5),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Material(
+                                              shape: const CircleBorder(),
+                                              color: Colors.white,
+                                              child: InkWell(
+                                                splashColor:
+                                                    Colormanager.primary,
+                                                customBorder:
+                                                    const CircleBorder(),
+                                                enableFeedback: true,
+                                                excludeFromSemantics: true,
+                                                onTap: () {
+                                                  BlocProvider.of<LoginBloc>(
+                                                          context)
+                                                      .add(
+                                                    UpdateProfilePicEvent(),
+                                                  );
+                                                },
+                                                child: const CircleAvatar(
+                                                  radius: 13,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  child: Icon(
+                                                    Icons.camera_alt_outlined,
+                                                    size: 14,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ))
+                                    ],
+                                  );
+                                }
+                                return Container();
+                              },
                             ),
                           ),
                           const SizedBox(
@@ -171,41 +234,61 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       const SizedBox(
                         height: 10,
                       ),
-                      TextField(
-                        decoration: InputDecoration(
-                          hintText: 'First Name',
-                          hintStyle: getLightStyle(
-                              color: Colormanager.mainTextColor, fontSize: 12),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 35),
+                        child: TextField(
+                          controller: EditProfileControllers.firstController,
+                          decoration: InputDecoration(
+                            hintText: 'First Name',
+                            hintStyle: getLightStyle(
+                                color: Colormanager.mainTextColor,
+                                fontSize: 12),
+                          ),
                         ),
                       ),
                       const SizedBox(
-                        height: 30,
+                        height: 20,
                       ),
-                      TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Last Name',
-                          hintStyle: getLightStyle(
-                              color: Colormanager.mainTextColor, fontSize: 12),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 35),
+                        child: TextField(
+                          controller: EditProfileControllers.lastController,
+                          decoration: InputDecoration(
+                            hintText: 'Last Name',
+                            hintStyle: getLightStyle(
+                                color: Colormanager.mainTextColor,
+                                fontSize: 12),
+                          ),
                         ),
                       ),
                       const SizedBox(
-                        height: 30,
+                        height: 20,
                       ),
-                      TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Phone',
-                          hintStyle: getLightStyle(
-                              color: Colormanager.mainTextColor, fontSize: 12),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 35),
+                        child: TextField(
+                          controller: EditProfileControllers.phoneController,
+                          decoration: InputDecoration(
+                            hintText: 'Phone',
+                            hintStyle: getLightStyle(
+                                color: Colormanager.mainTextColor,
+                                fontSize: 12),
+                          ),
                         ),
                       ),
                       const SizedBox(
-                        height: 30,
+                        height: 20,
                       ),
-                      TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Email ID',
-                          hintStyle: getLightStyle(
-                              color: Colormanager.mainTextColor, fontSize: 12),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 35),
+                        child: TextField(
+                          controller: EditProfileControllers.emailIdController,
+                          decoration: InputDecoration(
+                            hintText: 'Email ID',
+                            hintStyle: getLightStyle(
+                                color: Colormanager.mainTextColor,
+                                fontSize: 12),
+                          ),
                         ),
                       ),
                     ],

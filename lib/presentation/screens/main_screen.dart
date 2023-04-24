@@ -30,21 +30,32 @@ class _MainScreenState extends State<MainScreen> {
         index: 0,
         height: 60.0,
         items: <Widget>[
-          Image.asset(
-            "assets/homeIcon.png",
-            width: 30,
-            height: 30,
-            color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Image.asset(
+              "assets/homeIcon.png",
+              width: 25,
+              height: 25,
+              color: Colors.white,
+            ),
           ),
-          const Icon(
-            Icons.person_outline,
-            size: 30,
-            color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Image.asset(
+              "assets/icon_user.png",
+              width: 25,
+              height: 25,
+              color: Colors.white,
+            ),
           ),
-          const Icon(
-            Icons.menu,
-            size: 30,
-            color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Image.asset(
+              "assets/option.png",
+              width: 25,
+              height: 25,
+              color: Colors.white,
+            ),
           ),
         ],
         color: Colormanager.primary,

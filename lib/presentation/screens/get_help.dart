@@ -33,21 +33,32 @@ class _GetHelpScreenState extends State<GetHelpScreen> {
         index: 1,
         height: 60.0,
         items: <Widget>[
-          Image.asset(
-            "assets/homeIcon.png",
-            width: 30,
-            height: 30,
-            color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Image.asset(
+              "assets/homeIcon.png",
+              width: 25,
+              height: 25,
+              color: Colors.white,
+            ),
           ),
-          const Icon(
-            Icons.person_outline,
-            size: 30,
-            color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Image.asset(
+              "assets/icon_user.png",
+              width: 25,
+              height: 25,
+              color: Colors.white,
+            ),
           ),
-          const Icon(
-            Icons.menu,
-            size: 30,
-            color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Image.asset(
+              "assets/option.png",
+              width: 25,
+              height: 25,
+              color: Colors.white,
+            ),
           ),
         ],
         color: Colormanager.primary,
@@ -74,15 +85,28 @@ class _GetHelpScreenState extends State<GetHelpScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Get Help",
-                              style: getMediumtStyle(
-                                  color: Colors.black, fontSize: 10),
-                            ),
-                          ],
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Row(
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Icon(
+                                Icons.arrow_back_ios,
+                                size: 10,
+                                color: Colors.black,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Get Help",
+                                style: getMediumtStyle(
+                                    color: Colors.black, fontSize: 10),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -117,9 +141,7 @@ class _GetHelpScreenState extends State<GetHelpScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 15,
-                      ),
+                      const SizedBox(height: 30),
                       Container(
                         width: size.width,
                         height: 50,
@@ -139,7 +161,7 @@ class _GetHelpScreenState extends State<GetHelpScreen> {
                             ),
                             Text(
                               "Contact Live Chat",
-                              style: getLightStyle(
+                              style: getRegularStyle(
                                   color: Colormanager.textColor, fontSize: 13),
                             ),
                             const Spacer(),
@@ -175,7 +197,7 @@ class _GetHelpScreenState extends State<GetHelpScreen> {
                             ),
                             Text(
                               "Send us an E-mail",
-                              style: getLightStyle(
+                              style: getRegularStyle(
                                   color: Colormanager.textColor, fontSize: 13),
                             ),
                             const Spacer(),

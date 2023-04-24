@@ -1,12 +1,20 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:circle_progress_bar/circle_progress_bar.dart';
+import 'package:net_world_international/domain/core/api_endPoint.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -29,10 +37,18 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 30, right: 10),
                     child: Row(
                       children: [
+                        const Icon(
+                          Icons.arrow_back_ios,
+                          size: 10,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
                         Text(
                           "Dashboard",
                           style: getMediumtStyle(
-                              color: Colors.white, fontSize: 12),
+                              color: Colors.white, fontSize: 10),
                         ),
                       ],
                     ),
@@ -40,43 +56,51 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(
                     height: 50,
                   ),
-                  SizedBox(
-                    height: 60,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const CircleAvatar(
-                          minRadius: 60,
-                          // foregroundImage: AssetImage(
-                          //   'assets/man_image.png',
-                          // ),
-                          child: ClipOval(
-                            child: Image(
-                              image: AssetImage('assets/man_image.png'),
-                              fit: BoxFit.cover,
-                            ),
+                  BlocBuilder<LoginBloc, LoginState>(
+                    builder: (context, state) {
+                      if (state is LoggedIn) {
+                        print("Home State Logged In");
+                        return SizedBox(
+                          height: 60,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 120,
+                                height: 120,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                        "$endPoint/${state.userModel?.photoPath}"),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              // const SizedBox(
+                              //   width: 15,
+                              // ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    state.userModel?.name ?? '',
+                                    style: getMediumtStyle(
+                                        color: Colors.white, fontSize: 15),
+                                  ),
+                                  Text(
+                                    "In publishing and graphic design,",
+                                    style: getLightStyle(
+                                        color: Colors.white, fontSize: 7),
+                                  ),
+                                ],
+                              )
+                            ],
                           ),
-                        ),
-                        // const SizedBox(
-                        //   width: 15,
-                        // ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "John Robert",
-                              style: getMediumtStyle(
-                                  color: Colors.white, fontSize: 15),
-                            ),
-                            Text(
-                              "In publishing and graphic design,",
-                              style: getLightStyle(
-                                  color: Colors.white, fontSize: 7),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                        );
+                      }
+                      return Container();
+                    },
                   ),
                   const SizedBox(
                     height: 40,
@@ -84,7 +108,7 @@ class HomeScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 30, right: 30),
                     child: Container(
-                      height: size.height * .4,
+                      // height: size.height * .4,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colormanager.background,
@@ -102,7 +126,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 15),
                         child: Column(
                           children: [
                             const SizedBox(
@@ -114,7 +138,7 @@ class HomeScreen extends StatelessWidget {
                                 Text(
                                   "Gross Volume",
                                   style: getMediumtStyle(
-                                      color: Colors.grey, fontSize: 12),
+                                      color: Colors.grey, fontSize: 9),
                                 ),
                                 const Icon(Icons.filter_list)
                               ],
@@ -125,7 +149,7 @@ class HomeScreen extends StatelessWidget {
                                   "\$10.05k",
                                   style: getMediumtStyle(
                                       color: Colormanager.textColor,
-                                      fontSize: 20),
+                                      fontSize: 15),
                                 )
                               ],
                             ),
@@ -145,7 +169,7 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          width: size.width * .4,
+                          width: size.width * .39,
                           height: 170,
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -176,7 +200,7 @@ class HomeScreen extends StatelessWidget {
                                     "Incomes",
                                     style: getMediumtStyle(
                                         color: Colormanager.textColor,
-                                        fontSize: 12),
+                                        fontSize: 9),
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -185,8 +209,8 @@ class HomeScreen extends StatelessWidget {
                                     width: 80,
                                     height: 80,
                                     child: CircleProgressBar(
-                                      foregroundColor: Colors.blue,
-                                      backgroundColor: Colors.black12,
+                                      foregroundColor: Colormanager.primary,
+                                      backgroundColor: Colormanager.secondary,
                                       strokeWidth: 8,
                                       value: 0.65,
                                       child: Center(
@@ -218,7 +242,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          width: size.width * .4,
+                          width: size.width * .39,
                           height: 170,
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -249,7 +273,7 @@ class HomeScreen extends StatelessWidget {
                                     "Expenses",
                                     style: getMediumtStyle(
                                         color: Colormanager.textColor,
-                                        fontSize: 12),
+                                        fontSize: 9),
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -258,8 +282,8 @@ class HomeScreen extends StatelessWidget {
                                     width: 80,
                                     height: 80,
                                     child: CircleProgressBar(
-                                      foregroundColor: Colors.blue,
-                                      backgroundColor: Colors.black12,
+                                      foregroundColor: Colormanager.primary,
+                                      backgroundColor: Colormanager.secondary,
                                       strokeWidth: 8,
                                       value: 0.20,
                                       child: Center(
@@ -315,8 +339,8 @@ class LineChartSample2 extends StatefulWidget {
 
 class _LineChartSample2State extends State<LineChartSample2> {
   List<Color> gradientColors = [
-    Colormanager.primary,
-    Colormanager.primary,
+    const Color(0xff2C8CF4),
+    const Color(0xff2C8CF4),
   ];
 
   bool showAvg = false;
@@ -332,7 +356,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
               right: 10,
             ),
             child: LineChart(
-              showAvg ? avgData() : mainData(),
+              mainData(),
             ),
           ),
         ),
@@ -466,7 +490,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
           gradient: LinearGradient(
             colors: gradientColors,
           ),
-          barWidth: 5,
+          barWidth: 1,
           isStrokeCapRound: true,
           dotData: FlDotData(
             show: false,
@@ -475,7 +499,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             show: true,
             gradient: LinearGradient(
               colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
+                  .map((color) => color.withOpacity(0.15))
                   .toList(),
             ),
           ),
@@ -484,100 +508,100 @@ class _LineChartSample2State extends State<LineChartSample2> {
     );
   }
 
-  LineChartData avgData() {
-    return LineChartData(
-      lineTouchData: LineTouchData(enabled: false),
-      gridData: FlGridData(
-        show: true,
-        drawHorizontalLine: true,
-        verticalInterval: 1,
-        horizontalInterval: 1,
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: bottomTitleWidgets,
-            interval: 1,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
-            interval: 1,
-          ),
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: Colormanager.primary),
-      ),
-      minX: 0,
-      maxX: 11,
-      minY: 0,
-      maxY: 6,
-      lineBarsData: [
-        LineChartBarData(
-          spots: [
-            const FlSpot(0, 3.44),
-            const FlSpot(2.6, 3.44),
-            const FlSpot(4.9, 3.44),
-            const FlSpot(6.8, 3.44),
-            const FlSpot(8, 3.44),
-            const FlSpot(9.5, 3.44),
-            const FlSpot(11, 3.44),
-          ],
-          isCurved: true,
-          gradient: LinearGradient(
-            colors: [
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
-            ],
-          ),
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: [
-                ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                    .lerp(0.2)!
-                    .withOpacity(0.1),
-                ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                    .lerp(0.2)!
-                    .withOpacity(0.1),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // LineChartData avgData() {
+  //   return LineChartData(
+  //     lineTouchData: LineTouchData(enabled: false),
+  //     gridData: FlGridData(
+  //       show: true,
+  //       drawHorizontalLine: true,
+  //       verticalInterval: 1,
+  //       horizontalInterval: 1,
+  //       getDrawingVerticalLine: (value) {
+  //         return FlLine(
+  //           color: const Color(0xff37434d),
+  //           strokeWidth: 1,
+  //         );
+  //       },
+  //       getDrawingHorizontalLine: (value) {
+  //         return FlLine(
+  //           color: const Color(0xff37434d),
+  //           strokeWidth: 1,
+  //         );
+  //       },
+  //     ),
+  //     titlesData: FlTitlesData(
+  //       show: true,
+  //       bottomTitles: AxisTitles(
+  //         sideTitles: SideTitles(
+  //           showTitles: true,
+  //           reservedSize: 30,
+  //           getTitlesWidget: bottomTitleWidgets,
+  //           interval: 1,
+  //         ),
+  //       ),
+  //       leftTitles: AxisTitles(
+  //         sideTitles: SideTitles(
+  //           showTitles: true,
+  //           getTitlesWidget: leftTitleWidgets,
+  //           reservedSize: 42,
+  //           interval: 1,
+  //         ),
+  //       ),
+  //       topTitles: AxisTitles(
+  //         sideTitles: SideTitles(showTitles: false),
+  //       ),
+  //       rightTitles: AxisTitles(
+  //         sideTitles: SideTitles(showTitles: false),
+  //       ),
+  //     ),
+  //     borderData: FlBorderData(
+  //       show: true,
+  //       border: Border.all(color: Colormanager.primary),
+  //     ),
+  //     minX: 0,
+  //     maxX: 11,
+  //     minY: 0,
+  //     maxY: 6,
+  //     lineBarsData: [
+  //       LineChartBarData(
+  //         spots: [
+  //           const FlSpot(0, 3.44),
+  //           const FlSpot(2.6, 3.44),
+  //           const FlSpot(4.9, 3.44),
+  //           const FlSpot(6.8, 3.44),
+  //           const FlSpot(8, 3.44),
+  //           const FlSpot(9.5, 3.44),
+  //           const FlSpot(11, 3.44),
+  //         ],
+  //         isCurved: true,
+  //         gradient: LinearGradient(
+  //           colors: [
+  //             ColorTween(begin: gradientColors[0], end: gradientColors[1])
+  //                 .lerp(0.2)!,
+  //             ColorTween(begin: gradientColors[0], end: gradientColors[1])
+  //                 .lerp(0.2)!,
+  //           ],
+  //         ),
+  //         barWidth: 5,
+  //         isStrokeCapRound: true,
+  //         dotData: FlDotData(
+  //           show: false,
+  //         ),
+  //         belowBarData: BarAreaData(
+  //           show: true,
+  //           gradient: LinearGradient(
+  //             colors: [
+  //               ColorTween(begin: gradientColors[0], end: gradientColors[1])
+  //                   .lerp(0.2)!
+  //                   .withOpacity(0.1),
+  //               ColorTween(begin: gradientColors[0], end: gradientColors[1])
+  //                   .lerp(0.2)!
+  //                   .withOpacity(0.1),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }

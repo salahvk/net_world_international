@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:net_world_international/application/splashBloc/splash_bloc.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:net_world_international/application/loginBloc/login_bloc.dart';
+
 import 'package:net_world_international/core/routes_manager.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox("token");
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (ctx) => SplashScreenBloc()),
-        // BlocProvider(create: (ctx) => getIt<SearchBloc>()),
-        // BlocProvider(create: (ctx) => getIt<FastLaughBloc>()),
-        // BlocProvider(create: (ctx) => getIt<HotAndNewBloc>()),
-        // BlocProvider(create: (ctx) => getIt<HomepageBloc>()),
+        BlocProvider(create: (ctx) => LoginBloc()),
       ],
       child: MaterialApp(
         title: 'Net World International',

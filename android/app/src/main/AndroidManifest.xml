@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.net_world_international">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="net_world_international"
         android:name="${applicationName}"

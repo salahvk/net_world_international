@@ -44,6 +44,15 @@ dependencies:
   fl_chart: ^0.61.0
   circle_progress_bar: ^0.1.2
   simple_animations: ^5.0.0+3
+  injectable: ^2.1.1
+  json_annotation: ^4.8.0
+  dio: ^5.1.1
+  http: ^0.13.5
+  animated_snack_bar: ^0.3.0
+  cached_network_image: ^3.2.3
+  image_picker: ^0.8.7+2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
 
 
 

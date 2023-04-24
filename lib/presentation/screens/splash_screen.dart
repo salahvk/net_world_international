@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:net_world_international/application/splashBloc/splash_bloc.dart';
+import 'package:net_world_international/application/loginBloc/login_bloc.dart';
+
 import 'package:net_world_international/core/asset_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:net_world_international/presentation/screens/main_screen.dart';
 import 'package:net_world_international/presentation/screens/url_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<SplashScreenBloc>(context).add(
+    BlocProvider.of<LoginBloc>(context).add(
       NavigateToHomeScreenEvent(),
     );
   }
@@ -26,19 +28,21 @@ class _SplashScreenState extends State<SplashScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Center(
-        child: BlocListener<SplashScreenBloc, SplashScreenState>(
+        child: BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
-            if (state is Loaded) {
-              print("Loaded");
+            if (state is LoggedOut) {
               Navigator.push(context, MaterialPageRoute(builder: (c) {
                 return const UrlPage();
               }));
+            } else if (state is LoggedIn) {
+              Navigator.push(context, MaterialPageRoute(builder: (c) {
+                return const MainScreen();
+              }));
             }
           },
-          child: BlocBuilder<SplashScreenBloc, SplashScreenState>(
+          child: BlocBuilder<LoginBloc, LoginState>(
             builder: (context, state) {
               if ((state is Initial) || (state is Loading)) {
-                print("Loading");
                 return builIntro(size);
               }
               return Container();

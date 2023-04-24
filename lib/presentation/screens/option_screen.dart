@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/asset_manager.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
+import 'package:net_world_international/domain/core/api_endPoint.dart';
 
 class OptionScreen extends StatelessWidget {
   const OptionScreen({super.key});
@@ -23,54 +26,79 @@ class OptionScreen extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(40, 20, 0, 20),
-                    child: Row(
-                      children: [
-                        Text(
-                          "option",
-                          style: getMediumtStyle(
-                              color: Colors.black, fontSize: 10),
-                        ),
-                        const SizedBox(
-                          width: 100,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "John Robert",
-                              style: getMediumtStyle(
-                                  color: Colors.black, fontSize: 15),
-                            ),
-                            Text(
-                              "In publishing and graphic design,",
-                              style: getLightStyle(
-                                  color: Colors.black, fontSize: 7),
-                            ),
-                          ],
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                  BlocBuilder<LoginBloc, LoginState>(
+                    builder: (context, state) {
+                      if (state is LoggedIn) {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
                           child: SizedBox(
-                            height: 50,
-                            width: 50,
-                            child: CircleAvatar(
-                              minRadius: 60,
-                              // foregroundImage: AssetImage(
-                              //   'assets/man_image.png',
-                              // ),
-                              child: ClipOval(
-                                child: Image(
-                                  image: AssetImage('assets/man_image.png'),
-                                  fit: BoxFit.cover,
+                            width: size.width * .8,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.arrow_back_ios,
+                                      size: 10,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      "Option",
+                                      style: getMediumtStyle(
+                                          color: Colors.white, fontSize: 10),
+                                    ),
+                                  ],
                                 ),
-                              ),
+                                const Spacer(),
+                                // const SizedBox(
+                                //   width: 100,
+                                // ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      state.userModel?.name ?? '',
+                                      style: getMediumtStyle(
+                                          color: Colors.white, fontSize: 15),
+                                    ),
+                                    Text(
+                                      "In publishing and graphic design,",
+                                      style: getLightStyle(
+                                          color: Colors.white, fontSize: 7),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                  child: SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: Container(
+                                      width: 120,
+                                      height: 120,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                              "$endPoint/${state.userModel?.photoPath}"),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                        )
-                      ],
-                    ),
+                        );
+                      }
+                      return Container();
+                    },
                   ),
                   Center(
                     child: Container(
@@ -81,15 +109,15 @@ class OptionScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 3,
+                            blurRadius: 3,
                             offset: const Offset(0, 3),
                           ),
                         ],
                         border: Border.all(
                           width: 1,
-                          color: Colors.grey.withOpacity(0.5),
+                          color: Colors.grey.withOpacity(0.1),
                         ),
                       ),
                       child: Column(
