@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 
 import 'package:net_world_international/core/asset_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:net_world_international/presentation/screens/login_page.dart';
 import 'package:net_world_international/presentation/screens/main_screen.dart';
 import 'package:net_world_international/presentation/screens/url_page.dart';
 
@@ -30,9 +32,14 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
-            if (state is LoggedOut) {
+            final urlValid = Hive.box("url").get('url_valid');
+            if (state is LoggedOut && urlValid == null) {
               Navigator.push(context, MaterialPageRoute(builder: (c) {
                 return const UrlPage();
+              }));
+            } else if (state is LoggedOut) {
+              Navigator.push(context, MaterialPageRoute(builder: (c) {
+                return const LoginPage();
               }));
             } else if (state is LoggedIn) {
               Navigator.push(context, MaterialPageRoute(builder: (c) {

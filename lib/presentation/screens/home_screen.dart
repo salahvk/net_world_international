@@ -65,15 +65,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Container(
-                                width: 120,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                        "$endPoint/${state.userModel?.photoPath}"),
-                                    fit: BoxFit.cover,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 30, right: 30),
+                                child: Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          "$endPoint/${state.userModel?.photoPath}"),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),

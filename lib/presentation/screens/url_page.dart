@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hive/hive.dart';
 import 'package:net_world_international/core/asset_manager.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/routes_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
+import 'package:net_world_international/domain/core/api_endPoint.dart';
 
 class UrlPage extends StatefulWidget {
   const UrlPage({super.key});
@@ -19,7 +21,9 @@ class _UrlPageState extends State<UrlPage> {
   void _saveForm() {
     final bool isValid = _formKey.currentState!.validate();
     if (isValid) {
-      print('Got a valid input');
+      Hive.box("url").put('url_valid', "true");
+      // final apiToken = Hive.box("token").get('api_token');
+      // await Hive.openBox("token");
       Navigator.pushNamed(context, Routes.paymentScreen);
 
       // And do something here
@@ -76,7 +80,7 @@ class _UrlPageState extends State<UrlPage> {
                           child: TextFormField(
                         textAlign: TextAlign.center,
                         validator: (value) {
-                          if (value!.isEmpty) {
+                          if (value!.isEmpty || value != endPoint) {
                             return 'Invalid URL Address';
                           }
                           return null;

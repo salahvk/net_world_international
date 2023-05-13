@@ -19,7 +19,17 @@ class Error extends LoginState {}
 class LoggedIn extends LoginState {
   LoginModel? loginModel;
   UserDetailsModel? userModel;
-  LoggedIn({this.userModel, this.loginModel});
+  ItemGetConfig? itemGetConfig;
+  String? barCode1;
+  String? barCode2;
+  GetitemsModel? getItems;
+  LoggedIn(
+      {this.userModel,
+      this.loginModel,
+      this.itemGetConfig,
+      this.barCode1,
+      this.barCode2,
+      this.getItems});
 }
 
 class LoggedOut extends LoginState {}

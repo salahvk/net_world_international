@@ -19,7 +19,7 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   int _selectedIndex = 1;
-  // int _page = 0;
+  bool emailValid = true;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   final List<Widget> _screens = [
     const HomeScreen(),
@@ -28,6 +28,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   ];
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
@@ -102,12 +103,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             InkWell(
                               onTap: () {
-                                if (EditProfileControllers
-                                    .firstController.text.isNotEmpty) {
-                                  BlocProvider.of<LoginBloc>(context).add(
-                                    UpdateNameEvent(),
-                                  );
-                                }
+                                emailValid = RegExp(
+                                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                    .hasMatch(EditProfileControllers
+                                        .emailIdController.text);
+                                print(emailValid);
+                                // if (EditProfileControllers
+                                //     .firstController.text.isNotEmpty) {
+                                //   BlocProvider.of<LoginBloc>(context).add(
+                                //     UpdateNameEvent(),
+                                //   );
+                                // }
                               },
                               child: const SizedBox(
                                 width: 100,
@@ -268,6 +274,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         padding: const EdgeInsets.only(right: 35),
                         child: TextField(
                           controller: EditProfileControllers.phoneController,
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             hintText: 'Phone',
                             hintStyle: getLightStyle(
@@ -288,6 +295,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             hintStyle: getLightStyle(
                                 color: Colormanager.mainTextColor,
                                 fontSize: 12),
+                            enabledBorder: !emailValid
+                                ? const UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : const UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  ),
+                            focusedBorder: emailValid
+                                ? const UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colormanager.primary),
+                                  )
+                                : const UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  ),
                           ),
                         ),
                       ),

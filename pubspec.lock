@@ -21,10 +21,10 @@ packages:
     dependency: "direct main"
     description:
       name: animated_snack_bar
-      sha256: "12459c60530f6652e93adfafa24b0ff8d8dc44ad7be01103cb4370f3776435d5"
+      sha256: adfe1a4ae742849b7485f1c63a30ed5bdcf18119ac834443b813747943d312f4
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "0.3.1"
   args:
     dependency: transitive
     description:
@@ -41,6 +41,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
+  barcode:
+    dependency: transitive
+    description:
+      name: barcode
+      sha256: "52570564684bbb0240a9f1fdb6bad12adc5e0540103c1c96d6dd550bd928b1c9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
+  barcode_widget:
+    dependency: "direct main"
+    description:
+      name: barcode_widget
+      sha256: ea0c0578b5db3ca3a583d80e05eb47bfb70419e3a23b920d93ae7968c45c20ce
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.3"
   bloc:
     dependency: "direct main"
     description:
@@ -257,6 +273,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
+  dropdown_button2:
+    dependency: "direct main"
+    description:
+      name: dropdown_button2
+      sha256: "193e97bfe9fd3d89317bddb6129653781fa9b62d99811d49f633e67ea449a62c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   equatable:
     dependency: transitive
     description:
@@ -760,6 +784,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.2"
+  qr:
+    dependency: transitive
+    description:
+      name: qr
+      sha256: "64957a3930367bf97cc211a5af99551d630f2f4625e38af10edd6b19131b64b3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   recase:
     dependency: transitive
     description:
@@ -909,6 +941,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  transliteration:
+    dependency: "direct main"
+    description:
+      name: transliteration
+      sha256: "13b1d32b2d98a7bdcd949673a63102b2f9f3f746e17c1312052989a4aaec1491"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
   typed_data:
     dependency: transitive
     description:

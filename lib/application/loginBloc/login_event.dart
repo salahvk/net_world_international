@@ -11,4 +11,6 @@ class UpdateNameEvent extends LoginEvent {}
 
 class NavigateToHomeScreenEvent extends LoginEvent {}
 
+class GetItemConfigEvent extends LoginEvent {}
+
 // class LoggedOutEvent extends LoginEvent {}

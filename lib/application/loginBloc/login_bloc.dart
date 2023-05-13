@@ -5,8 +5,11 @@ import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
+import 'package:net_world_international/core/util/barcode_gen.dart';
 import 'package:net_world_international/domain/core/api_endPoint.dart';
 import 'package:net_world_international/domain/failures/main_failures.dart';
+import 'package:net_world_international/domain/get_items_model.dart';
+import 'package:net_world_international/domain/item_get_config/item_get_config/item_get_config.dart';
 import 'package:net_world_international/domain/login_model/login_model.dart';
 import 'package:net_world_international/domain/userDetails_model/user_details_model/user_details_model.dart';
 import 'package:net_world_international/infrastructure/login_api.dart';
@@ -21,34 +24,37 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       try {
         emit(Loading());
 
+        // Get Login data
         Either<MainFailure, LoginModel> result =
             await LoginImp().getLoginData();
+        LoginModel loginModel = result.getOrElse(() => LoginModel());
+
+        // Get User data
         Either<MainFailure, UserDetailsModel> userData =
             await LoginImp().getUserData();
+        UserDetailsModel userModel =
+            userData.getOrElse(() => UserDetailsModel());
 
-        LoginModel loginModel = result.fold(
-          (failure) {
-            emit(Error());
-            // handle the failure case here
-            return LoginModel(); // or some default value
-          },
-          (model) => model,
-        );
-
-        UserDetailsModel userModel = userData.fold(
-          (failure) {
-            emit(Error());
-            // handle the failure case here
-            return UserDetailsModel(); // or some default value
-          },
-          (model) => model,
-        );
-
+        Either<MainFailure, GetitemsModel> items = await LoginImp().getItems();
+        GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
+        print(getItems);
         if (loginModel.result?.message == 'Invalid user') {
           emit(Error());
         } else {
           Hive.box("token").put('api_token', loginModel.result?.token ?? '');
-          emit(LoggedIn(loginModel: loginModel, userModel: userModel));
+          Either<MainFailure, ItemGetConfig> result1 =
+              await LoginImp().getItemConfig();
+          ItemGetConfig itemGetConfig =
+              result1.getOrElse(() => ItemGetConfig());
+          String barcode1 = genBarcode(itemGetConfig);
+          String barcode2 = genBarcode2(itemGetConfig);
+          // itemGetConfig.;
+          emit(LoggedIn(
+              loginModel: loginModel,
+              userModel: userModel,
+              itemGetConfig: itemGetConfig,
+              barCode1: barcode1,
+              barCode2: barcode2));
         }
       } catch (_) {}
     });
@@ -93,9 +99,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           },
           (model) => model,
         );
+        Either<MainFailure, ItemGetConfig> result1 =
+            await LoginImp().getItemConfig();
+        ItemGetConfig itemGetConfig = result1.getOrElse(() => ItemGetConfig());
+        String barcode1 = genBarcode(itemGetConfig);
+        String barcode2 = genBarcode2(itemGetConfig);
         emit(LoggedIn(
-          userModel: userModel,
-        ));
+            userModel: userModel,
+            itemGetConfig: itemGetConfig,
+            barCode1: barcode1,
+            barCode2: barcode2));
       } catch (_) {}
     });
     on<UpdateNameEvent>((event, emit) async {
@@ -123,9 +136,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           },
           (model) => model,
         );
+        Either<MainFailure, ItemGetConfig> result1 =
+            await LoginImp().getItemConfig();
+        ItemGetConfig itemGetConfig = result1.getOrElse(() => ItemGetConfig());
+        String barcode1 = genBarcode(itemGetConfig);
+        String barcode2 = genBarcode2(itemGetConfig);
         emit(LoggedIn(
-          userModel: userModel,
-        ));
+            userModel: userModel,
+            itemGetConfig: itemGetConfig,
+            barCode1: barcode1,
+            barCode2: barcode2));
       } catch (_) {}
     });
     on<NavigateToHomeScreenEvent>((event, emit) async {
@@ -136,17 +156,29 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           await Future.delayed(const Duration(seconds: 3));
           emit(LoggedOut());
         } else {
-          Either<MainFailure, UserDetailsModel> userData =
+          Either<MainFailure, UserDetailsModel> result =
               await LoginImp().getUserData();
+          UserDetailsModel userDetailsModel =
+              result.getOrElse(() => UserDetailsModel());
 
-          UserDetailsModel userModel = userData.fold(
-            (failure) {
-              return UserDetailsModel();
-            },
-            (model) => model,
-          );
+          Either<MainFailure, ItemGetConfig> result1 =
+              await LoginImp().getItemConfig();
+          ItemGetConfig itemGetConfig =
+              result1.getOrElse(() => ItemGetConfig());
+
+          Either<MainFailure, GetitemsModel> items =
+              await LoginImp().getItems();
+          GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
+          print(getItems);
+
           await Future.delayed(const Duration(seconds: 3));
-          emit(LoggedIn(userModel: userModel));
+          String barcode1 = genBarcode(itemGetConfig);
+          String barcode2 = genBarcode2(itemGetConfig);
+          emit(LoggedIn(
+              userModel: userDetailsModel,
+              itemGetConfig: itemGetConfig,
+              barCode1: barcode1,
+              barCode2: barcode2));
         }
       } catch (_) {}
     });

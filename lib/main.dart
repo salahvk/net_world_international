@@ -9,6 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox("token");
+  await Hive.openBox("url");
   runApp(const MyApp());
 }
 

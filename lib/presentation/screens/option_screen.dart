@@ -5,6 +5,7 @@ import 'package:net_world_international/core/asset_manager.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:net_world_international/domain/core/api_endPoint.dart';
+import 'package:net_world_international/presentation/screens/add_item_screen.dart';
 
 class OptionScreen extends StatelessWidget {
   const OptionScreen({super.key});
@@ -123,24 +124,32 @@ class OptionScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Image.asset(
-                                  'assets/icon_items.png',
-                                  width: 20,
-                                  height: 20,
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (ctx) {
+                                return const AddItemScreen();
+                              }));
+                            },
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Image.asset(
+                                    'assets/icon_items.png',
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Item Master",
-                                style: getLightStyle(
-                                    color: Colormanager.textColor,
-                                    fontSize: 15),
-                              ),
-                            ],
+                                Text(
+                                  "Item Master",
+                                  style: getLightStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
                           ),
                           Row(
                             children: [
