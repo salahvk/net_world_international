@@ -1,8 +1,9 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
-import 'package:net_world_international/presentation/screens/add_item_screen.dart';
 import 'package:net_world_international/presentation/screens/home_screen.dart';
 import 'package:net_world_international/presentation/screens/option_screen.dart';
 import 'package:net_world_international/presentation/screens/profile_screen.dart';
@@ -77,63 +78,135 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: const [
-                        Text("Sl No:"),
+                        Text(" Id:"),
                         Text("Name"),
-                        Text("Unit"),
-                        Text("Contain"),
+                        // Text("Unit"),
+                        // Text("Contain"),
                         Text("Cost"),
                         Text("Selling"),
                       ],
                     ),
                   ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (ctx, index) {
-                      return Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: (index % 2) != 0
-                                ? Colormanager.white
-                                : Colormanager.teritiory),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "${index + 1}",
-                                style: getRegularStyle(
-                                    color: Colors.black, fontSize: 10),
-                              ),
-                              Text(
-                                "John Doe",
-                                style: getRegularStyle(
-                                    color: Colors.black, fontSize: 10),
-                              ),
-                              Text(
-                                "Lorem ipsum",
-                                style: getRegularStyle(
-                                    color: Colors.black, fontSize: 10),
-                              ),
-                              Text(
-                                "\$150",
-                                style: getRegularStyle(
-                                    color: Colors.black, fontSize: 10),
-                              ),
-                              Text(
-                                "\$150",
-                                style: getRegularStyle(
-                                    color: Colors.black, fontSize: 10),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                    itemCount: 5,
-                  ),
+                  Expanded(
+                    child: BlocBuilder<LoginBloc, LoginState>(
+                      builder: (context, state) {
+                        if (state is LoggedIn) {
+                          print("state");
+                          return ListView.builder(
+                            shrinkWrap: true,
+
+                            // physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (ctx, index) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: (index % 2) != 0
+                                        ? Colormanager.white
+                                        : Colormanager.teritiory),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        // "${index + 1}",
+                                        state.getItems?.items?[index].id
+                                                .toString() ??
+                                            '',
+                                        style: getRegularStyle(
+                                            color: Colors.black, fontSize: 10),
+                                      ),
+                                      Text(
+                                        state.getItems?.items?[index].name ??
+                                            '',
+                                        style: getRegularStyle(
+                                            color: Colors.black, fontSize: 10),
+                                      ),
+                                      Text(
+                                        state.getItems?.items?[index].costPrice
+                                                .toString() ??
+                                            '',
+                                        style: getRegularStyle(
+                                            color: Colors.black, fontSize: 10),
+                                      ),
+                                      Text(
+                                        state.getItems?.items?[index]
+                                                .sellingPrice
+                                                .toString() ??
+                                            '',
+                                        style: getRegularStyle(
+                                            color: Colors.black, fontSize: 10),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                            itemCount: state.getItems?.items?.length,
+                          );
+                        } else if (state is ScrolledState) {
+                          print("state");
+                          return ListView.builder(
+                            shrinkWrap: true,
+
+                            // physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (ctx, index) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: (index % 2) != 0
+                                        ? Colormanager.white
+                                        : Colormanager.teritiory),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        // "${index + 1}",
+                                        state.getItems?.items?[index].id
+                                                .toString() ??
+                                            '',
+                                        style: getRegularStyle(
+                                            color: Colors.black, fontSize: 10),
+                                      ),
+                                      Text(
+                                        state.getItems?.items?[index].name ??
+                                            '',
+                                        style: getRegularStyle(
+                                            color: Colors.black, fontSize: 10),
+                                      ),
+                                      Text(
+                                        state.getItems?.items?[index].costPrice
+                                                .toString() ??
+                                            '',
+                                        style: getRegularStyle(
+                                            color: Colors.black, fontSize: 10),
+                                      ),
+                                      Text(
+                                        state.getItems?.items?[index]
+                                                .sellingPrice
+                                                .toString() ??
+                                            '',
+                                        style: getRegularStyle(
+                                            color: Colors.black, fontSize: 10),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                            itemCount: state.getItems?.items?.length,
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                  )
                 ],
               ),
             ),

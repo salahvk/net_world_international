@@ -1,49 +1,72 @@
 class GetitemsModel {
-  int? id;
+  List<Items>? items;
+
+  GetitemsModel({this.items});
+
+  GetitemsModel.fromJson(Map<String, dynamic> json) {
+    if (json['Items'] != null) {
+      items = <Items>[];
+      json['Items'].forEach((v) {
+        items!.add(Items.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (items != null) {
+      data['Items'] = items!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Items {
+  var id;
   String? itemMasterCode;
   String? name;
   String? shortName;
-  int? categoryId;
-  int? unitId;
-  int? sellingPrice;
-  int? costPrice;
+  var categoryId;
+  var unitId;
+  var sellingPrice;
+  var costPrice;
   String? barcode;
-  int? reorderLevel;
-  int? reorderQty;
+  var reorderLevel;
+  var reorderQty;
   String? supplierItemCode;
-  int? departmentId;
-  int? firstcategoryId;
-  int? secondCategoryid;
-  int? colorId;
-  int? sizeid;
-  int? nonStockItem;
-  int? weighingScaleItem;
+  var departmentId;
+  var firstcategoryId;
+  var secondCategoryid;
+  var colorId;
+  var sizeid;
+  var nonStockItem;
+  var weighingScaleItem;
   String? shelfNo;
   String? rackNo;
-  int? fOCitem;
-  int? sellingUnitId;
-  int? leadtime;
-  int? sellingpricePackingUnit;
+  var fOCitem;
+  var sellingUnitId;
+  var leadtime;
+  var sellingpricePackingUnit;
   String? suppliercode;
-  int? discount;
+  var discount;
   bool? active;
   bool? weighingwCount;
-  int? delFlag;
+  var delFlag;
   String? itemGroup;
-  int? loadItems;
+  var loadItems;
   String? createDate;
   String? createUser;
   String? modDate;
   String? modUser;
   String? arabicname;
   String? remarks;
-  int? taxId;
-  int? basePrice;
-  int? counterStock;
+  var taxId;
+  var basePrice;
+  var counterStock;
   String? arabicBarcodeName;
-  int? weighingItemType;
+  var weighingItemType;
 
-  GetitemsModel(
+  Items(
       {this.id,
       this.itemMasterCode,
       this.name,
@@ -88,7 +111,7 @@ class GetitemsModel {
       this.arabicBarcodeName,
       this.weighingItemType});
 
-  GetitemsModel.fromJson(Map<String, dynamic> json) {
+  Items.fromJson(Map<String, dynamic> json) {
     id = json['Id'];
     itemMasterCode = json['ItemMasterCode'];
     name = json['Name'];

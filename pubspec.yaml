@@ -56,6 +56,8 @@ dependencies:
   transliteration: ^0.0.6
   dropdown_button2: ^2.1.0
   barcode_widget: ^2.0.3
+  freezed_annotation: ^2.2.0
+  # provider: ^6.0.5
 
 
 
@@ -71,7 +73,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   build_runner: ^2.3.3
-  freezed: ^2.3.2
+  freezed: ^2.3.4
   injectable_generator: ^2.1.5
   json_serializable: ^6.6.1
 

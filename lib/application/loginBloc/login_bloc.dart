@@ -3,7 +3,6 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:meta/meta.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/util/barcode_gen.dart';
 import 'package:net_world_international/domain/core/api_endPoint.dart';
@@ -169,7 +168,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           Either<MainFailure, GetitemsModel> items =
               await LoginImp().getItems();
           GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
-          print(getItems);
 
           await Future.delayed(const Duration(seconds: 3));
           String barcode1 = genBarcode(itemGetConfig);
@@ -178,12 +176,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               userModel: userDetailsModel,
               itemGetConfig: itemGetConfig,
               barCode1: barcode1,
-              barCode2: barcode2));
+              barCode2: barcode2,
+              getItems: getItems));
         }
       } catch (_) {}
     });
-    // on<LoggedOutEvent>((event, emit) {
-    //   try {} catch (_) {}
-    // });
   }
 }

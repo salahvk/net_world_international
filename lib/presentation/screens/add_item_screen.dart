@@ -296,7 +296,6 @@ class _AddItemScreenState extends State<AddItemScreen> {
                               ],
                             );
                           } else if (isnextBarCode == true) {
-                            print("object");
                             // Padding(
                             //   padding: const EdgeInsets.only(top: 20),
                             //   child: BarcodeWidget(
@@ -978,36 +977,27 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             const SizedBox(
                                               height: 5,
                                             ),
-                                            SizedBox(
-                                              height: 40,
-                                              width: size.width * .35,
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5.0, right: 5),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(4.5),
+                                                border: Border.all(
+                                                  color: Colormanager.primary,
+                                                  width: 1.0,
+                                                ),
+                                              ),
                                               child: TextField(
-                                                  controller:
-                                                      ItemMasterControllers
-                                                          .rackNoController,
-                                                  decoration: InputDecoration(
-                                                    border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              4.5),
-                                                      borderSide:
-                                                          const BorderSide(
-                                                        color: Colors.red,
-                                                      ),
-                                                    ),
-                                                    enabledBorder:
-                                                        const OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Colormanager
-                                                              .primary),
-                                                    ),
-                                                    focusedBorder:
-                                                        const OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Color.fromARGB(
-                                                              255, 2, 76, 136)),
-                                                    ),
-                                                  )),
+                                                controller:
+                                                    ItemMasterControllers
+                                                        .rackNoController,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  border: InputBorder.none,
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -1035,34 +1025,25 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                         const SizedBox(
                                           height: 5,
                                         ),
-                                        SizedBox(
-                                          height: 40,
-                                          width: size.width * .35,
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 5.0, right: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(4.5),
+                                            border: Border.all(
+                                              color: Colormanager.primary,
+                                              width: 1.0,
+                                            ),
+                                          ),
                                           child: TextField(
-                                              controller: ItemMasterControllers
-                                                  .shelfNoController,
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.5),
-                                                  borderSide: const BorderSide(
-                                                    color: Colors.red,
-                                                  ),
-                                                ),
-                                                enabledBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color:
-                                                          Colormanager.primary),
-                                                ),
-                                                focusedBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color.fromARGB(
-                                                          255, 2, 76, 136)),
-                                                ),
-                                              )),
+                                            controller: ItemMasterControllers
+                                                .shelfNoController,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1092,56 +1073,44 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                         const SizedBox(
                                           height: 5,
                                         ),
-                                        SizedBox(
-                                          height: 40,
-                                          width: size.width * .35,
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 5.0, right: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(4.5),
+                                            border: Border.all(
+                                              color: Colormanager.primary,
+                                              width: 1.0,
+                                            ),
+                                          ),
                                           child: TextField(
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              controller: ItemMasterControllers
-                                                  .costPriceController,
-                                              onChanged: (value) {
-                                                ItemMasterControllers
-                                                    .cleanControllersOnCostChange();
-                                                if (value.isEmpty ||
-                                                    deftax == null) {
-                                                  showAnimatedSnackBar(
-                                                      context, " Choose a vat");
-                                                  return;
-                                                }
-                                                print(value);
-                                                int s = int.parse(value);
-                                                cwT = (s +
-                                                    (s /
-                                                        100 *
-                                                        deftax?.taxRate));
-                                                ItemMasterControllers
-                                                    .costWithTaxController
-                                                    .text = cwT.toString();
-                                                print(cwT);
-                                              },
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.5),
-                                                  borderSide: const BorderSide(
-                                                    color: Colors.red,
-                                                  ),
-                                                ),
-                                                enabledBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color:
-                                                          Colormanager.primary),
-                                                ),
-                                                focusedBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color.fromARGB(
-                                                          255, 2, 76, 136)),
-                                                ),
-                                              )),
+                                            keyboardType: TextInputType.number,
+                                            controller: ItemMasterControllers
+                                                .costPriceController,
+                                            onChanged: (value) {
+                                              ItemMasterControllers
+                                                  .cleanControllersOnCostChange();
+                                              if (value.isEmpty ||
+                                                  deftax == null) {
+                                                showAnimatedSnackBar(
+                                                    context, " Choose a vat");
+                                                return;
+                                              }
+                                              print(value);
+                                              int s = int.parse(value);
+                                              cwT = (s +
+                                                  (s / 100 * deftax?.taxRate));
+                                              ItemMasterControllers
+                                                  .costWithTaxController
+                                                  .text = cwT.toString();
+                                              print(cwT);
+                                            },
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1165,35 +1134,26 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                         const SizedBox(
                                           height: 5,
                                         ),
-                                        SizedBox(
-                                          height: 40,
-                                          width: size.width * .35,
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 5.0, right: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(4.5),
+                                            border: Border.all(
+                                              color: Colormanager.primary,
+                                              width: 1.0,
+                                            ),
+                                          ),
                                           child: TextField(
-                                              keyboardType: TextInputType.none,
-                                              controller: ItemMasterControllers
-                                                  .costWithTaxController,
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.5),
-                                                  borderSide: const BorderSide(
-                                                    color: Colors.red,
-                                                  ),
-                                                ),
-                                                enabledBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color:
-                                                          Colormanager.primary),
-                                                ),
-                                                focusedBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color.fromARGB(
-                                                          255, 2, 76, 136)),
-                                                ),
-                                              )),
+                                            keyboardType: TextInputType.none,
+                                            controller: ItemMasterControllers
+                                                .costWithTaxController,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1223,65 +1183,58 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             const SizedBox(
                                               height: 5,
                                             ),
-                                            SizedBox(
-                                              height: 40,
-                                              width: size.width * .35,
-                                              child: TextField(
-                                                  controller:
-                                                      ItemMasterControllers
-                                                          .marginPerController,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  onChanged: (value) {
-                                                    if (value.isEmpty) return;
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5.0, right: 5),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(4.5),
+                                                border: Border.all(
+                                                  color: Colormanager.primary,
+                                                  width: 1.0,
+                                                ),
+                                              ),
 
-                                                    int s = int.parse(value);
-                                                    int l = int.parse(
-                                                        ItemMasterControllers
-                                                            .costPriceController
-                                                            .text);
-                                                    final t = (l / 100 * s);
+                                              // width: size.width * .35,
+                                              child: TextFormField(
+                                                controller:
                                                     ItemMasterControllers
-                                                        .marginController
-                                                        .text = t.toString();
-                                                    final k = l + t;
-                                                    ItemMasterControllers
-                                                        .sellingPController
-                                                        .text = k.toString();
-                                                    ItemMasterControllers
-                                                        .sellingPriceWithTaxController
-                                                        .text = (double.parse(
-                                                                ItemMasterControllers
-                                                                    .costWithTaxController
-                                                                    .text) +
-                                                            t)
-                                                        .toString();
-                                                    print(k);
-                                                    print(t);
-                                                  },
-                                                  decoration: InputDecoration(
-                                                    border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              4.5),
-                                                      borderSide:
-                                                          const BorderSide(
-                                                        color: Colors.red,
-                                                      ),
-                                                    ),
-                                                    enabledBorder:
-                                                        const OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Colormanager
-                                                              .primary),
-                                                    ),
-                                                    focusedBorder:
-                                                        const OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Color.fromARGB(
-                                                              255, 2, 76, 136)),
-                                                    ),
-                                                  )),
+                                                        .marginPerController,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                onChanged: (value) {
+                                                  if (value.isEmpty) return;
+
+                                                  int s = int.parse(value);
+                                                  int l = int.parse(
+                                                      ItemMasterControllers
+                                                          .costPriceController
+                                                          .text);
+                                                  final t = (l / 100 * s);
+                                                  ItemMasterControllers
+                                                      .marginController
+                                                      .text = t.toString();
+                                                  final k = l + t;
+                                                  ItemMasterControllers
+                                                      .sellingPController
+                                                      .text = k.toString();
+                                                  ItemMasterControllers
+                                                      .sellingPriceWithTaxController
+                                                      .text = (double.parse(
+                                                              ItemMasterControllers
+                                                                  .costWithTaxController
+                                                                  .text) +
+                                                          t)
+                                                      .toString();
+                                                  print(k);
+                                                  print(t);
+                                                },
+                                                decoration:
+                                                    const InputDecoration(
+                                                  border: InputBorder.none,
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -1309,35 +1262,28 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                         const SizedBox(
                                           height: 5,
                                         ),
-                                        SizedBox(
-                                          height: 40,
-                                          width: size.width * .35,
-                                          child: TextField(
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 5.0, right: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(4.5),
+                                            border: Border.all(
+                                              color: Colormanager.primary,
+                                              width: 1.0,
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: TextField(
                                               controller: ItemMasterControllers
                                                   .marginController,
                                               keyboardType: TextInputType.none,
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.5),
-                                                  borderSide: const BorderSide(
-                                                    color: Colors.red,
-                                                  ),
-                                                ),
-                                                enabledBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color:
-                                                          Colormanager.primary),
-                                                ),
-                                                focusedBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color.fromARGB(
-                                                          255, 2, 76, 136)),
-                                                ),
-                                              )),
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1367,35 +1313,26 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                         const SizedBox(
                                           height: 5,
                                         ),
-                                        SizedBox(
-                                          height: 40,
-                                          width: size.width * .35,
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 5.0, right: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(4.5),
+                                            border: Border.all(
+                                              color: Colormanager.primary,
+                                              width: 1.0,
+                                            ),
+                                          ),
                                           child: TextField(
-                                              controller: ItemMasterControllers
-                                                  .sellingPController,
-                                              keyboardType: TextInputType.none,
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.5),
-                                                  borderSide: const BorderSide(
-                                                    color: Colors.red,
-                                                  ),
-                                                ),
-                                                enabledBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color:
-                                                          Colormanager.primary),
-                                                ),
-                                                focusedBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color.fromARGB(
-                                                          255, 2, 76, 136)),
-                                                ),
-                                              )),
+                                            controller: ItemMasterControllers
+                                                .sellingPController,
+                                            keyboardType: TextInputType.none,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1419,35 +1356,26 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                         const SizedBox(
                                           height: 5,
                                         ),
-                                        SizedBox(
-                                          height: 40,
-                                          width: size.width * .35,
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 5.0, right: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(4.5),
+                                            border: Border.all(
+                                              color: Colormanager.primary,
+                                              width: 1.0,
+                                            ),
+                                          ),
                                           child: TextField(
-                                              controller: ItemMasterControllers
-                                                  .sellingPriceWithTaxController,
-                                              keyboardType: TextInputType.none,
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.5),
-                                                  borderSide: const BorderSide(
-                                                    color: Colors.red,
-                                                  ),
-                                                ),
-                                                enabledBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color:
-                                                          Colormanager.primary),
-                                                ),
-                                                focusedBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color.fromARGB(
-                                                          255, 2, 76, 136)),
-                                                ),
-                                              )),
+                                            controller: ItemMasterControllers
+                                                .sellingPriceWithTaxController,
+                                            keyboardType: TextInputType.none,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),

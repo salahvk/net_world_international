@@ -32,4 +32,9 @@ class LoggedIn extends LoginState {
       this.getItems});
 }
 
+class ScrolledState extends LoginState {
+  GetitemsModel? getItems;
+  ScrolledState({this.getItems});
+}
+
 class LoggedOut extends LoginState {}
