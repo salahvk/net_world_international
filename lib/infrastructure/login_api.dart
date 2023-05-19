@@ -67,7 +67,7 @@ class LoginImp implements LoginServices {
       var jsonResponse = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = UserDetailsModel.fromJson(jsonResponse);
-        log(response.body);
+        // log(response.body);
         return Right(result);
       } else {
         return const Left(MainFailure.serverFailure());
@@ -95,7 +95,7 @@ class LoginImp implements LoginServices {
       var jsonResponse = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = ItemGetConfig.fromJson(jsonResponse);
-        log(response.body);
+        // log(response.body);
         return Right(result);
       } else {
         return const Left(MainFailure.serverFailure());
@@ -123,7 +123,7 @@ class LoginImp implements LoginServices {
       var jsonResponse = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = GetitemsModel.fromJson(jsonResponse);
-        log(response.body);
+        // log(response.body);
         return Right(result);
       } else {
         return const Left(MainFailure.serverFailure());
@@ -142,8 +142,14 @@ class LoginImp implements LoginServices {
     try {
       final url = Uri.parse(ApiEndPoint.addItems);
       final headers = {'Content-Type': 'application/json'};
+      String barcode;
+      if (ItemMasterControllers.barCodeController2.text.isEmpty) {
+        barcode = ItemMasterControllers.barCodeController.text;
+      } else {
+        barcode = ItemMasterControllers.barCodeController2.text;
+      }
       final body = jsonEncode({
-        "itemMasterCode": ItemMasterControllers.barCodeController.text,
+        "itemMasterCode": barcode,
         "name": ItemMasterControllers.nameController.text,
         "shortName": ItemMasterControllers.shortNameController.text,
         "categoryId": int.parse(ItemMasterControllers.categoryController.text),
@@ -151,7 +157,7 @@ class LoginImp implements LoginServices {
         "sellingPrice":
             num.parse(ItemMasterControllers.sellingPController.text),
         "costPrice": int.parse(ItemMasterControllers.costPriceController.text),
-        "barcode": ItemMasterControllers.barCodeController.text,
+        "barcode": barcode,
         "supplierItemCode": "d",
         "departmentId":
             int.parse(ItemMasterControllers.departmentController.text),

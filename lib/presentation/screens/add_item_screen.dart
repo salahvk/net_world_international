@@ -13,7 +13,6 @@ import 'package:net_world_international/domain/item_get_config/item_get_config/d
 import 'package:net_world_international/domain/item_get_config/item_get_config/second_category_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/supplier_master_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/tax_list.dart';
-import 'package:net_world_international/infrastructure/add_to_itemMaster.dart';
 import 'package:net_world_international/infrastructure/login_api.dart';
 import 'package:net_world_international/presentation/screens/home_screen.dart';
 import 'package:net_world_international/presentation/screens/item_master.dart';
@@ -30,10 +29,13 @@ class AddItemScreen extends StatefulWidget {
 }
 
 class _AddItemScreenState extends State<AddItemScreen> {
-  bool isChecked = false;
+  bool isActiceChecked = false;
+  bool isNoneStockChecked = false;
+  bool isOutsideDeliveryChecked = false;
   bool isBarCodeGen = false;
   bool isnextBarCode = false;
   bool isprevBarCode = false;
+  bool onNextBarCode = false;
   String? defCategory;
   String? secCategory;
   String? defDepartment;
@@ -56,10 +58,22 @@ class _AddItemScreenState extends State<AddItemScreen> {
     // TODO: implement initState
     super.initState();
     ItemMasterControllers.cleanControllers();
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    BlocProvider.of<LoginBloc>(context).add(
+      OptionPageEvent(),
+    );
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    //   BlocProvider.of<LoginBloc>(context).add(
+    //     OptionPageEvent(),
+    //   );
+    //   print("hi");
+    // });
+
     final size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
@@ -93,6 +107,11 @@ class _AddItemScreenState extends State<AddItemScreen> {
           setState(() {
             _selectedIndex = index;
           });
+          if (index == 2) {
+            BlocProvider.of<LoginBloc>(context).add(
+              OptionPageEvent(),
+            );
+          }
         },
         letIndexChange: (index) => true,
       ),
@@ -152,6 +171,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                             child: SizedBox(
                               height: 50,
                               child: TextField(
+                                  keyboardType: TextInputType.number,
                                   controller:
                                       ItemMasterControllers.barCodeController,
                                   decoration: InputDecoration(
@@ -182,49 +202,126 @@ class _AddItemScreenState extends State<AddItemScreen> {
                           const SizedBox(
                             width: 10,
                           ),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                isBarCodeGen = true;
-                              });
+                          BlocBuilder<LoginBloc, LoginState>(
+                            builder: (context, state) {
+                              if (state is OptionPageState) {
+                                return Material(
+                                  color: Colormanager.teritiory,
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: InkWell(
+                                    splashColor: Colormanager.primary,
+                                    borderRadius: BorderRadius.circular(5),
+                                    onTap: () {
+                                      setState(() {
+                                        isBarCodeGen = true;
+                                        ItemMasterControllers.barCodeController2
+                                            .clear();
+                                        if (ItemMasterControllers
+                                            .barCodeController.text.isEmpty) {
+                                          ItemMasterControllers
+                                              .barCodeController
+                                              .text = state.barCode1 ?? '';
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      width: 80,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Center(
+                                          child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            Icons.add_circle_outline,
+                                            size: 12,
+                                            color: Colormanager.primary,
+                                          ),
+                                          const SizedBox(
+                                            width: 3,
+                                          ),
+                                          Text(
+                                            "Generate",
+                                            style: getRegularStyle(
+                                                color: Colormanager.primary,
+                                                fontSize: 11),
+                                          ),
+                                        ],
+                                      )),
+                                    ),
+                                  ),
+                                );
+                              }
+                              return Container();
                             },
-                            child: Container(
-                              width: 80,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colormanager.teritiory,
-                              ),
-                              child: Center(
-                                  child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.add_circle_outline,
-                                    size: 12,
-                                    color: Colormanager.primary,
-                                  ),
-                                  const SizedBox(
-                                    width: 3,
-                                  ),
-                                  Text(
-                                    "Generate",
-                                    style: getRegularStyle(
-                                        color: Colormanager.primary,
-                                        fontSize: 11),
-                                  ),
-                                ],
-                              )),
-                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 5, right: 5),
+                            child: Material(
+                              color: Colormanager.teritiory,
+                              borderRadius: BorderRadius.circular(5),
+                              child: InkWell(
+                                splashColor: Colormanager.primary,
+                                borderRadius: BorderRadius.circular(5),
+                                onTap: () async {
+                                  // await prevBarCode(ItemMasterControllers
+                                  //     .barCodeController.text);
+                                  ItemMasterControllers.barCodeController
+                                      .clear();
+                                  final barc = ItemMasterControllers
+                                          .barCodeController2.text.isNotEmpty
+                                      ? ItemMasterControllers
+                                          .barCodeController2.text
+                                      : '4321';
+                                  BlocProvider.of<LoginBloc>(context).add(
+                                    NextBarCodeEvent(
+                                        selectedThrow: 'previous',
+                                        barcode: barc),
+                                  );
+                                  setState(() {
+                                    isBarCodeGen = true;
+                                    onNextBarCode = true;
+                                  });
+                                },
+                                child: Container(
+                                  width: 40,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: const Center(
+                                      child: Icon(Icons.arrow_back,
+                                          size: 22,
+                                          color: Colormanager.primary)),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Material(
+                            color: Colormanager.teritiory,
+                            borderRadius: BorderRadius.circular(5),
                             child: InkWell(
+                              splashColor: Colormanager.primary,
+                              borderRadius: BorderRadius.circular(5),
                               onTap: () async {
-                                await prevBarCode(ItemMasterControllers
-                                    .barCodeController.text);
+                                // await nextBarCode(
+                                ItemMasterControllers.barCodeController.clear();
+                                final barc = ItemMasterControllers
+                                        .barCodeController2.text.isNotEmpty
+                                    ? ItemMasterControllers
+                                        .barCodeController2.text
+                                    : '4321';
+                                // print(barc);
+                                BlocProvider.of<LoginBloc>(context).add(
+                                  NextBarCodeEvent(
+                                      selectedThrow: 'next', barcode: barc),
+                                );
                                 setState(() {
                                   isBarCodeGen = true;
+                                  onNextBarCode = true;
                                 });
                               },
                               child: Container(
@@ -232,54 +329,36 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                 height: 50,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  color: Colormanager.teritiory,
+                                  // color: Colormanager.teritiory,
                                 ),
                                 child: const Center(
-                                    child: Icon(Icons.arrow_back,
-                                        size: 22, color: Colormanager.primary)),
+                                    child: Icon(
+                                  Icons.arrow_forward_rounded,
+                                  size: 22,
+                                  color: Colormanager.primary,
+                                )),
                               ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () async {
-                              await nextBarCode(
-                                  ItemMasterControllers.barCodeController.text);
-                              setState(() {
-                                isBarCodeGen = true;
-                              });
-                            },
-                            child: Container(
-                              width: 40,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colormanager.teritiory,
-                              ),
-                              child: const Center(
-                                  child: Icon(
-                                Icons.arrow_forward_rounded,
-                                size: 22,
-                                color: Colormanager.primary,
-                              )),
                             ),
                           )
                         ],
                       ),
                       BlocBuilder<LoginBloc, LoginState>(
                         builder: (context, state) {
-                          if (state is LoggedIn && isBarCodeGen == true) {
-                            if (ItemMasterControllers
-                                .barCodeController.text.isEmpty) {
-                              barcode = state.barCode1;
-                            }
-                            print(barcode);
+                          if (state is OptionPageState &&
+                              isBarCodeGen == true) {
+                            // if (ItemMasterControllers
+                            //     .barCodeController.text.isEmpty) {
+                            //   barcode = state.barCode1;
+                            // }
+                            // print(ItemMasterControllers.barCodeController.text);
+                            // print("object");
                             return Column(
                               children: [
                                 const SizedBox(
                                   height: 20,
                                 ),
                                 ItemMasterControllers
-                                        .barCodeController.text.isNotEmpty
+                                        .barCodeController2.text.isEmpty
                                     ? BarcodeWidget(
                                         barcode: Barcode.code128(),
                                         data: ItemMasterControllers
@@ -289,23 +368,24 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                       )
                                     : BarcodeWidget(
                                         barcode: Barcode.code128(),
-                                        data: state.barCode1 ?? '',
+                                        data: ItemMasterControllers
+                                            .barCodeController2.text,
                                         // width: 100,
                                         height: 100,
                                       ),
                               ],
                             );
-                          } else if (isnextBarCode == true) {
-                            // Padding(
-                            //   padding: const EdgeInsets.only(top: 20),
-                            //   child: BarcodeWidget(
-                            //     barcode: Barcode.code128(),
-                            //     data: nextBarCode().toString(),
-                            //     // width: 100,
-                            //     height: 100,
-                            //   ),
-                            // );
                           }
+                          //  else if (state is OptionPageState &&
+                          //     onNextBarCode == true) {
+                          //   BarcodeWidget(
+                          //     barcode: Barcode.code128(),
+                          //     data:
+                          //         ItemMasterControllers.barCodeController2.text,
+                          //     // width: 100,
+                          //     height: 100,
+                          //   );
+                          // }
                           return Container();
                         },
                       ),
@@ -415,17 +495,22 @@ class _AddItemScreenState extends State<AddItemScreen> {
                           const SizedBox(
                             width: 10,
                           ),
-                          InkWell(
-                            onTap: transiletrate,
-                            child: Container(
-                              width: 40,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colormanager.teritiory,
+                          Material(
+                            color: Colormanager.teritiory,
+                            borderRadius: BorderRadius.circular(5),
+                            child: InkWell(
+                              splashColor: Colormanager.primary,
+                              borderRadius: BorderRadius.circular(5),
+                              onTap: transiletrate,
+                              child: Container(
+                                width: 40,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child:
+                                    const Center(child: Icon(Icons.translate)),
                               ),
-                              child:
-                                  Center(child: Image.asset("assets/tran.png")),
                             ),
                           )
                         ],
@@ -440,7 +525,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       ),
                       BlocBuilder<LoginBloc, LoginState>(
                         builder: (context, state) {
-                          if (state is LoggedIn) {
+                          if (state is OptionPageState) {
                             return SizedBox(
                               height: 60,
                               child: Padding(
@@ -530,7 +615,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       ),
                       BlocBuilder<LoginBloc, LoginState>(
                         builder: (context, state) {
-                          if (state is LoggedIn) {
+                          if (state is OptionPageState) {
                             return SizedBox(
                               height: 60,
                               child: Padding(
@@ -618,7 +703,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       ),
                       BlocBuilder<LoginBloc, LoginState>(
                         builder: (context, state) {
-                          if (state is LoggedIn) {
+                          if (state is OptionPageState) {
                             return SizedBox(
                               height: 60,
                               child: Padding(
@@ -708,7 +793,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       ),
                       BlocBuilder<LoginBloc, LoginState>(
                         builder: (context, state) {
-                          if (state is LoggedIn) {
+                          if (state is OptionPageState) {
                             return SizedBox(
                               height: 60,
                               child: Padding(
@@ -826,7 +911,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                   Expanded(
                                     child: BlocBuilder<LoginBloc, LoginState>(
                                       builder: (context, state) {
-                                        if (state is LoggedIn) {
+                                        if (state is OptionPageState) {
                                           return SizedBox(
                                             width: size.width * .35,
                                             height: 40,
@@ -1095,17 +1180,17 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                               if (value.isEmpty ||
                                                   deftax == null) {
                                                 showAnimatedSnackBar(
-                                                    context, " Choose a vat");
+                                                    context, "Choose a vat");
                                                 return;
                                               }
-                                              print(value);
+                                              if (value.isEmpty) return;
+
                                               int s = int.parse(value);
                                               cwT = (s +
                                                   (s / 100 * deftax?.taxRate));
                                               ItemMasterControllers
                                                   .costWithTaxController
                                                   .text = cwT.toString();
-                                              print(cwT);
                                             },
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
@@ -1147,9 +1232,20 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             ),
                                           ),
                                           child: TextField(
-                                            keyboardType: TextInputType.none,
+                                            keyboardType: TextInputType.number,
                                             controller: ItemMasterControllers
                                                 .costWithTaxController,
+                                            onChanged: (value) {
+                                              if (value.isEmpty) return;
+                                              double cot = double.parse(value);
+                                              ItemMasterControllers
+                                                  .costPriceController
+                                                  .text = (cot /
+                                                      (1 +
+                                                          deftax?.taxRate /
+                                                              100))
+                                                  .toString();
+                                            },
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
                                             ),
@@ -1206,8 +1302,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                 onChanged: (value) {
                                                   if (value.isEmpty) return;
 
-                                                  int s = int.parse(value);
-                                                  int l = int.parse(
+                                                  double s =
+                                                      double.parse(value);
+                                                  double l = double.parse(
                                                       ItemMasterControllers
                                                           .costPriceController
                                                           .text);
@@ -1278,7 +1375,52 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             child: TextField(
                                               controller: ItemMasterControllers
                                                   .marginController,
-                                              keyboardType: TextInputType.none,
+                                              onChanged: (value) {
+                                                if (value.isEmpty ||
+                                                    ItemMasterControllers
+                                                        .costPriceController
+                                                        .text
+                                                        .isEmpty) return;
+                                                final margin =
+                                                    double.parse(value);
+                                                final cot = double.parse(
+                                                    ItemMasterControllers
+                                                        .costPriceController
+                                                        .text);
+                                                ItemMasterControllers
+                                                        .marginPerController
+                                                        .text =
+                                                    ((margin / cot) * 100)
+                                                        .toString();
+
+                                                //
+                                                double s = double.parse(
+                                                    ItemMasterControllers
+                                                        .marginPerController
+                                                        .text);
+                                                double l = double.parse(
+                                                    ItemMasterControllers
+                                                        .costPriceController
+                                                        .text);
+                                                final t = (l / 100 * s);
+                                                // ItemMasterControllers
+                                                //     .marginController
+                                                //     .text = t.toString();
+                                                final k = l + t;
+                                                ItemMasterControllers
+                                                    .sellingPController
+                                                    .text = k.toString();
+                                                ItemMasterControllers
+                                                    .sellingPriceWithTaxController
+                                                    .text = (double.parse(
+                                                            ItemMasterControllers
+                                                                .costWithTaxController
+                                                                .text) +
+                                                        t)
+                                                    .toString();
+                                              },
+                                              keyboardType:
+                                                  TextInputType.number,
                                               decoration: const InputDecoration(
                                                 border: InputBorder.none,
                                               ),
@@ -1389,27 +1531,33 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 3),
-                                          child: CurvedCheckbox(
-                                            value: isChecked,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                isChecked = value;
-                                              });
-                                            },
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 3),
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 3),
+                                            child: CurvedCheckbox(
+                                              value: isActiceChecked,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  isActiceChecked = value;
+                                                  isNoneStockChecked = false;
+                                                  isOutsideDeliveryChecked =
+                                                      false;
+                                                });
+                                              },
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          "Active",
-                                          style: getRegularStyle(
-                                              color: Colormanager.textColor,
-                                              fontSize: 10),
-                                        ),
-                                      ],
+                                          Text(
+                                            "Active",
+                                            style: getRegularStyle(
+                                                color: Colormanager.textColor,
+                                                fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(right: 3),
@@ -1419,10 +1567,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             padding:
                                                 const EdgeInsets.only(right: 3),
                                             child: CurvedCheckbox(
-                                              value: isChecked,
+                                              value: isNoneStockChecked,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  isChecked = value;
+                                                  isNoneStockChecked = value;
+                                                  isActiceChecked = false;
+                                                  isOutsideDeliveryChecked =
+                                                      false;
                                                 });
                                               },
                                             ),
@@ -1444,10 +1595,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             padding:
                                                 const EdgeInsets.only(right: 3),
                                             child: CurvedCheckbox(
-                                              value: isChecked,
+                                              value: isOutsideDeliveryChecked,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  isChecked = value;
+                                                  isOutsideDeliveryChecked =
+                                                      value;
+                                                  isActiceChecked = false;
+                                                  isNoneStockChecked = false;
                                                 });
                                               },
                                             ),
@@ -1515,20 +1669,27 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                     width: 5,
                                   ),
                                   Expanded(
-                                    child: Container(
-                                      width: 70,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Colormanager.teritiory,
+                                    child: InkWell(
+                                      onTap: () {
+                                        ItemMasterControllers
+                                            .cleanControllers();
+                                      },
+                                      child: Container(
+                                        width: 70,
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: Colormanager.teritiory,
+                                        ),
+                                        child: Center(
+                                            child: Text(
+                                          "Clear",
+                                          style: getRegularStyle(
+                                              color: Colormanager.primary,
+                                              fontSize: 10),
+                                        )),
                                       ),
-                                      child: Center(
-                                          child: Text(
-                                        "Clear",
-                                        style: getRegularStyle(
-                                            color: Colormanager.primary,
-                                            fontSize: 10),
-                                      )),
                                     ),
                                   ),
                                   const SizedBox(
@@ -1699,7 +1860,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                               ),
                               BlocBuilder<LoginBloc, LoginState>(
                                 builder: (context, state) {
-                                  if (state is LoggedIn) {
+                                  if (state is OptionPageState) {
                                     return BarcodeWidget(
                                       barcode: Barcode.code128(),
                                       data: state.barCode2 ?? '',
@@ -1955,10 +2116,10 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
   saveItemMasterdata() async {
     if (ItemMasterControllers.barCodeController.text.isEmpty &&
-        barcode == null) {
-      print(barcode);
+        ItemMasterControllers.barCodeController2.text.isEmpty) {
       showAnimatedSnackBar(context, "Generate a BarCode");
     } else if (ItemMasterControllers.nameController.text.isEmpty) {
+      print(ItemMasterControllers.barCodeController2.text);
       showAnimatedSnackBar(context, "Enter Your Name");
     } else if (ItemMasterControllers.shortNameController.text.isEmpty) {
       showAnimatedSnackBar(context, "Enter Your Short Name");
@@ -1977,10 +2138,16 @@ class _AddItemScreenState extends State<AddItemScreen> {
     } else if (ItemMasterControllers.sellingPController.text.isEmpty) {
       showAnimatedSnackBar(context, "Selling Price is Mandatory");
     } else {
-      ItemMasterControllers.barCodeController.text = barcode ?? '';
+      // ItemMasterControllers.barCodeController.text = barcode ?? '';
       // print(ItemMasterControllers.barCodeController.text);
       // return;
+
       await LoginImp().addToItemMaster();
+      BlocProvider.of<LoginBloc>(context).add(
+        OptionPageEvent(),
+      );
+      ItemMasterControllers.cleanControllers();
+
       setState(() {
         showSuccessAnimatedSnackBar(context, "Item Master Saved");
       });

@@ -16,6 +16,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<LoginBloc>(context).add(
+      HomePageEvent(),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
@@ -58,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   BlocBuilder<LoginBloc, LoginState>(
                     builder: (context, state) {
-                      if (state is LoggedIn) {
+                      if (state is HomePageState) {
                         print("Home State Logged In");
                         return SizedBox(
                           height: 60,

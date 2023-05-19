@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -48,12 +50,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           String barcode1 = genBarcode(itemGetConfig);
           String barcode2 = genBarcode2(itemGetConfig);
           // itemGetConfig.;
+
           emit(LoggedIn(
               loginModel: loginModel,
               userModel: userModel,
               itemGetConfig: itemGetConfig,
               barCode1: barcode1,
-              barCode2: barcode2));
+              barCode2: barcode2,
+              getItems: getItems));
         }
       } catch (_) {}
     });
@@ -180,6 +184,203 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               getItems: getItems));
         }
       } catch (_) {}
+    });
+    on<AddToItemMasterEvent>((event, emit) async {
+      Either<MainFailure, ItemGetConfig> result1 =
+          await LoginImp().getItemConfig();
+      ItemGetConfig itemGetConfig = result1.getOrElse(() => ItemGetConfig());
+
+      final cuState = state;
+      if (cuState is LoggedIn) {
+        emit(LoggedIn(
+            barCode1: cuState.barCode1,
+            barCode2: cuState.barCode2,
+            getItems: cuState.getItems,
+            itemGetConfig: itemGetConfig,
+            loginModel: cuState.loginModel,
+            userModel: cuState.userModel));
+      }
+    });
+
+    on<HomePageEvent>((event, emit) async {
+      final cuState = state;
+      if (cuState is LoggedIn) {
+        emit(HomePageState(
+            loginModel: cuState.loginModel, userModel: cuState.userModel));
+      } else if (cuState is HomePageState) {
+        emit(HomePageState(
+            loginModel: cuState.loginModel, userModel: cuState.userModel));
+      } else if (cuState is ProfilePageState) {
+        emit(HomePageState(
+            loginModel: cuState.loginModel, userModel: cuState.userModel));
+      } else if (cuState is OptionPageState) {
+        emit(HomePageState(
+            loginModel: cuState.loginModel, userModel: cuState.userModel));
+      }
+    });
+
+    on<ProfilePageEvent>((event, emit) async {
+      final cuState = state;
+      if (cuState is LoggedIn) {
+        print("w");
+        emit(ProfilePageState(
+            loginModel: cuState.loginModel, userModel: cuState.userModel));
+      } else if (cuState is HomePageState) {
+        emit(ProfilePageState(
+            loginModel: cuState.loginModel, userModel: cuState.userModel));
+      } else if (cuState is ProfilePageState) {
+        emit(ProfilePageState(
+            loginModel: cuState.loginModel, userModel: cuState.userModel));
+      } else if (cuState is OptionPageState) {
+        emit(ProfilePageState(
+            loginModel: cuState.loginModel, userModel: cuState.userModel));
+      }
+    });
+
+    on<OptionPageEvent>((event, emit) async {
+      // emit(Loading());
+      Either<MainFailure, UserDetailsModel> result =
+          await LoginImp().getUserData();
+      UserDetailsModel userDetailsModel =
+          result.getOrElse(() => UserDetailsModel());
+
+      Either<MainFailure, ItemGetConfig> result1 =
+          await LoginImp().getItemConfig();
+      ItemGetConfig itemGetConfig = result1.getOrElse(() => ItemGetConfig());
+
+      Either<MainFailure, GetitemsModel> items = await LoginImp().getItems();
+      GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
+
+      String barcode1 = genBarcode(itemGetConfig);
+      String barcode2 = genBarcode2(itemGetConfig);
+      final cuState = state;
+      if (cuState is LoggedIn) {
+        emit(OptionPageState(
+            loginModel: cuState.loginModel,
+            userModel: cuState.userModel,
+            barCode1: barcode1,
+            barCode2: barcode2,
+            getItems: getItems,
+            itemGetConfig: itemGetConfig));
+      } else if (cuState is HomePageState) {
+        emit(OptionPageState(
+            loginModel: cuState.loginModel,
+            userModel: cuState.userModel,
+            barCode1: barcode1,
+            barCode2: barcode2,
+            getItems: getItems,
+            itemGetConfig: itemGetConfig));
+      } else if (cuState is ProfilePageState) {
+        emit(OptionPageState(
+            loginModel: cuState.loginModel,
+            userModel: cuState.userModel,
+            barCode1: barcode1,
+            barCode2: barcode2,
+            getItems: getItems,
+            itemGetConfig: itemGetConfig));
+      } else if (cuState is OptionPageState) {
+        emit(OptionPageState(
+            loginModel: cuState.loginModel,
+            userModel: cuState.userModel,
+            barCode1: barcode1,
+            barCode2: barcode2,
+            getItems: getItems,
+            itemGetConfig: itemGetConfig));
+      }
+    });
+    on<GetNewItemsEvent>((event, emit) async {
+      final cuState = state;
+
+      String? pageNumber = event.pageNumber.toString();
+
+      final url = Uri.parse("${ApiEndPoint.getItems}?page=$pageNumber");
+      final headers = {'Content-Type': 'application/json'};
+      final response = await http.get(
+        url,
+        headers: headers,
+      );
+      print(response.body);
+      //  log(response.data.toString());
+      var jsonResponse = jsonDecode(response.body);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final result = GetitemsModel.fromJson(jsonResponse);
+        // log(response.body);
+        if (cuState is OptionPageState) {
+          emit(OptionPageState(
+              loginModel: cuState.loginModel,
+              userModel: cuState.userModel,
+              barCode1: cuState.barCode1,
+              barCode2: cuState.barCode2,
+              getItems: result,
+              itemGetConfig: cuState.itemGetConfig));
+        }
+      }
+
+      // if (cuState is LoggedIn) {
+      //   print("w");
+      //   emit(ProfilePageState(
+      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
+      // } else if (cuState is HomePageState) {
+      //   emit(ProfilePageState(
+      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
+      // } else if (cuState is ProfilePageState) {
+      //   emit(ProfilePageState(
+      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
+      // } else if (cuState is OptionPageState) {
+      //   emit(ProfilePageState(
+      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
+      // }
+    });
+
+    on<NextBarCodeEvent>((event, emit) async {
+      final cuState = state;
+      try {
+        final url = Uri.parse(ApiEndPoint.getNextItem);
+        final headers = {'Content-Type': 'application/json'};
+        final body = jsonEncode(
+            {"barcode": event.barcode, "selectrow": event.selectedThrow});
+
+        final response = await http.post(url, headers: headers, body: body);
+
+        //  log(response.data.toString());
+        var jsonResponse = jsonDecode(response.body);
+        ItemMasterControllers.barCodeController2.text = jsonResponse["barcode"];
+        print(jsonResponse["barcode"]);
+        if (cuState is OptionPageState) {
+          emit(OptionPageState(
+              loginModel: cuState.loginModel,
+              userModel: cuState.userModel,
+              barCode1: cuState.barCode1,
+              barCode2: cuState.barCode2,
+              getItems: cuState.getItems,
+              itemGetConfig: cuState.itemGetConfig));
+        }
+      } catch (_) {
+        ItemMasterControllers.barCodeController2.text = '4321';
+        if (cuState is OptionPageState) {
+          emit(OptionPageState(
+              loginModel: cuState.loginModel,
+              userModel: cuState.userModel,
+              barCode1: cuState.barCode1,
+              barCode2: cuState.barCode2,
+              getItems: cuState.getItems,
+              itemGetConfig: cuState.itemGetConfig));
+        }
+      }
+      // if (cuState is LoggedIn) {
+      //   print("w");
+      //   emit(ProfilePageState(
+      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
+      // } else if (cuState is HomePageState) {
+      //   emit(ProfilePageState(
+      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
+      // } else if (cuState is ProfilePageState) {
+      //   emit(ProfilePageState(
+      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
+      // } else if (cuState is OptionPageState) {
+      //   emit(ProfilePageState(
+      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
+      // }
     });
   }
 }

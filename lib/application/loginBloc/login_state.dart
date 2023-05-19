@@ -32,9 +32,45 @@ class LoggedIn extends LoginState {
       this.getItems});
 }
 
-class ScrolledState extends LoginState {
-  GetitemsModel? getItems;
-  ScrolledState({this.getItems});
-}
+// class ScrolledState extends LoginState {
+//   GetitemsModel? getItems;
+//   ScrolledState({this.getItems});
+// }
 
 class LoggedOut extends LoginState {}
+
+class HomePageState extends LoginState {
+  LoginModel? loginModel;
+  UserDetailsModel? userModel;
+
+  HomePageState({
+    this.userModel,
+    this.loginModel,
+  });
+}
+
+class ProfilePageState extends LoginState {
+  LoginModel? loginModel;
+  UserDetailsModel? userModel;
+
+  ProfilePageState({
+    this.userModel,
+    this.loginModel,
+  });
+}
+
+class OptionPageState extends LoginState {
+  LoginModel? loginModel;
+  UserDetailsModel? userModel;
+  ItemGetConfig? itemGetConfig;
+  String? barCode1;
+  String? barCode2;
+  GetitemsModel? getItems;
+  OptionPageState(
+      {this.userModel,
+      this.loginModel,
+      this.itemGetConfig,
+      this.barCode1,
+      this.barCode2,
+      this.getItems});
+}

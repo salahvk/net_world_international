@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:net_world_international/domain/item_get_config/item_get_config/item_get_config.dart';
 
 String genBarcode(ItemGetConfig itemGetConfig) {
@@ -9,13 +11,16 @@ String genBarcode(ItemGetConfig itemGetConfig) {
 
   if (itemGetConfig.acCompanyData != null) {
     String? barcodeStartChar = itemGetConfig.acCompanyData?[0].barcodeStartChar;
-    if (itemGetConfig.lastbarcode!.length >= 8) {
+    print(itemGetConfig.lastbarcode?[0].length);
+    if (itemGetConfig.lastbarcode![0].length >= 8) {
       String? barcode1last = itemGetConfig.lastbarcode?[0];
       String last8Digits = barcode1last!.substring(barcode1last.length - 8);
+      print("object");
       int? secondLast = int.parse(last8Digits) + 2001;
       barcode1 = "$barcodeStartChar$threeZero$secondLast";
     } else {
       String? secondLast = '00002001';
+      const Int64();
       barcode1 = "$barcodeStartChar$threeZero$secondLast";
     }
   } else {

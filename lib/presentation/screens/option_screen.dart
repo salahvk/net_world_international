@@ -7,8 +7,22 @@ import 'package:net_world_international/core/styles_manager.dart';
 import 'package:net_world_international/domain/core/api_endPoint.dart';
 import 'package:net_world_international/presentation/screens/add_item_screen.dart';
 
-class OptionScreen extends StatelessWidget {
+class OptionScreen extends StatefulWidget {
   const OptionScreen({super.key});
+
+  @override
+  State<OptionScreen> createState() => _OptionScreenState();
+}
+
+class _OptionScreenState extends State<OptionScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<LoginBloc>(context).add(
+      OptionPageEvent(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +43,8 @@ class OptionScreen extends StatelessWidget {
                 children: [
                   BlocBuilder<LoginBloc, LoginState>(
                     builder: (context, state) {
-                      if (state is LoggedIn) {
+                      print("kooi");
+                      if (state is OptionPageState) {
                         return Padding(
                           padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
                           child: SizedBox(
@@ -97,8 +112,14 @@ class OptionScreen extends StatelessWidget {
                             ),
                           ),
                         );
+                      } else {
+                        const SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: CircularProgressIndicator(),
+                        );
                       }
-                      return Container();
+                      return const CircularProgressIndicator();
                     },
                   ),
                   Center(

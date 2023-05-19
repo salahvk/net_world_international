@@ -14,6 +14,7 @@ class EditProfileControllers {
 
 class ItemMasterControllers {
   static TextEditingController barCodeController = TextEditingController();
+  static TextEditingController barCodeController2 = TextEditingController();
   static TextEditingController nameController = TextEditingController();
   static TextEditingController shortNameController = TextEditingController();
   static TextEditingController arabicController = TextEditingController();

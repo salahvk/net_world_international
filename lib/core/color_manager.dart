@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Colormanager {
   static const primary = Color(0xff2C8CF4);
   static const secondary = Color(0xffBBDCFF);
-  static const teritiory = Color(0xffEFF7FF);
+  static const teritiory = Color.fromARGB(255, 224, 236, 248);
   static const background = Colors.white;
   static Color textColor = const Color(0xff000000);
   static Color mainTextColor = const Color(0xff000000).withOpacity(.62);

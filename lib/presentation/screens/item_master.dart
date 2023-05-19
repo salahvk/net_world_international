@@ -17,12 +17,22 @@ class ItemMasterScreen extends StatefulWidget {
 
 class _ItemMasterScreenState extends State<ItemMasterScreen> {
   int _selectedIndex = 2;
+  int _currentPage = 1;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   final List<Widget> _screens = [
     const HomeScreen(),
     const ProfileScreen(),
     const OptionScreen()
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<LoginBloc>(context).add(
+      OptionPageEvent(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -59,6 +69,11 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
           setState(() {
             _selectedIndex = index;
           });
+          if (index == 2) {
+            BlocProvider.of<LoginBloc>(context).add(
+              OptionPageEvent(),
+            );
+          }
         },
         letIndexChange: (index) => true,
       ),
@@ -90,63 +105,7 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                   Expanded(
                     child: BlocBuilder<LoginBloc, LoginState>(
                       builder: (context, state) {
-                        if (state is LoggedIn) {
-                          print("state");
-                          return ListView.builder(
-                            shrinkWrap: true,
-
-                            // physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (ctx, index) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: (index % 2) != 0
-                                        ? Colormanager.white
-                                        : Colormanager.teritiory),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        // "${index + 1}",
-                                        state.getItems?.items?[index].id
-                                                .toString() ??
-                                            '',
-                                        style: getRegularStyle(
-                                            color: Colors.black, fontSize: 10),
-                                      ),
-                                      Text(
-                                        state.getItems?.items?[index].name ??
-                                            '',
-                                        style: getRegularStyle(
-                                            color: Colors.black, fontSize: 10),
-                                      ),
-                                      Text(
-                                        state.getItems?.items?[index].costPrice
-                                                .toString() ??
-                                            '',
-                                        style: getRegularStyle(
-                                            color: Colors.black, fontSize: 10),
-                                      ),
-                                      Text(
-                                        state.getItems?.items?[index]
-                                                .sellingPrice
-                                                .toString() ??
-                                            '',
-                                        style: getRegularStyle(
-                                            color: Colors.black, fontSize: 10),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                            padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                            itemCount: state.getItems?.items?.length,
-                          );
-                        } else if (state is ScrolledState) {
+                        if (state is OptionPageState) {
                           print("state");
                           return ListView.builder(
                             shrinkWrap: true,
@@ -206,7 +165,44 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                         return Container();
                       },
                     ),
-                  )
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _currentPage >= 2
+                          ? InkWell(
+                              onTap: () {
+                                _currentPage--;
+                                setState(() {});
+                                print(_currentPage);
+                                BlocProvider.of<LoginBloc>(context).add(
+                                  GetNewItemsEvent(pageNumber: _currentPage),
+                                );
+                              },
+                              child: const SizedBox(
+                                  height: 30,
+                                  child: Icon(Icons.arrow_back_ios)),
+                            )
+                          : Container(),
+                      Text(
+                        _currentPage.toString(),
+                        style: getBoldStyle(
+                            color: Colormanager.primary, fontSize: 15),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          _currentPage++;
+                          setState(() {});
+                          print(_currentPage);
+                          BlocProvider.of<LoginBloc>(context).add(
+                            GetNewItemsEvent(pageNumber: _currentPage),
+                          );
+                        },
+                        child: const SizedBox(
+                            height: 30, child: Icon(Icons.arrow_forward_ios)),
+                      )
+                    ],
+                  ),
                 ],
               ),
             ),

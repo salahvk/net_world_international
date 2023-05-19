@@ -17,6 +17,14 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<LoginBloc>(context).add(
+      ProfilePageEvent(),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -48,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(),
               BlocBuilder<LoginBloc, LoginState>(
                 builder: (context, state) {
-                  if (state is LoggedIn) {
+                  if (state is ProfilePageState) {
                     return Row(
                       children: [
                         Container(
