@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
@@ -7,10 +8,12 @@ import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/util/barcode_gen.dart';
+import 'package:net_world_international/core/util/check_dep_name.dart';
 import 'package:net_world_international/domain/core/api_endPoint.dart';
 import 'package:net_world_international/domain/failures/main_failures.dart';
 import 'package:net_world_international/domain/get_items_model.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/item_get_config.dart';
+import 'package:net_world_international/domain/item_view_model.dart';
 import 'package:net_world_international/domain/login_model/login_model.dart';
 import 'package:net_world_international/domain/userDetails_model/user_details_model/user_details_model.dart';
 import 'package:net_world_international/infrastructure/login_api.dart';
@@ -191,10 +194,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       ItemGetConfig itemGetConfig = result1.getOrElse(() => ItemGetConfig());
 
       final cuState = state;
+      String barcode1 = genBarcode(itemGetConfig);
+      String barcode2 = genBarcode2(itemGetConfig);
+      print("New barcode event");
+      print(barcode1);
       if (cuState is LoggedIn) {
         emit(LoggedIn(
-            barCode1: cuState.barCode1,
-            barCode2: cuState.barCode2,
+            barCode1: barcode1,
+            barCode2: barcode2,
             getItems: cuState.getItems,
             itemGetConfig: itemGetConfig,
             loginModel: cuState.loginModel,
@@ -299,20 +306,27 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         url,
         headers: headers,
       );
-      print(response.body);
+
       //  log(response.data.toString());
       var jsonResponse = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = GetitemsModel.fromJson(jsonResponse);
-        // log(response.body);
+        bool isEmpty = false;
+
+        if (result.items!.isEmpty) {
+          isEmpty = true;
+        }
+
         if (cuState is OptionPageState) {
           emit(OptionPageState(
-              loginModel: cuState.loginModel,
-              userModel: cuState.userModel,
-              barCode1: cuState.barCode1,
-              barCode2: cuState.barCode2,
-              getItems: result,
-              itemGetConfig: cuState.itemGetConfig));
+            isEmpty: isEmpty,
+            loginModel: cuState.loginModel,
+            userModel: cuState.userModel,
+            barCode1: cuState.barCode1,
+            barCode2: cuState.barCode2,
+            getItems: result,
+            itemGetConfig: cuState.itemGetConfig,
+          ));
         }
       }
 
@@ -344,7 +358,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         //  log(response.data.toString());
         var jsonResponse = jsonDecode(response.body);
-        ItemMasterControllers.barCodeController2.text = jsonResponse["barcode"];
+        log(response.body);
+        final result = ItemViewById.fromJson(jsonResponse);
+        ItemMasterControllers.barCodeController2.text = result.barcode ?? '';
+        ItemMasterControllers.nameController.text = result.name ?? '';
+        ItemMasterControllers.shortNameController.text = result.shortName ?? '';
+        ItemMasterControllers.arabicController.text = result.arabicname ?? '';
+        ItemMasterControllers.rackNoController.text = result.rackNo ?? '';
+        // ItemMasterControllers.nameController.text = result.name ?? '';
+        // ItemMasterControllers.barCodeController2.text = result.barcode ?? '';
+        // ItemMasterControllers.nameController.text = result.name ?? '';
+        // ItemMasterControllers.barCodeController2.text = result.barcode ?? '';
+        // ItemMasterControllers.nameController.text = result.name ?? '';
+        // ItemMasterControllers.barCodeController2.text = result.barcode ?? '';
+        // ItemMasterControllers.nameController.text = result.name ?? '';
         print(jsonResponse["barcode"]);
         if (cuState is OptionPageState) {
           emit(OptionPageState(
@@ -367,20 +394,61 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               itemGetConfig: cuState.itemGetConfig));
         }
       }
-      // if (cuState is LoggedIn) {
-      //   print("w");
-      //   emit(ProfilePageState(
-      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
-      // } else if (cuState is HomePageState) {
-      //   emit(ProfilePageState(
-      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
-      // } else if (cuState is ProfilePageState) {
-      //   emit(ProfilePageState(
-      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
-      // } else if (cuState is OptionPageState) {
-      //   emit(ProfilePageState(
-      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
-      // }
+    });
+
+    on<ItemViewByIdEvent>((event, emit) async {
+      final cuState = state;
+      try {
+        final url = Uri.parse("${ApiEndPoint.getItemById}${event.id}");
+        final headers = {'Content-Type': 'application/json'};
+
+        final response = await http.get(
+          url,
+          headers: headers,
+        );
+
+        var jsonResponse = jsonDecode(response.body);
+        final result = ItemViewById.fromJson(jsonResponse);
+        log(response.body);
+
+        AlterUnitControllers.itemMasterCode.text = result.itemMasterCode ?? '';
+        ItemMasterCloneControllers.cnameController.text = result.name ?? '';
+        ItemMasterCloneControllers.carabicController.text =
+            result.arabicname ?? '';
+        ItemMasterCloneControllers.cbarCodeController.text =
+            result.barcode ?? '';
+        ItemMasterCloneControllers.crackNoController.text = result.rackNo ?? '';
+        ItemMasterCloneControllers.cshelfNoController.text =
+            result.shelfNo ?? '';
+        ItemMasterCloneControllers.ccostPriceController.text =
+            result.costPrice.toString();
+        ItemMasterCloneControllers.csellingPController.text =
+            result.sellingPrice.toString();
+        ItemMasterCloneControllers.ccostWithTaxController.text =
+            result.basePrice.toString();
+        if (cuState is OptionPageState) {
+          final departmentName = getDepNameById(
+              result.departmentId, cuState.itemGetConfig!.departmentList!);
+          ItemMasterCloneControllers.cdepartmentNameController.text =
+              departmentName;
+
+          final categoryName = getCategoryNameById(
+              result.categoryId, cuState.itemGetConfig!.categoryList!);
+          ItemMasterCloneControllers.ccategoryNameController.text =
+              categoryName;
+
+          final supplierName = getSupplierNameById(result.suppliercode ?? '',
+              cuState.itemGetConfig!.supplierMasterList!);
+          ItemMasterCloneControllers.csupplierNameController.text =
+              supplierName;
+
+          final taxName = getTaxNameById(
+              result.taxId ?? '', cuState.itemGetConfig!.taxList!);
+          ItemMasterCloneControllers.cdefTaxName.text = taxName;
+        }
+      } catch (e) {
+        print(e);
+      }
     });
   }
 }

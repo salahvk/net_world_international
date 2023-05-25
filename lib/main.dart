@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         debugShowCheckedModeBanner: false,
-        // home: const SplashScreen(),
+        // home: const ItemViewPage(),
         initialRoute: Routes.splashScreen,
         onGenerateRoute: RouteGenerator.getRoute,
       ),

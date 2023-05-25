@@ -32,6 +32,7 @@ class LoginImp implements LoginServices {
 
       //  log(response.data.toString());
       var jsonResponse = jsonDecode(response.body);
+      log(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = LoginModel.fromJson(jsonResponse);
         log(response.body);
@@ -156,7 +157,7 @@ class LoginImp implements LoginServices {
         "unitId": 0,
         "sellingPrice":
             num.parse(ItemMasterControllers.sellingPController.text),
-        "costPrice": int.parse(ItemMasterControllers.costPriceController.text),
+        "costPrice": num.parse(ItemMasterControllers.costPriceController.text),
         "barcode": barcode,
         "supplierItemCode": "d",
         "departmentId":
@@ -165,7 +166,14 @@ class LoginImp implements LoginServices {
             int.parse(ItemMasterControllers.categoryController.text),
         "secondCategoryid":
             int.parse(ItemMasterControllers.subCategoryController.text),
-        "nonStockItem": true,
+        "nonStockItem":
+            (ItemMasterControllers.nonStockController.text.toLowerCase() ==
+                'true'),
+        "counterStock":
+            (ItemMasterControllers.counterStockController.text.toLowerCase() ==
+                'true'),
+        "active": (ItemMasterControllers.activeController.text.toLowerCase() ==
+            'true'),
         "shelfNo": ItemMasterControllers.shelfNoController.text,
         "rackNo": ItemMasterControllers.rackNoController.text,
         "supplierCode": ItemMasterControllers.supplierCodeController.text,
@@ -176,9 +184,66 @@ class LoginImp implements LoginServices {
         "modUser": "d",
         "arabicname": ItemMasterControllers.arabicController.text,
         "remarks": ItemMasterControllers.remarksController.text,
-        "arabicBarcodeName": "d"
+        "arabicBarcodeName": "d",
+        "taxId": int.parse(ItemMasterCloneControllers.cdefTaxId.text),
+        "basePrice":
+            num.parse(ItemMasterControllers.costWithTaxController.text),
       });
+
+      print(body);
+
+      final response = await http.post(url, headers: headers, body: body);
+
+      //  log(response.data.toString());
+      var jsonResponse = jsonDecode(response.body);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final result = AddItems.fromJson(jsonResponse);
+        log(response.body);
+        return Right(result);
+      } else if (response.statusCode == 400) {
+        return const Left(MainFailure.serverFailure());
+      } else {
+        return const Left(MainFailure.serverFailure());
+      }
+    } on Error catch (e) {
+      log(e.toString());
+      if (e is http.ClientException) {
+        return const Left(MainFailure.clientFailure());
+      } else {
+        return const Left(MainFailure.serverFailure());
+      }
+    } catch (e) {
+      log(e.toString());
+      return const Left(MainFailure.clientFailure());
+    }
+  }
+
+  @override
+  Future<Either<MainFailure, AddItems>> addAlterBarCode() async {
+    try {
+      final url = Uri.parse(ApiEndPoint.addAlterItems);
+      final headers = {'Content-Type': 'application/json'};
+      String barcode;
+      // if (ItemMasterControllers.barCodeController2.text.isEmpty) {
+      //   barcode = ItemMasterControllers.barCodeController.text;
+      // } else {
+      //   barcode = ItemMasterControllers.barCodeController2.text;
+      // }
       print("s");
+      print(int.parse(AlterUnitControllers.itemMasterCode.text));
+      final body = jsonEncode({
+        "itemMasterId": int.parse(AlterUnitControllers.itemMasterCode.text),
+        "sellingPrice": ItemMasterCloneControllers.csellingPController.text,
+        "costPrice": ItemMasterCloneControllers.ccostPriceController.text,
+        "barcode": AlterUnitControllers.barcodeAlt.text,
+        // "weighingScaleItem": 1,
+        // "unitId": 1,
+        "contain": AlterUnitControllers.contain.text,
+        // "cCode": 123,
+        "altName": AlterUnitControllers.altName.text,
+        "pluno": AlterUnitControllers.pluno.text,
+        "refcode": AlterUnitControllers.refcode.text
+      });
 
       print(body);
       print("l");
@@ -190,7 +255,13 @@ class LoginImp implements LoginServices {
         final result = AddItems.fromJson(jsonResponse);
         log(response.body);
         return Right(result);
+      } else if (response.statusCode == 400) {
+        print(response.statusCode);
+        print(response.body);
+
+        return const Left(MainFailure.serverFailure());
       } else {
+        print(response.statusCode);
         return const Left(MainFailure.serverFailure());
       }
     } on Error catch (e) {

@@ -6,6 +6,7 @@ import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:circle_progress_bar/circle_progress_bar.dart';
 import 'package:net_world_international/domain/core/api_endPoint.dart';
+import 'package:net_world_international/presentation/widget/scale_up_animation.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -74,18 +75,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 30, right: 30),
-                                child: Container(
-                                  width: 60,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          "$endPoint/${state.userModel?.photoPath}"),
-                                      fit: BoxFit.cover,
+                              ScaleUpAnimation(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 30, right: 30),
+                                  child: Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                            "$endPoint/${state.userModel?.photoPath}"),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -93,20 +96,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               // const SizedBox(
                               //   width: 15,
                               // ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    state.userModel?.name ?? '',
-                                    style: getMediumtStyle(
-                                        color: Colors.white, fontSize: 15),
-                                  ),
-                                  Text(
-                                    "In publishing and graphic design,",
-                                    style: getLightStyle(
-                                        color: Colors.white, fontSize: 7),
-                                  ),
-                                ],
+                              ScaleUpAnimation(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      state.userModel?.name ?? '',
+                                      style: getMediumtStyle(
+                                          color: Colors.white, fontSize: 15),
+                                    ),
+                                    Text(
+                                      "In publishing and graphic design,",
+                                      style: getLightStyle(
+                                          color: Colors.white, fontSize: 7),
+                                    ),
+                                  ],
+                                ),
                               )
                             ],
                           ),

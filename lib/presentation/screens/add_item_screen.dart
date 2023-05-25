@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
+import 'package:net_world_international/core/routes_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:net_world_international/core/util/animated_snackBar.dart';
 import 'package:net_world_international/core/util/arabic_transileteration.dart';
@@ -31,11 +32,13 @@ class AddItemScreen extends StatefulWidget {
 class _AddItemScreenState extends State<AddItemScreen> {
   bool isActiceChecked = false;
   bool isNoneStockChecked = false;
-  bool isOutsideDeliveryChecked = false;
+  bool isCounterStockChecked = false;
   bool isBarCodeGen = false;
   bool isnextBarCode = false;
   bool isprevBarCode = false;
   bool onNextBarCode = false;
+  bool isSaved = false;
+  bool isprint = false;
   String? defCategory;
   String? secCategory;
   String? defDepartment;
@@ -67,13 +70,6 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-    //   BlocProvider.of<LoginBloc>(context).add(
-    //     OptionPageEvent(),
-    //   );
-    //   print("hi");
-    // });
-
     final size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
@@ -111,6 +107,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
             BlocProvider.of<LoginBloc>(context).add(
               OptionPageEvent(),
             );
+            Navigator.pop(context);
           }
         },
         letIndexChange: (index) => true,
@@ -149,16 +146,24 @@ class _AddItemScreenState extends State<AddItemScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: size.width * .9,
-                        child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (ctx) {
-                                return const ItemMasterScreen();
-                              }));
-                            },
-                            child: const Text("View Items")),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          SizedBox(
+                            width: size.width * .3,
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (ctx) {
+                                    return const ItemMasterScreen();
+                                  }));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colormanager.primary,
+                                ),
+                                child: const Text("View Items")),
+                          ),
+                        ],
                       ),
                       Text(
                         "Barcode",
@@ -472,6 +477,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                             child: SizedBox(
                               height: 50,
                               child: TextField(
+                                  keyboardType: TextInputType.none,
                                   controller:
                                       ItemMasterControllers.arabicController,
                                   decoration: const InputDecoration(
@@ -564,6 +570,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                           defDepartment = value?.name as String;
                                         });
                                         ItemMasterControllers
+                                            .departmentNameController
+                                            .text = defDepartment ?? '';
+                                        ItemMasterControllers
                                             .departmentController
                                             .text = value?.id.toString() ?? '';
                                       },
@@ -652,6 +661,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                         setState(() {
                                           defCategory = value?.name as String;
                                         });
+                                        ItemMasterControllers
+                                            .categoryNameController
+                                            .text = defCategory ?? '';
                                         ItemMasterControllers.categoryController
                                             .text = value?.id.toString() ?? '';
                                       },
@@ -742,6 +754,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                           secCategory = value?.name as String;
                                         });
                                         ItemMasterControllers
+                                            .subCategoryNameController
+                                            .text = secCategory ?? '';
+                                        ItemMasterControllers
                                             .subCategoryController
                                             .text = value?.id.toString() ?? '';
                                       },
@@ -831,6 +846,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                         setState(() {
                                           defSupplier = value?.name as String;
                                         });
+                                        ItemMasterControllers
+                                            .supplierNameController
+                                            .text = defSupplier ?? '';
                                         ItemMasterControllers.supplierController
                                             .text = value?.id.toString() ?? '';
                                         ItemMasterControllers.remarksController
@@ -850,7 +868,10 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                             .fromLTRB(
                                                         10, 15, 10, 15),
                                                     child: Text(
-                                                        defSupplier ?? '',
+                                                        defSupplier ??
+                                                            ItemMasterControllers
+                                                                .supplierNameController
+                                                                .text,
                                                         style: getRegularStyle(
                                                             color: Colormanager
                                                                 .textColor,
@@ -963,6 +984,19 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                         defTaxName = value
                                                             ?.taxName as String;
                                                         deftax = value;
+                                                        ItemMasterCloneControllers
+                                                            .cdefTaxRate
+                                                            .text = deftax
+                                                                ?.taxRate
+                                                                .toString() ??
+                                                            '';
+
+                                                        ItemMasterCloneControllers
+                                                            .cdefTaxId
+                                                            .text = deftax
+                                                                ?.taxId
+                                                                .toString() ??
+                                                            '';
                                                       });
                                                     },
 
@@ -1078,6 +1112,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                 controller:
                                                     ItemMasterControllers
                                                         .rackNoController,
+                                                keyboardType:
+                                                    TextInputType.number,
                                                 decoration:
                                                     const InputDecoration(
                                                   border: InputBorder.none,
@@ -1123,6 +1159,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             ),
                                           ),
                                           child: TextField(
+                                            keyboardType: TextInputType.number,
                                             controller: ItemMasterControllers
                                                 .shelfNoController,
                                             decoration: const InputDecoration(
@@ -1185,7 +1222,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                               }
                                               if (value.isEmpty) return;
 
-                                              int s = int.parse(value);
+                                              double s = double.parse(value);
                                               cwT = (s +
                                                   (s / 100 * deftax?.taxRate));
                                               ItemMasterControllers
@@ -1244,7 +1281,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                       (1 +
                                                           deftax?.taxRate /
                                                               100))
-                                                  .toString();
+                                                  .toStringAsFixed(2);
                                             },
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
@@ -1310,12 +1347,14 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                           .text);
                                                   final t = (l / 100 * s);
                                                   ItemMasterControllers
-                                                      .marginController
-                                                      .text = t.toString();
+                                                          .marginController
+                                                          .text =
+                                                      t.toStringAsFixed(2);
                                                   final k = l + t;
                                                   ItemMasterControllers
-                                                      .sellingPController
-                                                      .text = k.toString();
+                                                          .sellingPController
+                                                          .text =
+                                                      k.toStringAsFixed(2);
                                                   ItemMasterControllers
                                                       .sellingPriceWithTaxController
                                                       .text = (double.parse(
@@ -1323,9 +1362,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                                   .costWithTaxController
                                                                   .text) +
                                                           t)
-                                                      .toString();
-                                                  print(k);
-                                                  print(t);
+                                                      .toStringAsFixed(2);
                                                 },
                                                 decoration:
                                                     const InputDecoration(
@@ -1391,7 +1428,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                         .marginPerController
                                                         .text =
                                                     ((margin / cot) * 100)
-                                                        .toString();
+                                                        .toStringAsFixed(2);
 
                                                 //
                                                 double s = double.parse(
@@ -1408,8 +1445,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                 //     .text = t.toString();
                                                 final k = l + t;
                                                 ItemMasterControllers
-                                                    .sellingPController
-                                                    .text = k.toString();
+                                                        .sellingPController
+                                                        .text =
+                                                    k.toStringAsFixed(2);
                                                 ItemMasterControllers
                                                     .sellingPriceWithTaxController
                                                     .text = (double.parse(
@@ -1417,7 +1455,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                                 .costWithTaxController
                                                                 .text) +
                                                         t)
-                                                    .toString();
+                                                    .toStringAsFixed(2);
                                               },
                                               keyboardType:
                                                   TextInputType.number,
@@ -1544,8 +1582,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                 setState(() {
                                                   isActiceChecked = value;
                                                   isNoneStockChecked = false;
-                                                  isOutsideDeliveryChecked =
-                                                      false;
+                                                  isCounterStockChecked = false;
                                                 });
                                               },
                                             ),
@@ -1572,8 +1609,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                 setState(() {
                                                   isNoneStockChecked = value;
                                                   isActiceChecked = false;
-                                                  isOutsideDeliveryChecked =
-                                                      false;
+                                                  isCounterStockChecked = false;
                                                 });
                                               },
                                             ),
@@ -1595,11 +1631,10 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             padding:
                                                 const EdgeInsets.only(right: 3),
                                             child: CurvedCheckbox(
-                                              value: isOutsideDeliveryChecked,
+                                              value: isCounterStockChecked,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  isOutsideDeliveryChecked =
-                                                      value;
+                                                  isCounterStockChecked = value;
                                                   isActiceChecked = false;
                                                   isNoneStockChecked = false;
                                                 });
@@ -1607,7 +1642,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             ),
                                           ),
                                           Text(
-                                            "Outside Delivery",
+                                            "Counter Stock",
                                             style: getRegularStyle(
                                                 color: Colormanager.textColor,
                                                 fontSize: 10),
@@ -1623,25 +1658,31 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
-                                    child: InkWell(
-                                      onTap: saveItemMasterdata,
-                                      child: Container(
-                                        width: 70,
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colormanager.primary),
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: Colormanager.teritiory,
+                                    child: Material(
+                                      color: Colormanager.teritiory,
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: InkWell(
+                                        splashColor: Colormanager.primary,
+                                        borderRadius: BorderRadius.circular(5),
+                                        onTap: saveItemMasterdata,
+                                        child: Container(
+                                          width: 70,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            // border: Border.all(
+                                            //     color: Colormanager.primary),
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            // color: Colormanager.teritiory,
+                                          ),
+                                          child: Center(
+                                              child: Text(
+                                            "Save",
+                                            style: getRegularStyle(
+                                                color: Colormanager.primary,
+                                                fontSize: 10),
+                                          )),
                                         ),
-                                        child: Center(
-                                            child: Text(
-                                          "Save",
-                                          style: getRegularStyle(
-                                              color: Colormanager.primary,
-                                              fontSize: 10),
-                                        )),
                                       ),
                                     ),
                                   ),
@@ -1649,89 +1690,162 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                     width: 5,
                                   ),
                                   Expanded(
-                                    child: Container(
-                                      width: 70,
-                                      height: 30,
-                                      decoration: BoxDecoration(
+                                    child: Material(
+                                      color: Colormanager.teritiory,
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: InkWell(
+                                        splashColor: Colormanager.primary,
                                         borderRadius: BorderRadius.circular(5),
-                                        color: Colormanager.teritiory,
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        "Clone",
-                                        style: getRegularStyle(
-                                            color: Colormanager.primary,
-                                            fontSize: 10),
-                                      )),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        ItemMasterControllers
-                                            .cleanControllers();
-                                      },
-                                      child: Container(
-                                        width: 70,
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: Colormanager.teritiory,
+                                        onTap: () {
+                                          ItemMasterControllers
+                                              .cleanControllers();
+                                        },
+                                        child: Container(
+                                          width: 70,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          child: Center(
+                                              child: Text(
+                                            "Clear",
+                                            style: getRegularStyle(
+                                                color: Colormanager.primary,
+                                                fontSize: 10),
+                                          )),
                                         ),
-                                        child: Center(
-                                            child: Text(
-                                          "Clear",
-                                          style: getRegularStyle(
-                                              color: Colormanager.primary,
-                                              fontSize: 10),
-                                        )),
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      width: 70,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Colormanager.teritiory,
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        "View",
-                                        style: getRegularStyle(
-                                            color: Colormanager.primary,
-                                            fontSize: 10),
-                                      )),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      width: 70,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Colormanager.teritiory,
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        "Print",
-                                        style: getRegularStyle(
-                                            color: Colormanager.primary,
-                                            fontSize: 10),
-                                      )),
-                                    ),
-                                  ),
+                                  isSaved
+                                      ? const SizedBox(
+                                          width: 5,
+                                        )
+                                      : Container(),
+                                  isSaved
+                                      ? BlocBuilder<LoginBloc, LoginState>(
+                                          builder: (context, state) {
+                                            if (state is OptionPageState) {
+                                              return Expanded(
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    ItemMasterCloneControllers
+                                                        .clone();
+
+                                                    setState(() {
+                                                      defSupplier =
+                                                          ItemMasterControllers
+                                                              .supplierNameController
+                                                              .text;
+                                                      defDepartment =
+                                                          ItemMasterControllers
+                                                              .departmentNameController
+                                                              .text;
+                                                      defCategory =
+                                                          ItemMasterControllers
+                                                              .categoryNameController
+                                                              .text;
+                                                      secCategory =
+                                                          ItemMasterControllers
+                                                              .subCategoryNameController
+                                                              .text;
+                                                      isBarCodeGen = true;
+                                                    });
+                                                    ItemMasterControllers
+                                                            .barCodeController
+                                                            .text =
+                                                        state.barCode1 ?? '';
+                                                  },
+                                                  child: Container(
+                                                    width: 70,
+                                                    height: 30,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: Colormanager
+                                                          .teritiory,
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Clone",
+                                                      style: getRegularStyle(
+                                                          color: Colormanager
+                                                              .primary,
+                                                          fontSize: 10),
+                                                    )),
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                            return Container();
+                                          },
+                                        )
+                                      : Container(),
+                                  isSaved
+                                      ? const SizedBox(
+                                          width: 5,
+                                        )
+                                      : Container(),
+                                  isSaved
+                                      ? Expanded(
+                                          child: InkWell(
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context, Routes.viewPage);
+                                            },
+                                            child: Container(
+                                              width: 70,
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: Colormanager.teritiory,
+                                              ),
+                                              child: Center(
+                                                  child: Text(
+                                                "View",
+                                                style: getRegularStyle(
+                                                    color: Colormanager.primary,
+                                                    fontSize: 10),
+                                              )),
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                                  isSaved
+                                      ? const SizedBox(
+                                          width: 5,
+                                        )
+                                      : Container(),
+                                  isSaved
+                                      ? Expanded(
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                isprint = !isprint;
+                                              });
+                                            },
+                                            child: Container(
+                                              width: 70,
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: Colormanager.teritiory,
+                                              ),
+                                              child: Center(
+                                                  child: Text(
+                                                "Print",
+                                                style: getRegularStyle(
+                                                    color: Colormanager.primary,
+                                                    fontSize: 10),
+                                              )),
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
                                 ],
                               ),
                             ],
@@ -1741,368 +1855,347 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        // width: size.width * .8,
-                        // height: size.height * .7,
-                        decoration: BoxDecoration(
-                          color: Colormanager.background,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 3,
-                              blurRadius: 3,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                          border: Border.all(
-                            width: 1,
-                            color: Colors.grey.withOpacity(0.1),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
+                      isprint
+                          ? Container(
+                              // width: size.width * .8,
+                              // height: size.height * .7,
+                              decoration: BoxDecoration(
+                                color: Colormanager.background,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 3,
+                                    blurRadius: 3,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                                border: Border.all(
+                                  width: 1,
+                                  color: Colors.grey.withOpacity(0.1),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(
                                       children: [
-                                        Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "Name",
-                                                  style: getRegularStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            SizedBox(
-                                              height: 40,
-                                              // width: size.width * .35,
-                                              child: TextField(
-                                                  decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.5),
-                                                  borderSide: const BorderSide(
-                                                    color: Colors.red,
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "Name",
+                                                        style: getRegularStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 10),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ),
-                                                enabledBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color:
-                                                          Colormanager.primary),
-                                                ),
-                                                focusedBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color.fromARGB(
-                                                          255, 2, 76, 136)),
-                                                ),
-                                              )),
-                                            ),
-                                          ],
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 40,
+                                                    // width: size.width * .35,
+                                                    child: TextField(
+                                                        decoration:
+                                                            InputDecoration(
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(4.5),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                      enabledBorder:
+                                                          const OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: Colormanager
+                                                                .primary),
+                                                      ),
+                                                      focusedBorder:
+                                                          const OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    2,
+                                                                    76,
+                                                                    136)),
+                                                      ),
+                                                    )),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "Barcode",
-                                    style: getRegularStyle(
-                                        color: Colors.black, fontSize: 10),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              SizedBox(
-                                height: 40,
-                                // width: size.width * .35,
-                                child: TextField(
-                                    decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(4.5),
-                                    borderSide: const BorderSide(
-                                      color: Colors.red,
+                                    const SizedBox(
+                                      height: 20,
                                     ),
-                                  ),
-                                  enabledBorder: const OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colormanager.primary),
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color.fromARGB(255, 2, 76, 136)),
-                                  ),
-                                )),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              BlocBuilder<LoginBloc, LoginState>(
-                                builder: (context, state) {
-                                  if (state is OptionPageState) {
-                                    return BarcodeWidget(
-                                      barcode: Barcode.code128(),
-                                      data: state.barCode2 ?? '',
-                                      // width: 100,
-                                      height: 100,
-                                    );
-                                  }
-                                  return Container();
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
+                                    Row(
                                       children: [
-                                        Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "Price",
-                                                  style: getRegularStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            SizedBox(
-                                              height: 40,
-                                              width: size.width * .35,
-                                              child: TextField(
-                                                  decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.5),
-                                                  borderSide: const BorderSide(
-                                                    color: Colors.red,
-                                                  ),
-                                                ),
-                                                enabledBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color:
-                                                          Colormanager.primary),
-                                                ),
-                                                focusedBorder:
-                                                    const OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color.fromARGB(
-                                                          255, 2, 76, 136)),
-                                                ),
-                                              )),
-                                            ),
-                                          ],
+                                        Text(
+                                          "Barcode",
+                                          style: getRegularStyle(
+                                              color: Colors.black,
+                                              fontSize: 10),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    SizedBox(
+                                      height: 40,
+                                      // width: size.width * .35,
+                                      child: TextField(
+                                          decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(4.5),
+                                          borderSide: const BorderSide(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                        enabledBorder: const OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colormanager.primary),
+                                        ),
+                                        focusedBorder: const OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color.fromARGB(
+                                                  255, 2, 76, 136)),
+                                        ),
+                                      )),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    BlocBuilder<LoginBloc, LoginState>(
+                                      builder: (context, state) {
+                                        if (state is OptionPageState) {
+                                          return BarcodeWidget(
+                                            barcode: Barcode.code128(),
+                                            data: state.barCode2 ?? '',
+                                            // width: 100,
+                                            height: 100,
+                                          );
+                                        }
+                                        return Container();
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
                                       children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Price Quantity",
-                                              style: getRegularStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "Price",
+                                                        style: getRegularStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 10),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 40,
+                                                    width: size.width * .35,
+                                                    child: TextField(
+                                                        decoration:
+                                                            InputDecoration(
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(4.5),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                      enabledBorder:
+                                                          const OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: Colormanager
+                                                                .primary),
+                                                      ),
+                                                      focusedBorder:
+                                                          const OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    2,
+                                                                    76,
+                                                                    136)),
+                                                      ),
+                                                    )),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         const SizedBox(
-                                          height: 5,
+                                          width: 10,
                                         ),
-                                        SizedBox(
-                                          height: 40,
-                                          width: size.width * .35,
-                                          child: TextField(
-                                              decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(4.5),
-                                              borderSide: const BorderSide(
-                                                color: Colors.red,
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Price Quantity",
+                                                    style: getRegularStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 10),
+                                                  ),
+                                                ],
                                               ),
-                                            ),
-                                            enabledBorder:
-                                                const OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colormanager.primary),
-                                            ),
-                                            focusedBorder:
-                                                const OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Color.fromARGB(
-                                                      255, 2, 76, 136)),
-                                            ),
-                                          )),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              SizedBox(
+                                                height: 40,
+                                                width: size.width * .35,
+                                                child: TextField(
+                                                    decoration: InputDecoration(
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4.5),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                  enabledBorder:
+                                                      const OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colormanager
+                                                            .primary),
+                                                  ),
+                                                  focusedBorder:
+                                                      const OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Color.fromARGB(
+                                                            255, 2, 76, 136)),
+                                                  ),
+                                                )),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              // Padding(
-                              //   padding:
-                              //       const EdgeInsets.only(top: 10, bottom: 10),
-                              //   child: Row(
-                              //     mainAxisAlignment:
-                              //         MainAxisAlignment.spaceBetween,
-                              //     children: [
-                              //       Row(
-                              //         children: [
-                              //           Text(
-                              //             "Active",
-                              //             style: getRegularStyle(
-                              //                 color: Colormanager.textColor,
-                              //                 fontSize: 10),
-                              //           ),
-                              //         ],
-                              //       ),
-                              //       Padding(
-                              //         padding: const EdgeInsets.only(right: 3),
-                              //         child: Row(
-                              //           children: [
-                              //             Text(
-                              //               "None Stock ",
-                              //               style: getRegularStyle(
-                              //                   color: Colormanager.textColor,
-                              //                   fontSize: 10),
-                              //             ),
-                              //           ],
-                              //         ),
-                              //       ),
-                              //       Padding(
-                              //         padding: const EdgeInsets.only(right: 3),
-                              //         child: Row(
-                              //           children: [
-                              //             Text(
-                              //               "Outside Delivery",
-                              //               style: getRegularStyle(
-                              //                   color: Colormanager.textColor,
-                              //                   fontSize: 10),
-                              //             ),
-                              //           ],
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      width: 70,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Colormanager.teritiory,
-                                        border: Border.all(
-                                            color: Colormanager.primary),
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        "Item Print",
-                                        style: getRegularStyle(
-                                            color: Colormanager.primary,
-                                            fontSize: 10),
-                                      )),
+                                    const SizedBox(
+                                      height: 20,
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      width: 70,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: Border.all(
-                                            color: Colormanager.primary),
-                                        color: Colormanager.teritiory,
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        "Shelf Print",
-                                        style: getRegularStyle(
-                                            color: Colormanager.primary,
-                                            fontSize: 10),
-                                      )),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            width: 70,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              color: Colormanager.teritiory,
+                                              border: Border.all(
+                                                  color: Colormanager.primary),
+                                            ),
+                                            child: Center(
+                                                child: Text(
+                                              "Item Print",
+                                              style: getRegularStyle(
+                                                  color: Colormanager.primary,
+                                                  fontSize: 10),
+                                            )),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            width: 70,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              border: Border.all(
+                                                  color: Colormanager.primary),
+                                              color: Colormanager.teritiory,
+                                            ),
+                                            child: Center(
+                                                child: Text(
+                                              "Shelf Print",
+                                              style: getRegularStyle(
+                                                  color: Colormanager.primary,
+                                                  fontSize: 10),
+                                            )),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            width: 70,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              border: Border.all(
+                                                  color: Colormanager.primary),
+                                              color: Colormanager.teritiory,
+                                            ),
+                                            child: Center(
+                                                child: Text(
+                                              "Jewellery",
+                                              style: getRegularStyle(
+                                                  color: Colormanager.primary,
+                                                  fontSize: 10),
+                                            )),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      width: 70,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: Border.all(
-                                            color: Colormanager.primary),
-                                        color: Colormanager.teritiory,
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        "Jewellery",
-                                        style: getRegularStyle(
-                                            color: Colormanager.primary,
-                                            fontSize: 10),
-                                      )),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
+                            )
+                          : Container(),
                       const SizedBox(
                         height: 20,
                       ),
@@ -2138,18 +2231,35 @@ class _AddItemScreenState extends State<AddItemScreen> {
     } else if (ItemMasterControllers.sellingPController.text.isEmpty) {
       showAnimatedSnackBar(context, "Selling Price is Mandatory");
     } else {
+      ItemMasterControllers.activeController.text = isActiceChecked.toString();
+      ItemMasterControllers.nonStockController.text =
+          isNoneStockChecked.toString();
+      ItemMasterControllers.counterStockController.text =
+          isCounterStockChecked.toString();
       // ItemMasterControllers.barCodeController.text = barcode ?? '';
       // print(ItemMasterControllers.barCodeController.text);
       // return;
 
-      await LoginImp().addToItemMaster();
-      BlocProvider.of<LoginBloc>(context).add(
-        OptionPageEvent(),
-      );
-      ItemMasterControllers.cleanControllers();
+      final s = await LoginImp().addToItemMaster();
 
-      setState(() {
-        showSuccessAnimatedSnackBar(context, "Item Master Saved");
+      s.fold((falure) {
+        return setState(() {
+          showAnimatedSnackBar(context, "Barcode Already Exists");
+        });
+      }, (success) {
+        BlocProvider.of<LoginBloc>(context).add(
+          OptionPageEvent(),
+        );
+        ItemMasterCloneControllers.save();
+
+        defSupplier = null;
+        defCategory = null;
+        secCategory = null;
+        defDepartment = null;
+        isSaved = true;
+        return setState(() {
+          showSuccessAnimatedSnackBar(context, "Item Master Saved");
+        });
       });
     }
   }

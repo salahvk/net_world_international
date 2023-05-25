@@ -17,4 +17,6 @@ abstract class LoginServices {
   Future<Either<MainFailure, GetitemsModel>> getItems();
 
   Future<Either<MainFailure, AddItems>> addToItemMaster();
+
+  Future<Either<MainFailure, AddItems>> addAlterBarCode();
 }

@@ -31,3 +31,8 @@ class NextBarCodeEvent extends LoginEvent {
   final String? barcode;
   NextBarCodeEvent({this.selectedThrow, this.barcode});
 }
+
+class ItemViewByIdEvent extends LoginEvent {
+  final String? id;
+  ItemViewByIdEvent({this.id});
+}

@@ -60,6 +60,7 @@ class ProfilePageState extends LoginState {
 }
 
 class OptionPageState extends LoginState {
+  bool? isEmpty;
   LoginModel? loginModel;
   UserDetailsModel? userModel;
   ItemGetConfig? itemGetConfig;
@@ -68,6 +69,7 @@ class OptionPageState extends LoginState {
   GetitemsModel? getItems;
   OptionPageState(
       {this.userModel,
+      this.isEmpty,
       this.loginModel,
       this.itemGetConfig,
       this.barCode1,

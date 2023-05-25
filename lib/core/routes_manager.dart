@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:net_world_international/presentation/screens/change_password.dart';
 import 'package:net_world_international/presentation/screens/edit_profile.dart';
 import 'package:net_world_international/presentation/screens/get_help.dart';
+import 'package:net_world_international/presentation/screens/item_view_page.dart';
 import 'package:net_world_international/presentation/screens/login_page.dart';
 import 'package:net_world_international/presentation/screens/main_screen.dart';
 import 'package:net_world_international/presentation/screens/make_payment.dart';
@@ -15,6 +16,7 @@ class Routes {
   static const String editProfile = '/editProfile';
   static const String changePassword = '/changePassword';
   static const String getHelp = '/getHelp';
+  static const String viewPage = '/viewPage';
 }
 
 class RouteGenerator {
@@ -34,6 +36,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const ChangePassword());
       case Routes.getHelp:
         return MaterialPageRoute(builder: (_) => const GetHelpScreen());
+      case Routes.viewPage:
+        return MaterialPageRoute(builder: (_) => const ItemViewPage());
       default:
         return unDefinedRoute();
     }

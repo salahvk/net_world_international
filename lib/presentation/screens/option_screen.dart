@@ -6,6 +6,7 @@ import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:net_world_international/domain/core/api_endPoint.dart';
 import 'package:net_world_international/presentation/screens/add_item_screen.dart';
+import 'package:net_world_international/presentation/widget/scale_up_animation.dart';
 
 class OptionScreen extends StatefulWidget {
   const OptionScreen({super.key});
@@ -119,7 +120,13 @@ class _OptionScreenState extends State<OptionScreen> {
                           child: CircularProgressIndicator(),
                         );
                       }
-                      return const CircularProgressIndicator();
+                      return const Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: CircularProgressIndicator()),
+                      );
                     },
                   ),
                   Center(
@@ -145,26 +152,55 @@ class _OptionScreenState extends State<OptionScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (ctx) {
-                                return const AddItemScreen();
-                              }));
-                            },
+                          ScaleUpAnimation(
+                            child: Material(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(5),
+                              child: InkWell(
+                                splashColor: Colormanager.primary,
+                                borderRadius: BorderRadius.circular(5),
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (ctx) {
+                                    return const AddItemScreen();
+                                  }));
+                                },
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 20),
+                                      child: Image.asset(
+                                        'assets/icon_items.png',
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Item Master",
+                                      style: getLightStyle(
+                                          color: Colormanager.textColor,
+                                          fontSize: 15),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          ScaleUpAnimation(
                             child: Row(
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       left: 20, right: 20),
                                   child: Image.asset(
-                                    'assets/icon_items.png',
+                                    'assets/icon_ShoppingCart.png',
                                     width: 20,
                                     height: 20,
                                   ),
                                 ),
                                 Text(
-                                  "Item Master",
+                                  "Purchase",
                                   style: getLightStyle(
                                       color: Colormanager.textColor,
                                       fontSize: 15),
@@ -172,233 +208,236 @@ class _OptionScreenState extends State<OptionScreen> {
                               ],
                             ),
                           ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Image.asset(
-                                  'assets/icon_ShoppingCart.png',
-                                  width: 20,
-                                  height: 20,
+                          ScaleUpAnimation(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Image.asset(
+                                    IconImages.sales,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Purchase",
-                                style: getLightStyle(
-                                    color: Colormanager.textColor,
-                                    fontSize: 15),
-                              ),
-                            ],
+                                Text(
+                                  "Sales",
+                                  style: getLightStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Image.asset(
-                                  IconImages.sales,
-                                  width: 20,
-                                  height: 20,
+                          ScaleUpAnimation(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Image.asset(
+                                    IconImages.credit,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Sales",
-                                style: getLightStyle(
-                                    color: Colormanager.textColor,
-                                    fontSize: 15),
-                              ),
-                            ],
+                                Text(
+                                  "Debit Note",
+                                  style: getLightStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Image.asset(
-                                  IconImages.credit,
-                                  width: 20,
-                                  height: 20,
+                          ScaleUpAnimation(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Image.asset(
+                                    IconImages.credit,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Debit Note",
-                                style: getLightStyle(
-                                    color: Colormanager.textColor,
-                                    fontSize: 15),
-                              ),
-                            ],
+                                Text(
+                                  "Credit Note",
+                                  style: getLightStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Image.asset(
-                                  IconImages.credit,
-                                  width: 20,
-                                  height: 20,
+                          ScaleUpAnimation(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Image.asset(
+                                    IconImages.transfer,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Credit Note",
-                                style: getLightStyle(
-                                    color: Colormanager.textColor,
-                                    fontSize: 15),
-                              ),
-                            ],
+                                Text(
+                                  "Transfer",
+                                  style: getLightStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Image.asset(
-                                  IconImages.transfer,
-                                  width: 20,
-                                  height: 20,
+                          ScaleUpAnimation(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Image.asset(
+                                    IconImages.quote,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Transfer",
-                                style: getLightStyle(
-                                    color: Colormanager.textColor,
-                                    fontSize: 15),
-                              ),
-                            ],
+                                Text(
+                                  "Quotation",
+                                  style: getLightStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Image.asset(
-                                  IconImages.quote,
-                                  width: 20,
-                                  height: 20,
+                          ScaleUpAnimation(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Image.asset(
+                                    IconImages.marketLPO,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Quotation",
-                                style: getLightStyle(
-                                    color: Colormanager.textColor,
-                                    fontSize: 15),
-                              ),
-                            ],
+                                Text(
+                                  "Market Purchase LPO",
+                                  style: getLightStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Image.asset(
-                                  IconImages.marketLPO,
-                                  width: 20,
-                                  height: 20,
+                          ScaleUpAnimation(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Image.asset(
+                                    IconImages.stockUpdate,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Market Purchase LPO",
-                                style: getLightStyle(
-                                    color: Colormanager.textColor,
-                                    fontSize: 15),
-                              ),
-                            ],
+                                Text(
+                                  "Stock Update",
+                                  style: getLightStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Image.asset(
-                                  IconImages.stockUpdate,
-                                  width: 20,
-                                  height: 20,
+                          ScaleUpAnimation(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Image.asset(
+                                    IconImages.barcode,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Stock Update",
-                                style: getLightStyle(
-                                    color: Colormanager.textColor,
-                                    fontSize: 15),
-                              ),
-                            ],
+                                Text(
+                                  "Barcode",
+                                  style: getLightStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Image.asset(
-                                  IconImages.barcode,
-                                  width: 20,
-                                  height: 20,
+                          ScaleUpAnimation(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Image.asset(
+                                    IconImages.reports,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Barcode",
-                                style: getLightStyle(
-                                    color: Colormanager.textColor,
-                                    fontSize: 15),
-                              ),
-                            ],
+                                Text(
+                                  "Reports",
+                                  style: getLightStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Image.asset(
-                                  IconImages.reports,
-                                  width: 20,
-                                  height: 20,
+                          ScaleUpAnimation(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Image.asset(
+                                    IconImages.import,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Reports",
-                                style: getLightStyle(
-                                    color: Colormanager.textColor,
-                                    fontSize: 15),
-                              ),
-                            ],
+                                Text(
+                                  "Import Live DB",
+                                  style: getLightStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Image.asset(
-                                  IconImages.import,
-                                  width: 20,
-                                  height: 20,
+                          ScaleUpAnimation(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Image.asset(
+                                    IconImages.sync,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Import Live DB",
-                                style: getLightStyle(
-                                    color: Colormanager.textColor,
-                                    fontSize: 15),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Image.asset(
-                                  IconImages.sync,
-                                  width: 20,
-                                  height: 20,
+                                Text(
+                                  "Sync with Live DB",
+                                  style: getLightStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 15),
                                 ),
-                              ),
-                              Text(
-                                "Sync with Live DB",
-                                style: getLightStyle(
-                                    color: Colormanager.textColor,
-                                    fontSize: 15),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),
