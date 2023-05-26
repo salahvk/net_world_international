@@ -4,7 +4,7 @@ import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/asset_manager.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
-import 'package:net_world_international/domain/core/api_endPoint.dart';
+import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/presentation/screens/add_item_screen.dart';
 import 'package:net_world_international/presentation/widget/scale_up_animation.dart';
 
@@ -18,7 +18,6 @@ class OptionScreen extends StatefulWidget {
 class _OptionScreenState extends State<OptionScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<LoginBloc>(context).add(
       OptionPageEvent(),
@@ -44,7 +43,6 @@ class _OptionScreenState extends State<OptionScreen> {
                 children: [
                   BlocBuilder<LoginBloc, LoginState>(
                     builder: (context, state) {
-                      print("kooi");
                       if (state is OptionPageState) {
                         return Padding(
                           padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),

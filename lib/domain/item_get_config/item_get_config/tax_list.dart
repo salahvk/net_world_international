@@ -6,7 +6,7 @@ part 'tax_list.g.dart';
 class TaxList {
   int? taxId;
   String? taxName;
-  var taxRate;
+  dynamic taxRate;
   bool? defaltTax;
 
   TaxList({this.taxId, this.taxName, this.taxRate, this.defaltTax});

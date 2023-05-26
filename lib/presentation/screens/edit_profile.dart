@@ -5,7 +5,7 @@ import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/styles_manager.dart';
-import 'package:net_world_international/domain/core/api_endPoint.dart';
+import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/presentation/screens/home_screen.dart';
 import 'package:net_world_international/presentation/screens/option_screen.dart';
 import 'package:net_world_international/presentation/screens/profile_screen.dart';
@@ -28,7 +28,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   ];
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
@@ -107,7 +106,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                     .hasMatch(EditProfileControllers
                                         .emailIdController.text);
-                                print(emailValid);
+
                                 // if (EditProfileControllers
                                 //     .firstController.text.isNotEmpty) {
                                 //   BlocProvider.of<LoginBloc>(context).add(

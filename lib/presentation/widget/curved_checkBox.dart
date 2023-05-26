@@ -12,7 +12,7 @@ class CurvedCheckbox extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CurvedCheckboxState createState() => _CurvedCheckboxState();
+  State<CurvedCheckbox> createState() => _CurvedCheckboxState();
 }
 
 class _CurvedCheckboxState extends State<CurvedCheckbox> {
@@ -41,11 +41,6 @@ class _CurvedCheckboxState extends State<CurvedCheckbox> {
                   ? const SizedBox(
                       height: 15,
                       width: 15,
-                      // child: Icon(
-                      //   Icons.check,
-                      //   size: 12.0,
-                      //   color: Colors.white,
-                      // ),
                     )
                   : const SizedBox(
                       height: 15,

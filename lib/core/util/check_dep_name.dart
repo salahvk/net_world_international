@@ -1,5 +1,6 @@
 import 'package:net_world_international/domain/item_get_config/item_get_config/category_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/department_list.dart';
+import 'package:net_world_international/domain/item_get_config/item_get_config/second_category_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/supplier_master_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/tax_list.dart';
 
@@ -21,10 +22,23 @@ String getCategoryNameById(int id, List<CategoryList> categoryList) {
   return 'null';
 }
 
+String getSecondCategoryId(int id, List<SecondCategoryList> categoryList) {
+  for (var category in categoryList) {
+    if (category.id == id) {
+      return category.name ?? '';
+    }
+  }
+  return 'null';
+}
+
 String getSupplierNameById(String id, List<SupplierMasterList> supplierList) {
   for (var supplier in supplierList) {
-    if (supplier.code == id) {
-      return supplier.name ?? '';
+    try {
+      if (supplier.id == int.parse(id)) {
+        return supplier.name ?? '';
+      }
+    } catch (_) {
+      return 'null';
     }
   }
   return 'null';

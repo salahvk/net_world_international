@@ -69,7 +69,6 @@ class _MainScreenState extends State<MainScreen> {
           setState(() {
             _selectedIndex = index;
           });
-          print(index);
           if (index == 2) {
             BlocProvider.of<LoginBloc>(context).add(
               OptionPageEvent(),

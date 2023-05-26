@@ -5,6 +5,7 @@ import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/routes_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
+import 'package:net_world_international/infrastructure/item_imp.dart';
 import 'package:net_world_international/presentation/screens/home_screen.dart';
 import 'package:net_world_international/presentation/screens/option_screen.dart';
 import 'package:net_world_international/presentation/screens/profile_screen.dart';
@@ -27,7 +28,6 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
   ];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<LoginBloc>(context).add(
       OptionPageEvent(),
@@ -36,7 +36,6 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: CurvedNavigationBar(
@@ -130,10 +129,9 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                     child: BlocBuilder<LoginBloc, LoginState>(
                       builder: (context, state) {
                         if (state is OptionPageState) {
+                          final cuState = state;
                           return ListView.builder(
                             shrinkWrap: true,
-
-                            // physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (ctx, index) {
                               return Material(
                                 color: (index % 2) != 0
@@ -144,17 +142,16 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                                   splashColor: Colormanager.primary,
                                   borderRadius: BorderRadius.circular(5),
                                   onTap: () async {
-                                    BlocProvider.of<LoginBloc>(context).add(
-                                      ItemViewByIdEvent(
-                                          id: state.getItems?.items?[index].id
-                                              .toString()),
-                                    );
-
-                                    await Future.delayed(
-                                        const Duration(milliseconds: 500));
-
-                                    Navigator.pushNamed(
-                                        context, Routes.viewPage);
+                                    final s = await ItemImp(
+                                            itemId: state
+                                                .getItems?.items?[index].id
+                                                .toString(),
+                                            state: cuState)
+                                        .getItemById();
+                                    s.fold(
+                                        (falure) {},
+                                        (success) => Navigator.pushNamed(
+                                            context, Routes.viewPage));
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(

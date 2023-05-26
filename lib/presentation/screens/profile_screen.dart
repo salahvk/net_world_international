@@ -6,7 +6,7 @@ import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/routes_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
-import 'package:net_world_international/domain/core/api_endPoint.dart';
+import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/presentation/widget/diologue.dart';
 
 class ProfileScreen extends StatefulWidget {

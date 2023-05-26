@@ -4,12 +4,12 @@ part 'category_list.g.dart';
 
 @JsonSerializable()
 class CategoryList {
-  var id;
+  dynamic id;
   String? name;
   String? code;
   String? cKeys;
   @JsonKey(name: 'departmentID')
-  var departmentId;
+  dynamic departmentId;
 
   CategoryList({
     this.id,

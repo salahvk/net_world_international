@@ -34,7 +34,7 @@ packages:
     source: hosted
     version: "2.4.0"
   async:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: async
       sha256: bfe67ef28df125b7dddcea62755991f807aa39a2492a23e1550161692950bbe0
@@ -265,14 +265,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.10.1"
-  dio:
-    dependency: "direct main"
-    description:
-      name: dio
-      sha256: "0894a098594263fe1caaba3520e3016d8a855caeb010a882273189cca10f11e9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.1"
   dropdown_button2:
     dependency: "direct main"
     description:

@@ -5,7 +5,7 @@ import 'package:net_world_international/core/asset_manager.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/routes_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
-import 'package:net_world_international/domain/core/api_endPoint.dart';
+import 'package:net_world_international/domain/core/api_endpoint.dart';
 
 class UrlPage extends StatefulWidget {
   const UrlPage({super.key});
@@ -16,17 +16,11 @@ class UrlPage extends StatefulWidget {
 
 class _UrlPageState extends State<UrlPage> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  final TextEditingController _controller = TextEditingController();
-  final bool _hasError = true;
   void _saveForm() {
     final bool isValid = _formKey.currentState!.validate();
     if (isValid) {
       Hive.box("url").put('url_valid', "true");
-      // final apiToken = Hive.box("token").get('api_token');
-      // await Hive.openBox("token");
       Navigator.pushNamed(context, Routes.paymentScreen);
-
-      // And do something here
     }
   }
 

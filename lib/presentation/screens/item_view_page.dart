@@ -5,9 +5,9 @@ import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/styles_manager.dart';
-import 'package:net_world_international/core/util/animated_snackBar.dart';
-import 'package:net_world_international/infrastructure/login_api.dart';
-import 'package:net_world_international/presentation/widget/itemViewRow.dart';
+import 'package:net_world_international/core/util/animated_snackbar.dart';
+import 'package:net_world_international/infrastructure/add_item_imp.dart';
+import 'package:net_world_international/presentation/widget/itemview_row.dart';
 
 class ItemViewPage extends StatefulWidget {
   const ItemViewPage({super.key});
@@ -554,7 +554,6 @@ class _ItemViewPageState extends State<ItemViewPage> {
   }
 
   saveAlternateBarCode() async {
-    print(AlterUnitControllers.barcodeAlt.text);
     if (AlterUnitControllers.contain.text.isEmpty) {
       showAnimatedSnackBar(context, "Enter Contain");
     } else if (AlterUnitControllers.altName.text.isEmpty) {
@@ -564,11 +563,7 @@ class _ItemViewPageState extends State<ItemViewPage> {
     } else if (AlterUnitControllers.refcode.text.isEmpty) {
       showAnimatedSnackBar(context, "Enter Ref Code");
     } else {
-      // ItemMasterControllers.barCodeController.text = barcode ?? '';
-      // print(ItemMasterControllers.barCodeController.text);
-      // return;
-
-      final s = await LoginImp().addAlterBarCode();
+      final s = await AddItemImp().addAlterBarCode();
       s.fold(
           (falure) => setState(() {
                 showAnimatedSnackBar(context, "Barcode Already Exists");

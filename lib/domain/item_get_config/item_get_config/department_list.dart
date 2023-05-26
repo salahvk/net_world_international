@@ -4,14 +4,14 @@ part 'department_list.g.dart';
 
 @JsonSerializable()
 class DepartmentList {
-  var id;
+  dynamic id;
   String? name;
-  var purchaseAcCode;
-  var salesAcCode;
+  dynamic purchaseAcCode;
+  dynamic salesAcCode;
   String? code;
   String? arabicName;
-  var defaultmargin;
-  var showInCounterClose;
+  dynamic defaultmargin;
+  dynamic showInCounterClose;
   int? taxId;
 
   DepartmentList({

@@ -1,7 +1,7 @@
 class AddItems {
   bool? result;
   String? message;
-  var token;
+  dynamic token;
 
   AddItems({this.result, this.message, this.token});
 

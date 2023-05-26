@@ -5,7 +5,7 @@ import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:circle_progress_bar/circle_progress_bar.dart';
-import 'package:net_world_international/domain/core/api_endPoint.dart';
+import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/presentation/widget/scale_up_animation.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<LoginBloc>(context).add(
       HomePageEvent(),
@@ -69,7 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   BlocBuilder<LoginBloc, LoginState>(
                     builder: (context, state) {
                       if (state is HomePageState) {
-                        print("Home State Logged In");
                         return SizedBox(
                           height: 60,
                           child: Row(

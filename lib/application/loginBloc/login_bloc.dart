@@ -9,14 +9,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/util/barcode_gen.dart';
 import 'package:net_world_international/core/util/check_dep_name.dart';
-import 'package:net_world_international/domain/core/api_endPoint.dart';
+import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/domain/failures/main_failures.dart';
 import 'package:net_world_international/domain/get_items_model.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/item_get_config.dart';
 import 'package:net_world_international/domain/item_view_model.dart';
 import 'package:net_world_international/domain/login_model/login_model.dart';
 import 'package:net_world_international/domain/userDetails_model/user_details_model/user_details_model.dart';
-import 'package:net_world_international/infrastructure/login_api.dart';
+import 'package:net_world_international/infrastructure/item_imp.dart';
+import 'package:net_world_international/infrastructure/login_imp.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
 part 'login_event.dart';
@@ -39,15 +40,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         UserDetailsModel userModel =
             userData.getOrElse(() => UserDetailsModel());
 
-        Either<MainFailure, GetitemsModel> items = await LoginImp().getItems();
+        Either<MainFailure, GetitemsModel> items = await ItemImp().getItems();
         GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
-        print(getItems);
         if (loginModel.result?.message == 'Invalid user') {
           emit(Error());
         } else {
           Hive.box("token").put('api_token', loginModel.result?.token ?? '');
           Either<MainFailure, ItemGetConfig> result1 =
-              await LoginImp().getItemConfig();
+              await ItemImp().getItemConfig();
           ItemGetConfig itemGetConfig =
               result1.getOrElse(() => ItemGetConfig());
           String barcode1 = genBarcode(itemGetConfig);
@@ -93,8 +93,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         request.fields['userId'] = '1';
 
         request.files.add(multipartFile);
-        var response = await request.send();
-        print(response);
+        await request.send();
+
         Either<MainFailure, UserDetailsModel> userData =
             await LoginImp().getUserData();
         UserDetailsModel userModel = userData.fold(
@@ -106,7 +106,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           (model) => model,
         );
         Either<MainFailure, ItemGetConfig> result1 =
-            await LoginImp().getItemConfig();
+            await ItemImp().getItemConfig();
         ItemGetConfig itemGetConfig = result1.getOrElse(() => ItemGetConfig());
         String barcode1 = genBarcode(itemGetConfig);
         String barcode2 = genBarcode2(itemGetConfig);
@@ -127,11 +127,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         map['name'] = "$fName $lName";
         map['userId'] = '1';
 
-        http.Response response = await http.post(
+        await http.post(
           uri,
           body: map,
         );
-        print(response);
+
         Either<MainFailure, UserDetailsModel> userData =
             await LoginImp().getUserData();
         UserDetailsModel userModel = userData.fold(
@@ -143,7 +143,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           (model) => model,
         );
         Either<MainFailure, ItemGetConfig> result1 =
-            await LoginImp().getItemConfig();
+            await ItemImp().getItemConfig();
         ItemGetConfig itemGetConfig = result1.getOrElse(() => ItemGetConfig());
         String barcode1 = genBarcode(itemGetConfig);
         String barcode2 = genBarcode2(itemGetConfig);
@@ -157,6 +157,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<NavigateToHomeScreenEvent>((event, emit) async {
       try {
         emit(Loading());
+
         final apiToken = Hive.box("token").get('api_token');
         if (apiToken == null) {
           await Future.delayed(const Duration(seconds: 3));
@@ -168,12 +169,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               result.getOrElse(() => UserDetailsModel());
 
           Either<MainFailure, ItemGetConfig> result1 =
-              await LoginImp().getItemConfig();
+              await ItemImp().getItemConfig();
           ItemGetConfig itemGetConfig =
               result1.getOrElse(() => ItemGetConfig());
 
-          Either<MainFailure, GetitemsModel> items =
-              await LoginImp().getItems();
+          Either<MainFailure, GetitemsModel> items = await ItemImp().getItems();
           GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
 
           await Future.delayed(const Duration(seconds: 3));
@@ -190,14 +190,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     });
     on<AddToItemMasterEvent>((event, emit) async {
       Either<MainFailure, ItemGetConfig> result1 =
-          await LoginImp().getItemConfig();
+          await ItemImp().getItemConfig();
       ItemGetConfig itemGetConfig = result1.getOrElse(() => ItemGetConfig());
 
       final cuState = state;
       String barcode1 = genBarcode(itemGetConfig);
       String barcode2 = genBarcode2(itemGetConfig);
-      print("New barcode event");
-      print(barcode1);
+
       if (cuState is LoggedIn) {
         emit(LoggedIn(
             barCode1: barcode1,
@@ -229,7 +228,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<ProfilePageEvent>((event, emit) async {
       final cuState = state;
       if (cuState is LoggedIn) {
-        print("w");
         emit(ProfilePageState(
             loginModel: cuState.loginModel, userModel: cuState.userModel));
       } else if (cuState is HomePageState) {
@@ -245,17 +243,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     });
 
     on<OptionPageEvent>((event, emit) async {
-      // emit(Loading());
-      Either<MainFailure, UserDetailsModel> result =
-          await LoginImp().getUserData();
-      UserDetailsModel userDetailsModel =
-          result.getOrElse(() => UserDetailsModel());
-
       Either<MainFailure, ItemGetConfig> result1 =
-          await LoginImp().getItemConfig();
+          await ItemImp().getItemConfig();
       ItemGetConfig itemGetConfig = result1.getOrElse(() => ItemGetConfig());
 
-      Either<MainFailure, GetitemsModel> items = await LoginImp().getItems();
+      Either<MainFailure, GetitemsModel> items = await ItemImp().getItems();
       GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
 
       String barcode1 = genBarcode(itemGetConfig);
@@ -329,21 +321,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           ));
         }
       }
-
-      // if (cuState is LoggedIn) {
-      //   print("w");
-      //   emit(ProfilePageState(
-      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
-      // } else if (cuState is HomePageState) {
-      //   emit(ProfilePageState(
-      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
-      // } else if (cuState is ProfilePageState) {
-      //   emit(ProfilePageState(
-      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
-      // } else if (cuState is OptionPageState) {
-      //   emit(ProfilePageState(
-      //       loginModel: cuState.loginModel, userModel: cuState.userModel));
-      // }
     });
 
     on<NextBarCodeEvent>((event, emit) async {
@@ -356,7 +333,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         final response = await http.post(url, headers: headers, body: body);
 
-        //  log(response.data.toString());
         var jsonResponse = jsonDecode(response.body);
         log(response.body);
         final result = ItemViewById.fromJson(jsonResponse);
@@ -365,15 +341,46 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         ItemMasterControllers.shortNameController.text = result.shortName ?? '';
         ItemMasterControllers.arabicController.text = result.arabicname ?? '';
         ItemMasterControllers.rackNoController.text = result.rackNo ?? '';
-        // ItemMasterControllers.nameController.text = result.name ?? '';
-        // ItemMasterControllers.barCodeController2.text = result.barcode ?? '';
-        // ItemMasterControllers.nameController.text = result.name ?? '';
-        // ItemMasterControllers.barCodeController2.text = result.barcode ?? '';
-        // ItemMasterControllers.nameController.text = result.name ?? '';
-        // ItemMasterControllers.barCodeController2.text = result.barcode ?? '';
-        // ItemMasterControllers.nameController.text = result.name ?? '';
-        print(jsonResponse["barcode"]);
+        ItemMasterControllers.shelfNoController.text = result.shelfNo ?? '';
+        ItemMasterControllers.departmentController.text =
+            result.departmentId.toString();
+        ItemMasterControllers.categoryController.text =
+            result.categoryId.toString();
+        ItemMasterControllers.subCategoryController.text =
+            result.secondCategoryid.toString();
+        ItemMasterControllers.supplierController.text =
+            result.supplierItemCode.toString();
+        ItemMasterControllers.costPriceController.text =
+            result.costPrice.toString();
+        ItemMasterControllers.sellingPController.text =
+            result.sellingPrice.toString();
+        ItemMasterControllers.costWithTaxController.text =
+            result.basePrice.toString();
+        ItemMasterControllers.supplierController.text =
+            result.supplierItemCode ?? '';
+        ItemMasterControllers.supplierCodeController.text =
+            result.supplierItemCode ?? '';
+        ItemMasterControllers.itemId.text = result.id.toString();
+        ItemMasterCloneControllers.cdefTaxId.text = result.taxId.toString();
+
         if (cuState is OptionPageState) {
+          final departmentName = getDepNameById(
+              result.departmentId, cuState.itemGetConfig!.departmentList!);
+          ItemMasterControllers.departmentNameController.text = departmentName;
+
+          final categoryName = getCategoryNameById(
+              result.categoryId, cuState.itemGetConfig!.categoryList!);
+          ItemMasterControllers.categoryNameController.text = categoryName;
+
+          final subcategoryName = getSecondCategoryId(result.secondCategoryid,
+              cuState.itemGetConfig!.secondCategoryList!);
+          ItemMasterControllers.subCategoryNameController.text =
+              subcategoryName;
+
+          final supplierName = getSupplierNameById(
+              result.supplierItemCode ?? '',
+              cuState.itemGetConfig!.supplierMasterList!);
+          ItemMasterControllers.supplierNameController.text = supplierName;
           emit(OptionPageState(
               loginModel: cuState.loginModel,
               userModel: cuState.userModel,
@@ -382,7 +389,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               getItems: cuState.getItems,
               itemGetConfig: cuState.itemGetConfig));
         }
-      } catch (_) {
+      } catch (e) {
+        print(e);
         ItemMasterControllers.barCodeController2.text = '4321';
         if (cuState is OptionPageState) {
           emit(OptionPageState(
@@ -393,61 +401,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               getItems: cuState.getItems,
               itemGetConfig: cuState.itemGetConfig));
         }
-      }
-    });
-
-    on<ItemViewByIdEvent>((event, emit) async {
-      final cuState = state;
-      try {
-        final url = Uri.parse("${ApiEndPoint.getItemById}${event.id}");
-        final headers = {'Content-Type': 'application/json'};
-
-        final response = await http.get(
-          url,
-          headers: headers,
-        );
-
-        var jsonResponse = jsonDecode(response.body);
-        final result = ItemViewById.fromJson(jsonResponse);
-        log(response.body);
-
-        AlterUnitControllers.itemMasterCode.text = result.itemMasterCode ?? '';
-        ItemMasterCloneControllers.cnameController.text = result.name ?? '';
-        ItemMasterCloneControllers.carabicController.text =
-            result.arabicname ?? '';
-        ItemMasterCloneControllers.cbarCodeController.text =
-            result.barcode ?? '';
-        ItemMasterCloneControllers.crackNoController.text = result.rackNo ?? '';
-        ItemMasterCloneControllers.cshelfNoController.text =
-            result.shelfNo ?? '';
-        ItemMasterCloneControllers.ccostPriceController.text =
-            result.costPrice.toString();
-        ItemMasterCloneControllers.csellingPController.text =
-            result.sellingPrice.toString();
-        ItemMasterCloneControllers.ccostWithTaxController.text =
-            result.basePrice.toString();
-        if (cuState is OptionPageState) {
-          final departmentName = getDepNameById(
-              result.departmentId, cuState.itemGetConfig!.departmentList!);
-          ItemMasterCloneControllers.cdepartmentNameController.text =
-              departmentName;
-
-          final categoryName = getCategoryNameById(
-              result.categoryId, cuState.itemGetConfig!.categoryList!);
-          ItemMasterCloneControllers.ccategoryNameController.text =
-              categoryName;
-
-          final supplierName = getSupplierNameById(result.suppliercode ?? '',
-              cuState.itemGetConfig!.supplierMasterList!);
-          ItemMasterCloneControllers.csupplierNameController.text =
-              supplierName;
-
-          final taxName = getTaxNameById(
-              result.taxId ?? '', cuState.itemGetConfig!.taxList!);
-          ItemMasterCloneControllers.cdefTaxName.text = taxName;
-        }
-      } catch (e) {
-        print(e);
       }
     });
   }

@@ -7,19 +7,19 @@ import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/routes_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
-import 'package:net_world_international/core/util/animated_snackBar.dart';
+import 'package:net_world_international/core/util/animated_snackbar.dart';
 import 'package:net_world_international/core/util/arabic_transileteration.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/category_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/department_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/second_category_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/supplier_master_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/tax_list.dart';
-import 'package:net_world_international/infrastructure/login_api.dart';
+import 'package:net_world_international/infrastructure/add_item_imp.dart';
 import 'package:net_world_international/presentation/screens/home_screen.dart';
 import 'package:net_world_international/presentation/screens/item_master.dart';
 import 'package:net_world_international/presentation/screens/option_screen.dart';
 import 'package:net_world_international/presentation/screens/profile_screen.dart';
-import 'package:net_world_international/presentation/widget/curved_checkBox.dart';
+import 'package:net_world_international/presentation/widget/curved_checkbox.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 
 class AddItemScreen extends StatefulWidget {
@@ -39,16 +39,17 @@ class _AddItemScreenState extends State<AddItemScreen> {
   bool onNextBarCode = false;
   bool isSaved = false;
   bool isprint = false;
-  String? defCategory;
-  String? secCategory;
-  String? defDepartment;
-  String? defSupplier;
+  // String? defCategory;
+  // String? secCategory;
+  bool isNextVisible = false;
+  // String? defDepartment;
+  // String? defSupplier;
   String? defTaxName;
   String? barcode;
   String? nextBarcode;
   String? preBarcode;
   TaxList? deftax;
-  var cwT;
+  dynamic cwT;
   int _selectedIndex = 2;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   final List<Widget> _screens = [
@@ -58,14 +59,11 @@ class _AddItemScreenState extends State<AddItemScreen> {
   ];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     ItemMasterControllers.cleanControllers();
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
     BlocProvider.of<LoginBloc>(context).add(
       OptionPageEvent(),
     );
-    // });
   }
 
   @override
@@ -265,86 +263,125 @@ class _AddItemScreenState extends State<AddItemScreen> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 5, right: 5),
-                            child: Material(
-                              color: Colormanager.teritiory,
-                              borderRadius: BorderRadius.circular(5),
-                              child: InkWell(
-                                splashColor: Colormanager.primary,
-                                borderRadius: BorderRadius.circular(5),
-                                onTap: () async {
-                                  // await prevBarCode(ItemMasterControllers
-                                  //     .barCodeController.text);
-                                  ItemMasterControllers.barCodeController
-                                      .clear();
-                                  final barc = ItemMasterControllers
-                                          .barCodeController2.text.isNotEmpty
-                                      ? ItemMasterControllers
-                                          .barCodeController2.text
-                                      : '4321';
-                                  BlocProvider.of<LoginBloc>(context).add(
-                                    NextBarCodeEvent(
-                                        selectedThrow: 'previous',
-                                        barcode: barc),
-                                  );
-                                  setState(() {
-                                    isBarCodeGen = true;
-                                    onNextBarCode = true;
-                                  });
-                                },
-                                child: Container(
-                                  width: 40,
-                                  height: 50,
-                                  decoration: BoxDecoration(
+                            child: BlocBuilder<LoginBloc, LoginState>(
+                              builder: (context, state) {
+                                if (state is OptionPageState) {
+                                  return Material(
+                                    color: Colormanager.teritiory,
                                     borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: const Center(
-                                      child: Icon(Icons.arrow_back,
-                                          size: 22,
-                                          color: Colormanager.primary)),
-                                ),
-                              ),
+                                    child: InkWell(
+                                      splashColor: Colormanager.primary,
+                                      borderRadius: BorderRadius.circular(5),
+                                      onTap: () async {
+                                        // await prevBarCode(ItemMasterControllers
+                                        //     .barCodeController.text);
+                                        ItemMasterControllers.barCodeController
+                                            .clear();
+                                        final barc = ItemMasterControllers
+                                                .barCodeController2
+                                                .text
+                                                .isNotEmpty
+                                            ? ItemMasterControllers
+                                                .barCodeController2.text
+                                            : state.itemGetConfig
+                                                    ?.lastbarcode?[0] ??
+                                                '';
+                                        BlocProvider.of<LoginBloc>(context).add(
+                                          NextBarCodeEvent(
+                                              selectedThrow: 'previous',
+                                              barcode: barc),
+                                        );
+                                        setState(() {
+                                          isNextVisible = true;
+                                          isBarCodeGen = true;
+                                          onNextBarCode = true;
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 40,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: const Center(
+                                            child: Icon(Icons.arrow_back,
+                                                size: 22,
+                                                color: Colormanager.primary)),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return Container();
+                              },
                             ),
                           ),
-                          Material(
-                            color: Colormanager.teritiory,
-                            borderRadius: BorderRadius.circular(5),
-                            child: InkWell(
-                              splashColor: Colormanager.primary,
-                              borderRadius: BorderRadius.circular(5),
-                              onTap: () async {
-                                // await nextBarCode(
-                                ItemMasterControllers.barCodeController.clear();
-                                final barc = ItemMasterControllers
-                                        .barCodeController2.text.isNotEmpty
-                                    ? ItemMasterControllers
-                                        .barCodeController2.text
-                                    : '4321';
-                                // print(barc);
-                                BlocProvider.of<LoginBloc>(context).add(
-                                  NextBarCodeEvent(
-                                      selectedThrow: 'next', barcode: barc),
-                                );
-                                setState(() {
-                                  isBarCodeGen = true;
-                                  onNextBarCode = true;
-                                });
-                              },
-                              child: Container(
-                                width: 40,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  // color: Colormanager.teritiory,
-                                ),
-                                child: const Center(
-                                    child: Icon(
-                                  Icons.arrow_forward_rounded,
-                                  size: 22,
-                                  color: Colormanager.primary,
-                                )),
-                              ),
-                            ),
-                          )
+                          isNextVisible
+                              ? BlocBuilder<LoginBloc, LoginState>(
+                                  builder: (context, state) {
+                                    if (state is OptionPageState) {
+                                      return Material(
+                                        color: Colormanager.teritiory,
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: InkWell(
+                                          splashColor: Colormanager.primary,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          onTap: () async {
+                                            if (ItemMasterControllers
+                                                    .barCodeController2.text ==
+                                                state.itemGetConfig
+                                                    ?.lastbarcode?[0]) {
+                                              setState(() {
+                                                isNextVisible = false;
+                                              });
+                                              return;
+                                            }
+                                            // await nextBarCode(
+                                            ItemMasterControllers
+                                                .barCodeController
+                                                .clear();
+                                            final barc = ItemMasterControllers
+                                                    .barCodeController2
+                                                    .text
+                                                    .isNotEmpty
+                                                ? ItemMasterControllers
+                                                    .barCodeController2.text
+                                                : '4321';
+
+                                            BlocProvider.of<LoginBloc>(context)
+                                                .add(
+                                              NextBarCodeEvent(
+                                                  selectedThrow: 'next',
+                                                  barcode: barc),
+                                            );
+                                            setState(() {
+                                              isBarCodeGen = true;
+                                              onNextBarCode = true;
+                                            });
+                                          },
+                                          child: Container(
+                                            width: 40,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              // color: Colormanager.teritiory,
+                                            ),
+                                            child: const Center(
+                                                child: Icon(
+                                              Icons.arrow_forward_rounded,
+                                              size: 22,
+                                              color: Colormanager.primary,
+                                            )),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    return Container();
+                                  },
+                                )
+                              : Container()
                         ],
                       ),
                       BlocBuilder<LoginBloc, LoginState>(
@@ -355,8 +392,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                             //     .barCodeController.text.isEmpty) {
                             //   barcode = state.barCode1;
                             // }
-                            // print(ItemMasterControllers.barCodeController.text);
-                            // print("object");
+
                             return Column(
                               children: [
                                 const SizedBox(
@@ -564,20 +600,25 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                         fontSize: 15)),
                                               ))
                                           .toList(),
-                                      // value: defDepartment,
+
                                       onChanged: (value) {
                                         setState(() {
-                                          defDepartment = value?.name as String;
+                                          ItemMasterControllers
+                                              .departmentNameController
+                                              .text = value?.name as String;
                                         });
-                                        ItemMasterControllers
-                                            .departmentNameController
-                                            .text = defDepartment ?? '';
+                                        // ItemMasterControllers
+                                        //     .departmentNameController
+                                        //     .text = defDepartment ?? '';
                                         ItemMasterControllers
                                             .departmentController
                                             .text = value?.id.toString() ?? '';
                                       },
 
-                                      customButton: defDepartment == null
+                                      customButton: ItemMasterControllers
+                                              .departmentNameController
+                                              .text
+                                              .isEmpty
                                           ? null
                                           : Row(
                                               children: [
@@ -587,7 +628,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                             .fromLTRB(
                                                         10, 15, 10, 15),
                                                     child: Text(
-                                                        defDepartment ?? '',
+                                                        ItemMasterControllers
+                                                            .departmentNameController
+                                                            .text,
                                                         style: getRegularStyle(
                                                             color: Colormanager
                                                                 .textColor,
@@ -659,16 +702,21 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                       // value: defCategory,
                                       onChanged: (value) {
                                         setState(() {
-                                          defCategory = value?.name as String;
+                                          ItemMasterControllers
+                                              .categoryNameController
+                                              .text = value?.name as String;
                                         });
-                                        ItemMasterControllers
-                                            .categoryNameController
-                                            .text = defCategory ?? '';
+                                        // ItemMasterControllers
+                                        //     .categoryNameController
+                                        //     .text = defCategory ?? '';
                                         ItemMasterControllers.categoryController
                                             .text = value?.id.toString() ?? '';
                                       },
 
-                                      customButton: defCategory == null
+                                      customButton: ItemMasterControllers
+                                              .categoryNameController
+                                              .text
+                                              .isEmpty
                                           ? null
                                           : Row(
                                               children: [
@@ -678,7 +726,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                             .fromLTRB(
                                                         10, 15, 10, 15),
                                                     child: Text(
-                                                        defCategory ?? '',
+                                                        ItemMasterControllers
+                                                            .categoryNameController
+                                                            .text,
                                                         style: getRegularStyle(
                                                             color: Colormanager
                                                                 .textColor,
@@ -751,17 +801,22 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                       // value: secCategory,
                                       onChanged: (value) {
                                         setState(() {
-                                          secCategory = value?.name as String;
+                                          ItemMasterControllers
+                                              .subCategoryNameController
+                                              .text = value?.name as String;
                                         });
-                                        ItemMasterControllers
-                                            .subCategoryNameController
-                                            .text = secCategory ?? '';
+                                        // ItemMasterControllers
+                                        //     .subCategoryNameController
+                                        //     .text = secCategory ?? '';
                                         ItemMasterControllers
                                             .subCategoryController
                                             .text = value?.id.toString() ?? '';
                                       },
 
-                                      customButton: secCategory == null
+                                      customButton: ItemMasterControllers
+                                              .subCategoryNameController
+                                              .text
+                                              .isEmpty
                                           ? null
                                           : Row(
                                               children: [
@@ -771,7 +826,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                             .fromLTRB(
                                                         10, 15, 10, 15),
                                                     child: Text(
-                                                        secCategory ?? '',
+                                                        ItemMasterControllers
+                                                            .subCategoryNameController
+                                                            .text,
                                                         style: getRegularStyle(
                                                             color: Colormanager
                                                                 .textColor,
@@ -844,11 +901,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                       // value: defSupplier,
                                       onChanged: (value) {
                                         setState(() {
-                                          defSupplier = value?.name as String;
+                                          ItemMasterControllers
+                                              .supplierNameController
+                                              .text = value?.name as String;
                                         });
-                                        ItemMasterControllers
-                                            .supplierNameController
-                                            .text = defSupplier ?? '';
+                                        // ItemMasterControllers
+                                        //     .supplierNameController
+                                        //     .text = defSupplier ?? '';
                                         ItemMasterControllers.supplierController
                                             .text = value?.id.toString() ?? '';
                                         ItemMasterControllers.remarksController
@@ -858,7 +917,10 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             .text = value?.code ?? '';
                                       },
 
-                                      customButton: defSupplier == null
+                                      customButton: ItemMasterControllers
+                                              .supplierNameController
+                                              .text
+                                              .isEmpty
                                           ? null
                                           : Row(
                                               children: [
@@ -868,10 +930,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                             .fromLTRB(
                                                         10, 15, 10, 15),
                                                     child: Text(
-                                                        defSupplier ??
-                                                            ItemMasterControllers
-                                                                .supplierNameController
-                                                                .text,
+                                                        ItemMasterControllers
+                                                            .supplierNameController
+                                                            .text,
                                                         style: getRegularStyle(
                                                             color: Colormanager
                                                                 .textColor,
@@ -1664,7 +1725,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                       child: InkWell(
                                         splashColor: Colormanager.primary,
                                         borderRadius: BorderRadius.circular(5),
-                                        onTap: saveItemMasterdata,
+                                        onTap: () {
+                                          isNextVisible
+                                              ? updateItemMasterdata(
+                                                  ItemMasterControllers
+                                                      .itemId.text)
+                                              : saveItemMasterdata();
+                                        },
                                         child: Container(
                                           width: 70,
                                           height: 30,
@@ -1734,22 +1801,22 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                         .clone();
 
                                                     setState(() {
-                                                      defSupplier =
-                                                          ItemMasterControllers
-                                                              .supplierNameController
-                                                              .text;
-                                                      defDepartment =
-                                                          ItemMasterControllers
-                                                              .departmentNameController
-                                                              .text;
-                                                      defCategory =
-                                                          ItemMasterControllers
-                                                              .categoryNameController
-                                                              .text;
-                                                      secCategory =
-                                                          ItemMasterControllers
-                                                              .subCategoryNameController
-                                                              .text;
+                                                      // defSupplier =
+                                                      //     ItemMasterControllers
+                                                      //         .supplierNameController
+                                                      //         .text;
+                                                      // defDepartment =
+                                                      //     ItemMasterControllers
+                                                      //         .departmentNameController
+                                                      //         .text;
+                                                      // defCategory =
+                                                      //     ItemMasterControllers
+                                                      //         .categoryNameController
+                                                      //         .text;
+                                                      // secCategory =
+                                                      //     ItemMasterControllers
+                                                      //         .subCategoryNameController
+                                                      //         .text;
                                                       isBarCodeGen = true;
                                                     });
                                                     ItemMasterControllers
@@ -2212,7 +2279,6 @@ class _AddItemScreenState extends State<AddItemScreen> {
         ItemMasterControllers.barCodeController2.text.isEmpty) {
       showAnimatedSnackBar(context, "Generate a BarCode");
     } else if (ItemMasterControllers.nameController.text.isEmpty) {
-      print(ItemMasterControllers.barCodeController2.text);
       showAnimatedSnackBar(context, "Enter Your Name");
     } else if (ItemMasterControllers.shortNameController.text.isEmpty) {
       showAnimatedSnackBar(context, "Enter Your Short Name");
@@ -2237,10 +2303,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
       ItemMasterControllers.counterStockController.text =
           isCounterStockChecked.toString();
       // ItemMasterControllers.barCodeController.text = barcode ?? '';
-      // print(ItemMasterControllers.barCodeController.text);
       // return;
 
-      final s = await LoginImp().addToItemMaster();
+      final s = await AddItemImp().addToItemMaster();
 
       s.fold((falure) {
         return setState(() {
@@ -2252,13 +2317,68 @@ class _AddItemScreenState extends State<AddItemScreen> {
         );
         ItemMasterCloneControllers.save();
 
-        defSupplier = null;
-        defCategory = null;
-        secCategory = null;
-        defDepartment = null;
+        // defSupplier = null;
+        // defCategory = null;
+        // secCategory = null;
+        // defDepartment = null;
         isSaved = true;
         return setState(() {
           showSuccessAnimatedSnackBar(context, "Item Master Saved");
+        });
+      });
+    }
+  }
+
+  updateItemMasterdata(String id) async {
+    if (ItemMasterControllers.barCodeController.text.isEmpty &&
+        ItemMasterControllers.barCodeController2.text.isEmpty) {
+      showAnimatedSnackBar(context, "Generate a BarCode");
+    } else if (ItemMasterControllers.nameController.text.isEmpty) {
+      showAnimatedSnackBar(context, "Enter Your Name");
+    } else if (ItemMasterControllers.shortNameController.text.isEmpty) {
+      showAnimatedSnackBar(context, "Enter Your Short Name");
+    } else if (ItemMasterControllers.arabicController.text.isEmpty) {
+      showAnimatedSnackBar(context, "Generate Your Arabic Name");
+    } else if (ItemMasterControllers.departmentController.text.isEmpty) {
+      showAnimatedSnackBar(context, "Select a Department");
+    } else if (ItemMasterControllers.categoryController.text.isEmpty) {
+      showAnimatedSnackBar(context, "Select a Category");
+    } else if (ItemMasterControllers.subCategoryController.text.isEmpty) {
+      showAnimatedSnackBar(context, "Select a sub Category");
+    } else if (ItemMasterControllers.supplierCodeController.text.isEmpty) {
+      showAnimatedSnackBar(context, "Select a Supplier");
+    } else if (ItemMasterControllers.costPriceController.text.isEmpty) {
+      showAnimatedSnackBar(context, "Enter a Cost");
+    } else if (ItemMasterControllers.sellingPController.text.isEmpty) {
+      showAnimatedSnackBar(context, "Selling Price is Mandatory");
+    } else {
+      // ItemMasterControllers.activeController.text = isActiceChecked.toString();
+      // ItemMasterControllers.nonStockController.text =
+      //     isNoneStockChecked.toString();
+      // ItemMasterControllers.counterStockController.text =
+      //     isCounterStockChecked.toString();
+      // ItemMasterControllers.barCodeController.text = barcode ?? '';
+      // return;
+
+      final s = await AddItemImp(id: id).updateToItemMaster();
+
+      s.fold((falure) {
+        return setState(() {
+          showAnimatedSnackBar(context, "Something error");
+        });
+      }, (success) {
+        BlocProvider.of<LoginBloc>(context).add(
+          OptionPageEvent(),
+        );
+        ItemMasterCloneControllers.save();
+
+        // defSupplier = null;
+        // defCategory = null;
+        // secCategory = null;
+        // defDepartment = null;
+        isSaved = true;
+        return setState(() {
+          showSuccessAnimatedSnackBar(context, "Item Master Updated");
         });
       });
     }

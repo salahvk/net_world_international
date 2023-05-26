@@ -13,6 +13,7 @@ class EditProfileControllers {
 }
 
 class ItemMasterControllers {
+  static TextEditingController itemId = TextEditingController();
   static TextEditingController activeController = TextEditingController();
   static TextEditingController nonStockController = TextEditingController();
   static TextEditingController counterStockController = TextEditingController();
@@ -44,6 +45,13 @@ class ItemMasterControllers {
   static TextEditingController sellingPriceWithTaxController =
       TextEditingController();
   static cleanControllers() {
+    departmentNameController.clear();
+    supplierController.clear();
+    supplierNameController.clear();
+    supplierCodeController.clear();
+    categoryNameController.clear();
+    subCategoryNameController.clear();
+    departmentController.clear();
     nameController.clear();
     shortNameController.clear();
     arabicController.clear();
@@ -139,8 +147,6 @@ class ItemMasterCloneControllers {
     ItemMasterControllers.sellingPController.text = csellingPController.text;
     ItemMasterControllers.sellingPriceWithTaxController.text =
         csellingPriceWithTaxController.text;
-    print("cloned");
-    print(ItemMasterControllers.barCodeController.text);
   }
 
   static save() {

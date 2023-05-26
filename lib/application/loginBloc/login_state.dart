@@ -1,6 +1,5 @@
 part of 'login_bloc.dart';
 
-@immutable
 abstract class LoginState {}
 
 class Initial extends LoginState {}
@@ -8,13 +7,6 @@ class Initial extends LoginState {}
 class Loading extends LoginState {}
 
 class Error extends LoginState {}
-
-// class Loaded extends LoginState {
-//   LoginModel? loginModel;
-//   final UserDetailsModel userModel;
-
-//   Loaded({this.loginModel, required this.userModel});
-// }
 
 class LoggedIn extends LoginState {
   LoginModel? loginModel;
@@ -31,11 +23,6 @@ class LoggedIn extends LoginState {
       this.barCode2,
       this.getItems});
 }
-
-// class ScrolledState extends LoginState {
-//   GetitemsModel? getItems;
-//   ScrolledState({this.getItems});
-// }
 
 class LoggedOut extends LoginState {}
 
