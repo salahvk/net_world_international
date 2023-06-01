@@ -27,7 +27,7 @@ class AddItemImp implements AddItemServices {
         barcode = ItemMasterControllers.barCodeController2.text;
       }
       final body = jsonEncode({
-        "itemMasterCode": barcode,
+        "itemMasterCode": '',
         "name": ItemMasterControllers.nameController.text,
         "shortName": ItemMasterControllers.shortNameController.text,
         "categoryId": int.parse(ItemMasterControllers.categoryController.text),
@@ -43,14 +43,14 @@ class AddItemImp implements AddItemServices {
             int.parse(ItemMasterControllers.categoryController.text),
         "secondCategoryid":
             int.parse(ItemMasterControllers.subCategoryController.text),
-        "nonStockItem": false,
-        // (ItemMasterControllers.nonStockController.text.toLowerCase() ==
-        //     'true'),
-        "counterStock": false,
-        // (ItemMasterControllers.counterStockController.text.toLowerCase() ==
-        //     'true'),
-        // "active": (ItemMasterControllers.activeController.text.toLowerCase() ==
-        //     'true'),
+        "nonStockItem":
+            (ItemMasterControllers.nonStockController.text.toLowerCase() ==
+                'true'),
+        "counterStock":
+            (ItemMasterControllers.counterStockController.text.toLowerCase() ==
+                'true'),
+        "active": (ItemMasterControllers.activeController.text.toLowerCase() ==
+            'true'),
         "shelfNo": ItemMasterControllers.shelfNoController.text,
         "rackNo": ItemMasterControllers.rackNoController.text,
         "supplierCode": ItemMasterControllers.supplierCodeController.text,
@@ -120,7 +120,7 @@ class AddItemImp implements AddItemServices {
         barcode = ItemMasterControllers.barCodeController2.text;
       }
       final body = jsonEncode({
-        "itemMasterCode": barcode,
+        "itemMasterCode": '',
         "name": ItemMasterControllers.nameController.text,
         "shortName": ItemMasterControllers.shortNameController.text,
         "categoryId": int.parse(ItemMasterControllers.categoryController.text),
@@ -136,14 +136,14 @@ class AddItemImp implements AddItemServices {
             int.parse(ItemMasterControllers.categoryController.text),
         "secondCategoryid":
             int.parse(ItemMasterControllers.subCategoryController.text),
-        "nonStockItem": false,
-        // (ItemMasterControllers.nonStockController.text.toLowerCase() ==
-        //     'true'),
-        "counterStock": false,
-        // (ItemMasterControllers.counterStockController.text.toLowerCase() ==
-        //     'true'),
-        // "active": (ItemMasterControllers.activeController.text.toLowerCase() ==
-        //     'true'),
+        "nonStockItem":
+            (ItemMasterControllers.nonStockController.text.toLowerCase() ==
+                'true'),
+        "counterStock":
+            (ItemMasterControllers.counterStockController.text.toLowerCase() ==
+                'true'),
+        "active": (ItemMasterControllers.activeController.text.toLowerCase() ==
+            'true'),
         "shelfNo": ItemMasterControllers.shelfNoController.text,
         "rackNo": ItemMasterControllers.rackNoController.text,
         "supplierCode": ItemMasterControllers.supplierCodeController.text,
@@ -203,11 +203,13 @@ class AddItemImp implements AddItemServices {
 
   @override
   Future<Either<MainFailure, AddItems>> addAlterBarCode() async {
+    print(ItemMasterControllers.itemId.text);
     try {
       final url = Uri.parse(ApiEndPoint.addAlterItems);
       final headers = {'Content-Type': 'application/json'};
       final body = jsonEncode({
-        "itemMasterId": int.parse(AlterUnitControllers.itemMasterCode.text),
+        "itemMasterId": ItemMasterControllers.itemId.text,
+        // "itemMasterId": '',
         "sellingPrice": ItemMasterCloneControllers.csellingPController.text,
         "costPrice": ItemMasterCloneControllers.ccostPriceController.text,
         "barcode": AlterUnitControllers.barcodeAlt.text,
@@ -217,8 +219,10 @@ class AddItemImp implements AddItemServices {
         // "cCode": 123,
         "altName": AlterUnitControllers.altName.text,
         "pluno": AlterUnitControllers.pluno.text,
-        "refcode": AlterUnitControllers.refcode.text
+        "refcode": AlterUnitControllers.refcode.text,
+        "altitem": ""
       });
+      log(body);
 
       final response = await http.post(url, headers: headers, body: body);
       var jsonResponse = jsonDecode(response.body);
@@ -227,6 +231,7 @@ class AddItemImp implements AddItemServices {
         log(response.body);
         return Right(result);
       } else if (response.statusCode == 400) {
+        log(response.body);
         return const Left(MainFailure.serverFailure());
       } else {
         return const Left(MainFailure.serverFailure());

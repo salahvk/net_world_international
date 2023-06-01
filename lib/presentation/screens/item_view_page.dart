@@ -7,6 +7,7 @@ import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:net_world_international/core/util/animated_snackbar.dart';
 import 'package:net_world_international/infrastructure/add_item_imp.dart';
+import 'package:net_world_international/presentation/screens/add_item_screen.dart';
 import 'package:net_world_international/presentation/widget/itemview_row.dart';
 
 class ItemViewPage extends StatefulWidget {
@@ -46,24 +47,49 @@ class _ItemViewPageState extends State<ItemViewPage> {
                       color: Colors.grey.withOpacity(0.1),
                     ),
                   ),
-                  child: Column(
+                  child: Stack(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, bottom: 5),
-                        child: Text("Barcode",
-                            style: getRegularStyle(
-                                color: Colormanager.textColor, fontSize: 14)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                              onTap: () {
+                                ItemMasterCloneControllers.clone();
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (ctx) {
+                                  return const AddItemScreen(
+                                    isUpdating: true,
+                                  );
+                                }));
+                              },
+                              child: const Icon(Icons.edit)),
+                        ],
                       ),
-                      BarcodeWidget(
-                        barcode: Barcode.code128(),
-                        data:
-                            ItemMasterCloneControllers.cbarCodeController.text,
-                        width: w * .6,
-                        height: 100,
+                      Center(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5, bottom: 5),
+                              child: Text("Barcode",
+                                  style: getRegularStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 14)),
+                            ),
+                            BarcodeWidget(
+                              barcode: Barcode.code128(),
+                              data: ItemMasterCloneControllers
+                                  .cbarCodeController.text,
+                              width: w * .6,
+                              height: 100,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            )
+                          ],
+                        ),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      )
                     ],
                   ),
                 ),

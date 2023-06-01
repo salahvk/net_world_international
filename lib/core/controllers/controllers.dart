@@ -150,6 +150,7 @@ class ItemMasterCloneControllers {
   }
 
   static save() {
+    print(ItemMasterCloneControllers.cnameController.text);
     cdepartmentNameController.text =
         ItemMasterControllers.departmentNameController.text;
     ccategoryNameController.text =

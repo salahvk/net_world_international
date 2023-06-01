@@ -11,6 +11,7 @@ class Colormanager {
   static const buttonColor = Color(0xffF6F4FC);
   static const lightBlue = Color(0xffEFF7FF);
   static const white = Colors.white;
+  static const amber = Color.fromARGB(255, 231, 177, 15);
 
   // static const green = Color(0xff397E48);
 }

@@ -57,6 +57,7 @@ dependencies:
   barcode_widget: ^2.0.3
   freezed_annotation: ^2.2.0
   async: ^2.10.0
+  esc_pos_bluetooth: ^0.4.1
 
 
 

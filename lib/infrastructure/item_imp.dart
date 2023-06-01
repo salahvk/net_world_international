@@ -77,12 +77,30 @@ class ItemImp implements ItemServices {
       var jsonResponse = jsonDecode(response.body);
       final result = ItemViewById.fromJson(jsonResponse);
       log(response.body);
-
+      ItemMasterCloneControllers.cdepartmentController.text =
+          result.departmentId.toString();
+      ItemMasterCloneControllers.ccategoryController.text =
+          result.categoryId.toString();
+      ItemMasterCloneControllers.csubCategoryController.text =
+          result.secondCategoryid.toString();
+      ItemMasterCloneControllers.cdepartmentController.text =
+          result.departmentId.toString();
+      // ItemMasterControllers.categoryController.text =
+      //     result.categoryId.toString();
+      ItemMasterCloneControllers.cdefTaxId.text = result.taxId.toString();
+      ItemMasterControllers.supplierController.text =
+          result.supplierItemCode.toString();
+      ItemMasterCloneControllers.csupplierCodeController.text =
+          result.suppliercode.toString();
+      ItemMasterControllers.itemId.text = itemId ?? '';
       AlterUnitControllers.itemMasterCode.text = result.itemMasterCode ?? '';
       ItemMasterCloneControllers.cnameController.text = result.name ?? '';
+      ItemMasterCloneControllers.cshortNameController.text =
+          result.shortName ?? '';
       ItemMasterCloneControllers.carabicController.text =
           result.arabicname ?? '';
       ItemMasterCloneControllers.cbarCodeController.text = result.barcode ?? '';
+      ItemMasterControllers.barCodeController.text = result.barcode ?? '';
       ItemMasterCloneControllers.crackNoController.text = result.rackNo ?? '';
       ItemMasterCloneControllers.cshelfNoController.text = result.shelfNo ?? '';
       ItemMasterCloneControllers.ccostPriceController.text =
@@ -100,6 +118,11 @@ class ItemImp implements ItemServices {
       final categoryName = getCategoryNameById(
           result.categoryId, state!.itemGetConfig!.categoryList!);
       ItemMasterCloneControllers.ccategoryNameController.text = categoryName;
+
+      final scategoryName = getSecondCategoryId(
+          result.secondCategoryid, state!.itemGetConfig!.secondCategoryList);
+      ItemMasterCloneControllers.csubCategoryNameController.text =
+          scategoryName;
 
       final supplierName = getSupplierNameById(result.supplierItemCode ?? '',
           state!.itemGetConfig!.supplierMasterList!);

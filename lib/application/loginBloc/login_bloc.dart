@@ -361,6 +361,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         ItemMasterControllers.supplierCodeController.text =
             result.supplierItemCode ?? '';
         ItemMasterControllers.itemId.text = result.id.toString();
+        // ItemMasterControllers.nonStockController.text = result.nonStockItem.toString() == 1 ? true : false;
+        //  "nonStockItem":
+        //     (ItemMasterControllers.nonStockController.text.toLowerCase() ==
+        //         'true'),
+        // "counterStock":
+        //     (ItemMasterControllers.counterStockController.text.toLowerCase() ==
+        //         'true'),
+        // "active": (ItemMasterControllers.activeController.text.toLowerCase() ==
+        //     'true'),
         ItemMasterCloneControllers.cdefTaxId.text = result.taxId.toString();
 
         if (cuState is OptionPageState) {

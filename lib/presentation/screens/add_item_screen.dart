@@ -23,7 +23,8 @@ import 'package:net_world_international/presentation/widget/curved_checkbox.dart
 import 'package:barcode_widget/barcode_widget.dart';
 
 class AddItemScreen extends StatefulWidget {
-  const AddItemScreen({super.key});
+  final bool isUpdating;
+  const AddItemScreen({super.key, this.isUpdating = false});
 
   @override
   State<AddItemScreen> createState() => _AddItemScreenState();
@@ -44,12 +45,12 @@ class _AddItemScreenState extends State<AddItemScreen> {
   bool isNextVisible = false;
   // String? defDepartment;
   // String? defSupplier;
-  String? defTaxName;
+  // String? defTaxName;
   String? barcode;
   String? nextBarcode;
   String? preBarcode;
   TaxList? deftax;
-  dynamic cwT;
+
   int _selectedIndex = 2;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   final List<Widget> _screens = [
@@ -60,7 +61,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
   @override
   void initState() {
     super.initState();
-    ItemMasterControllers.cleanControllers();
+    widget.isUpdating ? null : ItemMasterControllers.cleanControllers();
     BlocProvider.of<LoginBloc>(context).add(
       OptionPageEvent(),
     );
@@ -190,7 +191,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: const BorderSide(
-                                          color: Colormanager.primary),
+                                          color: Colormanager.amber),
                                       // borderRadius: BorderRadius.circular(5)
                                     ),
                                     focusedBorder: OutlineInputBorder(
@@ -454,8 +455,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(
-                                    color: Colormanager.primary),
+                                borderSide:
+                                    const BorderSide(color: Colormanager.amber),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5),
@@ -578,7 +579,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                       color: Colormanager.white,
                                       borderRadius: BorderRadius.circular(5),
                                       border: Border.all(
-                                          color: Colormanager.primary)),
+                                          color: Colormanager.amber)),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton2<DepartmentList>(
                                       isExpanded: true,
@@ -1041,28 +1042,14 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                         .toList(),
                                                     // value: defTaxName,
                                                     onChanged: (value) {
-                                                      setState(() {
-                                                        defTaxName = value
-                                                            ?.taxName as String;
-                                                        deftax = value;
-                                                        ItemMasterCloneControllers
-                                                            .cdefTaxRate
-                                                            .text = deftax
-                                                                ?.taxRate
-                                                                .toString() ??
-                                                            '';
-
-                                                        ItemMasterCloneControllers
-                                                            .cdefTaxId
-                                                            .text = deftax
-                                                                ?.taxId
-                                                                .toString() ??
-                                                            '';
-                                                      });
+                                                      onTaxSelect(value);
                                                     },
 
                                                     customButton:
-                                                        defTaxName == null
+                                                        ItemMasterCloneControllers
+                                                                .cdefTaxName
+                                                                .text
+                                                                .isEmpty
                                                             ? null
                                                             : Row(
                                                                 children: [
@@ -1076,8 +1063,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                                               0,
                                                                               0),
                                                                       child: Text(
-                                                                          defTaxName ??
-                                                                              '',
+                                                                          ItemMasterCloneControllers
+                                                                              .cdefTaxName
+                                                                              .text,
                                                                           style: getRegularStyle(
                                                                               color: Colormanager.white,
                                                                               fontSize: 12)),
@@ -1264,7 +1252,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(4.5),
                                             border: Border.all(
-                                              color: Colormanager.primary,
+                                              color: Colormanager.amber,
                                               width: 1.0,
                                             ),
                                           ),
@@ -1273,22 +1261,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             controller: ItemMasterControllers
                                                 .costPriceController,
                                             onChanged: (value) {
-                                              ItemMasterControllers
-                                                  .cleanControllersOnCostChange();
-                                              if (value.isEmpty ||
-                                                  deftax == null) {
-                                                showAnimatedSnackBar(
-                                                    context, "Choose a vat");
-                                                return;
-                                              }
-                                              if (value.isEmpty) return;
-
-                                              double s = double.parse(value);
-                                              cwT = (s +
-                                                  (s / 100 * deftax?.taxRate));
-                                              ItemMasterControllers
-                                                  .costWithTaxController
-                                                  .text = cwT.toString();
+                                              onCostChange(value);
                                             },
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
@@ -1334,15 +1307,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             controller: ItemMasterControllers
                                                 .costWithTaxController,
                                             onChanged: (value) {
-                                              if (value.isEmpty) return;
-                                              double cot = double.parse(value);
-                                              ItemMasterControllers
-                                                  .costPriceController
-                                                  .text = (cot /
-                                                      (1 +
-                                                          deftax?.taxRate /
-                                                              100))
-                                                  .toStringAsFixed(2);
+                                              onCostWithTaxChanged(value);
                                             },
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
@@ -1398,32 +1363,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                 keyboardType:
                                                     TextInputType.number,
                                                 onChanged: (value) {
-                                                  if (value.isEmpty) return;
-
-                                                  double s =
-                                                      double.parse(value);
-                                                  double l = double.parse(
-                                                      ItemMasterControllers
-                                                          .costPriceController
-                                                          .text);
-                                                  final t = (l / 100 * s);
-                                                  ItemMasterControllers
-                                                          .marginController
-                                                          .text =
-                                                      t.toStringAsFixed(2);
-                                                  final k = l + t;
-                                                  ItemMasterControllers
-                                                          .sellingPController
-                                                          .text =
-                                                      k.toStringAsFixed(2);
-                                                  ItemMasterControllers
-                                                      .sellingPriceWithTaxController
-                                                      .text = (double.parse(
-                                                              ItemMasterControllers
-                                                                  .costWithTaxController
-                                                                  .text) +
-                                                          t)
-                                                      .toStringAsFixed(2);
+                                                  print(value);
+                                                  onMarginPerChanged(value);
                                                 },
                                                 decoration:
                                                     const InputDecoration(
@@ -1474,49 +1415,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                               controller: ItemMasterControllers
                                                   .marginController,
                                               onChanged: (value) {
-                                                if (value.isEmpty ||
-                                                    ItemMasterControllers
-                                                        .costPriceController
-                                                        .text
-                                                        .isEmpty) return;
-                                                final margin =
-                                                    double.parse(value);
-                                                final cot = double.parse(
-                                                    ItemMasterControllers
-                                                        .costPriceController
-                                                        .text);
-                                                ItemMasterControllers
-                                                        .marginPerController
-                                                        .text =
-                                                    ((margin / cot) * 100)
-                                                        .toStringAsFixed(2);
-
-                                                //
-                                                double s = double.parse(
-                                                    ItemMasterControllers
-                                                        .marginPerController
-                                                        .text);
-                                                double l = double.parse(
-                                                    ItemMasterControllers
-                                                        .costPriceController
-                                                        .text);
-                                                final t = (l / 100 * s);
-                                                // ItemMasterControllers
-                                                //     .marginController
-                                                //     .text = t.toString();
-                                                final k = l + t;
-                                                ItemMasterControllers
-                                                        .sellingPController
-                                                        .text =
-                                                    k.toStringAsFixed(2);
-                                                ItemMasterControllers
-                                                    .sellingPriceWithTaxController
-                                                    .text = (double.parse(
-                                                            ItemMasterControllers
-                                                                .costWithTaxController
-                                                                .text) +
-                                                        t)
-                                                    .toStringAsFixed(2);
+                                                onMarginCostChanged(value);
                                               },
                                               keyboardType:
                                                   TextInputType.number,
@@ -1562,7 +1461,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(4.5),
                                             border: Border.all(
-                                              color: Colormanager.primary,
+                                              color: Colormanager.amber,
                                               width: 1.0,
                                             ),
                                           ),
@@ -1726,7 +1625,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                         splashColor: Colormanager.primary,
                                         borderRadius: BorderRadius.circular(5),
                                         onTap: () {
-                                          isNextVisible
+                                          isNextVisible || widget.isUpdating
                                               ? updateItemMasterdata(
                                                   ItemMasterControllers
                                                       .itemId.text)
@@ -1785,12 +1684,12 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                       ),
                                     ),
                                   ),
-                                  isSaved
+                                  isSaved || isNextVisible
                                       ? const SizedBox(
                                           width: 5,
                                         )
                                       : Container(),
-                                  isSaved
+                                  isSaved || isNextVisible
                                       ? BlocBuilder<LoginBloc, LoginState>(
                                           builder: (context, state) {
                                             if (state is OptionPageState) {
@@ -1850,12 +1749,12 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                           },
                                         )
                                       : Container(),
-                                  isSaved
+                                  isSaved || isNextVisible
                                       ? const SizedBox(
                                           width: 5,
                                         )
                                       : Container(),
-                                  isSaved
+                                  isSaved || isNextVisible
                                       ? Expanded(
                                           child: InkWell(
                                             onTap: () {
@@ -1881,12 +1780,12 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                           ),
                                         )
                                       : Container(),
-                                  isSaved
+                                  isSaved || isNextVisible
                                       ? const SizedBox(
                                           width: 5,
                                         )
                                       : Container(),
-                                  isSaved
+                                  isSaved || isNextVisible
                                       ? Expanded(
                                           child: InkWell(
                                             onTap: () {
@@ -2188,23 +2087,29 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Expanded(
-                                          child: Container(
-                                            width: 70,
-                                            height: 30,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              color: Colormanager.teritiory,
-                                              border: Border.all(
-                                                  color: Colormanager.primary),
+                                          child: InkWell(
+                                            onTap: () {
+                                              // printBarcodeDetails();
+                                            },
+                                            child: Container(
+                                              width: 70,
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: Colormanager.teritiory,
+                                                border: Border.all(
+                                                    color:
+                                                        Colormanager.primary),
+                                              ),
+                                              child: Center(
+                                                  child: Text(
+                                                "Item Print",
+                                                style: getRegularStyle(
+                                                    color: Colormanager.primary,
+                                                    fontSize: 10),
+                                              )),
                                             ),
-                                            child: Center(
-                                                child: Text(
-                                              "Item Print",
-                                              style: getRegularStyle(
-                                                  color: Colormanager.primary,
-                                                  fontSize: 10),
-                                            )),
                                           ),
                                         ),
                                         const SizedBox(
@@ -2383,4 +2288,156 @@ class _AddItemScreenState extends State<AddItemScreen> {
       });
     }
   }
+
+// * onCostPriceChange
+
+  onCostChange(value) {
+    // ItemMasterControllers.cleanControllersOnCostChange();
+    if (deftax == null) {
+      ItemMasterControllers.costWithTaxController.text = value.toString();
+      ItemMasterControllers.marginPerController.text = value.toString();
+      ItemMasterControllers.marginController.text = value.toString();
+      ItemMasterControllers.sellingPController.text = value.toString();
+
+      ItemMasterControllers.sellingPriceWithTaxController.text =
+          value.toString();
+    }
+    if (value.isEmpty || deftax == null) {
+      showAnimatedSnackBar(context, "Choose a vat");
+      return;
+    }
+    if (value.isEmpty) return;
+
+    double s = double.parse(value);
+    ItemMasterControllers.costWithTaxController.text =
+        (s + (s / 100 * deftax?.taxRate)).toString();
+  }
+
+  // * onMarginCostChanged
+
+  onMarginCostChanged(value) {
+    if (value.isEmpty ||
+        ItemMasterControllers.costPriceController.text.isEmpty) {
+      return;
+    }
+    final margin = double.parse(value);
+    final cot = double.parse(ItemMasterControllers.costPriceController.text);
+    ItemMasterControllers.marginPerController.text =
+        ((margin / cot) * 100).toStringAsFixed(2);
+
+    //
+    double s = double.parse(ItemMasterControllers.marginPerController.text);
+    double l = double.parse(ItemMasterControllers.costPriceController.text);
+    final t = (l / 100 * s);
+    // ItemMasterControllers
+    //     .marginController
+    //     .text = t.toString();
+    final k = l + t;
+    ItemMasterControllers.sellingPController.text = k.toStringAsFixed(2);
+    ItemMasterControllers.sellingPriceWithTaxController.text =
+        (double.parse(ItemMasterControllers.costWithTaxController.text) + t)
+            .toStringAsFixed(2);
+  }
+
+  onMarginPerChanged(value) {
+    if (value.isEmpty) return;
+
+    double s = double.parse(value);
+    double l = double.parse(ItemMasterControllers.costPriceController.text);
+    final t = (l / 100 * s);
+    ItemMasterControllers.marginController.text = t.toStringAsFixed(2);
+    final k = l + t;
+    ItemMasterControllers.sellingPController.text = k.toStringAsFixed(2);
+    ItemMasterControllers.sellingPriceWithTaxController.text =
+        (double.parse(ItemMasterControllers.costWithTaxController.text) + t)
+            .toStringAsFixed(2);
+  }
+
+  onCostWithTaxChanged(value) {
+    if (value.isEmpty) return;
+    if (deftax == null) {
+      ItemMasterControllers.costPriceController.text = value.toString();
+      ItemMasterControllers.marginPerController.text = value.toString();
+      ItemMasterControllers.marginController.text = value.toString();
+      ItemMasterControllers.sellingPController.text = value.toString();
+
+      ItemMasterControllers.sellingPriceWithTaxController.text =
+          value.toString();
+      return;
+    }
+    double cot = double.parse(value);
+    ItemMasterControllers.costPriceController.text =
+        (cot / (1 + deftax?.taxRate / 100)).toStringAsFixed(2);
+  }
+
+  onTaxSelect(value) {
+    setState(() {
+      ItemMasterCloneControllers.cdefTaxName.text = value?.taxName as String;
+      deftax = value;
+      ItemMasterCloneControllers.cdefTaxRate.text =
+          deftax?.taxRate.toString() ?? '';
+
+      ItemMasterCloneControllers.cdefTaxId.text =
+          deftax?.taxId.toString() ?? '';
+    });
+    if (ItemMasterControllers.costPriceController.text.isNotEmpty) {
+      onCostChange(ItemMasterControllers.costPriceController.text);
+    }
+    if (ItemMasterControllers.marginController.text.isNotEmpty) {
+      onMarginCostChanged(ItemMasterControllers.marginController.text);
+    }
+    if (ItemMasterControllers.costWithTaxController.text.isNotEmpty) {
+      onCostWithTaxChanged(ItemMasterControllers.costWithTaxController.text);
+    }
+    if (ItemMasterControllers.marginPerController.text.isNotEmpty) {
+      onMarginPerChanged(ItemMasterControllers.marginPerController.text);
+    }
+  }
+
+//   printBarcodeDetails() {
+// PrinterBluetoothManager printerManager = PrinterBluetoothManager();
+
+// printerManager.scanResults.listen((printers) async {
+//   // store found printers
+// });
+// printerManager.startScan(const Duration(seconds: 4));
+
+// // ...
+
+// printerManager.selectPrinter(printer);
+// final PosPrintResult res = await printerManager.printTicket(testTicket());
+
+// print('Print result: ${res.msg}');
+
+//   }
+
+//   Ticket testTicket() {
+//     final Ticket ticket = Ticket(PaperSize.mm80);
+
+//     ticket.text(
+//         'Regular: aA bB cC dD eE fF gG hH iI jJ kK lL mM nN oO pP qQ rR sS tT uU vV wW xX yY zZ');
+//     ticket.text('Special 1: àÀ èÈ éÉ ûÛ üÜ çÇ ôÔ',
+//         styles: PosStyles(codeTable: PosCodeTable.westEur));
+//     ticket.text('Special 2: blåbærgrød',
+//         styles: PosStyles(codeTable: PosCodeTable.westEur));
+
+//     ticket.text('Bold text', styles: PosStyles(bold: true));
+//     ticket.text('Reverse text', styles: PosStyles(reverse: true));
+//     ticket.text('Underlined text',
+//         styles: PosStyles(underline: true), linesAfter: 1);
+//     ticket.text('Align left', styles: PosStyles(align: PosAlign.left));
+//     ticket.text('Align center', styles: PosStyles(align: PosAlign.center));
+//     ticket.text('Align right',
+//         styles: PosStyles(align: PosAlign.right), linesAfter: 1);
+
+//     ticket.text('Text size 200%',
+//         styles: PosStyles(
+//           height: PosTextSize.size2,
+//           width: PosTextSize.size2,
+//         ));
+
+//     ticket.feed(2);
+//     ticket.cut();
+//     return ticket;
+//   }
 }

@@ -5,6 +5,7 @@ import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/routes_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
+import 'package:net_world_international/core/util/check_dep_name.dart';
 import 'package:net_world_international/infrastructure/item_imp.dart';
 import 'package:net_world_international/presentation/screens/home_screen.dart';
 import 'package:net_world_international/presentation/screens/option_screen.dart';
@@ -36,6 +37,7 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final w = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: CurvedNavigationBar(
@@ -93,26 +95,39 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(25, 0, 25, 10),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          " Id",
-                          style: getRegularStyle(
-                            color: Colormanager.mainTextColor,
+                        // Text(
+                        //   " Id",
+                        //   style: getRegularStyle(
+                        //     color: Colormanager.mainTextColor,
+                        //   ),
+                        // ),
+                        SizedBox(
+                          width: w * .2,
+                          child: Text(
+                            "Name",
+                            style: getRegularStyle(
+                              color: Colormanager.mainTextColor,
+                            ),
                           ),
                         ),
-                        Text(
-                          "Name",
-                          style: getRegularStyle(
-                            color: Colormanager.mainTextColor,
+                        SizedBox(
+                          width: w * .3,
+                          child: Text(
+                            " Department",
+                            style: getRegularStyle(
+                              color: Colormanager.mainTextColor,
+                            ),
                           ),
                         ),
-                        // Text("Unit"),
-                        // Text("Contain"),
-                        Text(
-                          "Cost",
-                          style: getRegularStyle(
-                            color: Colormanager.mainTextColor,
+                        SizedBox(
+                          width: w * .2,
+                          child: Text(
+                            "Cost",
+                            style: getRegularStyle(
+                              color: Colormanager.mainTextColor,
+                            ),
                           ),
                         ),
                         Text(
@@ -160,34 +175,54 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(15.0),
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        // mainAxisAlignment:
+                                        //     MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                            // "${index + 1}",
-                                            state.getItems?.items?[index].id
-                                                    .toString() ??
-                                                '',
-                                            style: getRegularStyle(
-                                                color: Colors.black,
-                                                fontSize: 10),
+                                          // Text(
+                                          //   // "${index + 1}",
+                                          //   state.getItems?.items?[index].id
+                                          //           .toString() ??
+                                          //       '',
+                                          //   style: getRegularStyle(
+                                          //       color: Colors.black,
+                                          //       fontSize: 10),
+                                          // ),
+                                          SizedBox(
+                                            width: w * .2,
+                                            child: Text(
+                                              state.getItems?.items?[index]
+                                                      .name ??
+                                                  '',
+                                              style: getRegularStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10),
+                                            ),
                                           ),
-                                          Text(
-                                            state.getItems?.items?[index]
-                                                    .name ??
-                                                '',
-                                            style: getRegularStyle(
-                                                color: Colors.black,
-                                                fontSize: 10),
+                                          SizedBox(
+                                            width: w * .3,
+                                            child: Text(
+                                              getDepNameById(
+                                                  state.getItems?.items?[index]
+                                                      .departmentId,
+                                                  state.itemGetConfig
+                                                          ?.departmentList ??
+                                                      []),
+                                              style: getRegularStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10),
+                                            ),
                                           ),
-                                          Text(
-                                            state.getItems?.items?[index]
-                                                    .costPrice
-                                                    .toString() ??
-                                                '',
-                                            style: getRegularStyle(
-                                                color: Colors.black,
-                                                fontSize: 10),
+                                          SizedBox(
+                                            width: w * .2,
+                                            child: Text(
+                                              state.getItems?.items?[index]
+                                                      .costPrice
+                                                      .toString() ??
+                                                  '',
+                                              style: getRegularStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10),
+                                            ),
                                           ),
                                           Text(
                                             state.getItems?.items?[index]
