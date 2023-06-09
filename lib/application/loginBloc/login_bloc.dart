@@ -356,11 +356,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             result.sellingPrice.toString();
         ItemMasterControllers.costWithTaxController.text =
             result.basePrice.toString();
-        ItemMasterControllers.supplierController.text =
-            result.supplierItemCode ?? '';
         ItemMasterControllers.supplierCodeController.text =
-            result.supplierItemCode ?? '';
+            result.suppliercode ?? '';
         ItemMasterControllers.itemId.text = result.id.toString();
+        //
         // ItemMasterControllers.nonStockController.text = result.nonStockItem.toString() == 1 ? true : false;
         //  "nonStockItem":
         //     (ItemMasterControllers.nonStockController.text.toLowerCase() ==
@@ -370,7 +369,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         //         'true'),
         // "active": (ItemMasterControllers.activeController.text.toLowerCase() ==
         //     'true'),
-        ItemMasterCloneControllers.cdefTaxId.text = result.taxId.toString();
+        //
+        // ItemMasterCloneControllers.cdefTaxId.text = result.taxId.toString();
 
         if (cuState is OptionPageState) {
           final departmentName = getDepNameById(

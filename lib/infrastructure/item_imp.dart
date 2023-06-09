@@ -137,4 +137,34 @@ class ItemImp implements ItemServices {
     } catch (_) {}
     return const Left(MainFailure.clientFailure());
   }
+
+  @override
+  Future<Either<MainFailure, ItemViewById>> getItemByBar() async {
+    try {
+      final url = Uri.parse(
+          "${ApiEndPoint.itemByBarcode}${PrintControllers.barcode.text}");
+      print(url);
+      final headers = {'Content-Type': 'application/json'};
+      final response = await http.get(
+        url,
+        headers: headers,
+      );
+
+      var jsonResponse = jsonDecode(response.body);
+      log(response.body);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final result = ItemViewById.fromJson(jsonResponse);
+        PrintControllers.name.text = result.name ?? '';
+        // PrintControllers.barcode.text = result.name ?? '';
+        PrintControllers.sellingPrice.text = result.sellingPrice.toString();
+        PrintControllers.costPrice.text = result.costPrice.toString();
+        return Right(result);
+      } else {
+        return const Left(MainFailure.serverFailure());
+      }
+    } catch (e) {
+      log(e.toString());
+      return const Left(MainFailure.clientFailure());
+    }
+  }
 }

@@ -15,4 +15,5 @@ class ApiEndPoint {
   static String addAlterItems = "$api/Item/AddItemsinAlterUnit";
   static String getItemById = "$api/Item/";
   static String itemUpdateById = "$api/Item/UpdateItem/";
+  static String itemByBarcode = "$api/Item/barcode/";
 }

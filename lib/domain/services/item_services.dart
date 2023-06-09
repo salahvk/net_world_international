@@ -8,4 +8,5 @@ abstract class ItemServices {
   Future<Either<MainFailure, ItemGetConfig>> getItemConfig();
   Future<Either<MainFailure, GetitemsModel>> getItems();
   Future<Either<MainFailure, ItemViewById>> getItemById();
+  Future<Either<MainFailure, ItemViewById>> getItemByBar();
 }

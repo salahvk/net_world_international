@@ -9,12 +9,14 @@ import 'package:net_world_international/core/routes_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:net_world_international/core/util/animated_snackbar.dart';
 import 'package:net_world_international/core/util/arabic_transileteration.dart';
+import 'package:net_world_international/core/util/print_page.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/category_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/department_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/second_category_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/supplier_master_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/tax_list.dart';
 import 'package:net_world_international/infrastructure/add_item_imp.dart';
+import 'package:net_world_international/infrastructure/item_imp.dart';
 import 'package:net_world_international/presentation/screens/home_screen.dart';
 import 'package:net_world_international/presentation/screens/item_master.dart';
 import 'package:net_world_international/presentation/screens/option_screen.dart';
@@ -35,6 +37,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
   bool isNoneStockChecked = false;
   bool isCounterStockChecked = false;
   bool isBarCodeGen = false;
+  bool isBarCodePrintable = false;
   bool isnextBarCode = false;
   bool isprevBarCode = false;
   bool onNextBarCode = false;
@@ -1871,35 +1874,40 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                     height: 40,
                                                     // width: size.width * .35,
                                                     child: TextField(
+                                                        controller:
+                                                            PrintControllers
+                                                                .name,
                                                         decoration:
                                                             InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(4.5),
-                                                        borderSide:
-                                                            const BorderSide(
-                                                          color: Colors.red,
-                                                        ),
-                                                      ),
-                                                      enabledBorder:
-                                                          const OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: Colormanager
-                                                                .primary),
-                                                      ),
-                                                      focusedBorder:
-                                                          const OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    2,
-                                                                    76,
-                                                                    136)),
-                                                      ),
-                                                    )),
+                                                          border:
+                                                              OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4.5),
+                                                            borderSide:
+                                                                const BorderSide(
+                                                              color: Colors.red,
+                                                            ),
+                                                          ),
+                                                          enabledBorder:
+                                                              const OutlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color:
+                                                                    Colormanager
+                                                                        .primary),
+                                                          ),
+                                                          focusedBorder:
+                                                              const OutlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        2,
+                                                                        76,
+                                                                        136)),
+                                                          ),
+                                                        )),
                                                   ),
                                                 ],
                                               ),
@@ -1928,41 +1936,86 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                       height: 40,
                                       // width: size.width * .35,
                                       child: TextField(
+                                          keyboardType: TextInputType.number,
+                                          controller: PrintControllers.barcode,
                                           decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4.5),
-                                          borderSide: const BorderSide(
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                        enabledBorder: const OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colormanager.primary),
-                                        ),
-                                        focusedBorder: const OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color.fromARGB(
-                                                  255, 2, 76, 136)),
-                                        ),
-                                      )),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4.5),
+                                              borderSide: const BorderSide(
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                            suffixIcon: InkWell(
+                                              onTap: () async {
+                                                print(PrintControllers
+                                                    .barcode.text);
+                                                final itemFetch =
+                                                    await ItemImp()
+                                                        .getItemByBar();
+
+                                                itemFetch.fold((falure) {
+                                                  return setState(() {
+                                                    showAnimatedSnackBar(
+                                                        context,
+                                                        "No Barcode Found");
+                                                    setState(() {
+                                                      isBarCodePrintable =
+                                                          false;
+                                                    });
+                                                    PrintControllers
+                                                        .clearControllers();
+                                                  });
+                                                }, (success) {
+                                                  showSuccessAnimatedSnackBar(
+                                                      context,
+                                                      "Barcode Fetched");
+                                                  setState(() {
+                                                    isBarCodePrintable = true;
+                                                  });
+                                                });
+                                              },
+                                              child: const Icon(
+                                                  Icons.arrow_forward_rounded),
+                                            ),
+                                            enabledBorder:
+                                                const OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colormanager.primary),
+                                            ),
+                                            focusedBorder:
+                                                const OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Color.fromARGB(
+                                                      255, 2, 76, 136)),
+                                            ),
+                                          )),
                                     ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    BlocBuilder<LoginBloc, LoginState>(
-                                      builder: (context, state) {
-                                        if (state is OptionPageState) {
-                                          return BarcodeWidget(
-                                            barcode: Barcode.code128(),
-                                            data: state.barCode2 ?? '',
-                                            // width: 100,
-                                            height: 100,
-                                          );
-                                        }
-                                        return Container();
-                                      },
-                                    ),
+                                    // const SizedBox(
+                                    //   height: 20,
+                                    // ),
+                                    // BlocBuilder<LoginBloc, LoginState>(
+                                    //   builder: (context, state) {
+                                    //     if (state is OptionPageState) {
+                                    //       return
+
+                                    isBarCodePrintable
+                                        ? Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 20),
+                                            child: BarcodeWidget(
+                                              barcode: Barcode.code128(),
+                                              data:
+                                                  PrintControllers.barcode.text,
+                                              // width: 100,
+                                              height: 100,
+                                            ),
+                                          )
+                                        : Container(),
+                                    //     }
+                                    //     return Container();
+                                    //   },
+                                    // ),
                                     const SizedBox(
                                       height: 20,
                                     ),
@@ -1976,7 +2029,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                   Row(
                                                     children: [
                                                       Text(
-                                                        "Price",
+                                                        "Selling Price",
                                                         style: getRegularStyle(
                                                             color: Colors.black,
                                                             fontSize: 10),
@@ -1990,8 +2043,74 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                     height: 40,
                                                     width: size.width * .35,
                                                     child: TextField(
+                                                        controller:
+                                                            PrintControllers
+                                                                .sellingPrice,
                                                         decoration:
                                                             InputDecoration(
+                                                          border:
+                                                              OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4.5),
+                                                            borderSide:
+                                                                const BorderSide(
+                                                              color: Colors.red,
+                                                            ),
+                                                          ),
+                                                          enabledBorder:
+                                                              const OutlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color:
+                                                                    Colormanager
+                                                                        .primary),
+                                                          ),
+                                                          focusedBorder:
+                                                              const OutlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        2,
+                                                                        76,
+                                                                        136)),
+                                                          ),
+                                                        )),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Cost Price",
+                                                    style: getRegularStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 10),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              SizedBox(
+                                                height: 40,
+                                                width: size.width * .35,
+                                                child: TextField(
+                                                    controller: PrintControllers
+                                                        .costPrice,
+                                                    decoration: InputDecoration(
                                                       border:
                                                           OutlineInputBorder(
                                                         borderRadius:
@@ -2019,60 +2138,6 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                                     136)),
                                                       ),
                                                     )),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Price Quantity",
-                                                    style: getRegularStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 10),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              SizedBox(
-                                                height: 40,
-                                                width: size.width * .35,
-                                                child: TextField(
-                                                    decoration: InputDecoration(
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4.5),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                      color: Colors.red,
-                                                    ),
-                                                  ),
-                                                  enabledBorder:
-                                                      const OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colormanager
-                                                            .primary),
-                                                  ),
-                                                  focusedBorder:
-                                                      const OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Color.fromARGB(
-                                                            255, 2, 76, 136)),
-                                                  ),
-                                                )),
                                               ),
                                             ],
                                           ),
@@ -2090,6 +2155,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                           child: InkWell(
                                             onTap: () {
                                               // printBarcodeDetails();
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      const PrintPage(),
+                                                ),
+                                              );
                                             },
                                             child: Container(
                                               width: 70,

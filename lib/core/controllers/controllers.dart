@@ -200,3 +200,16 @@ class AlterUnitControllers {
   static TextEditingController pluno = TextEditingController();
   static TextEditingController refcode = TextEditingController();
 }
+
+class PrintControllers {
+  static TextEditingController name = TextEditingController();
+  static TextEditingController barcode = TextEditingController();
+  static TextEditingController sellingPrice = TextEditingController();
+  static TextEditingController costPrice = TextEditingController();
+
+  static clearControllers() {
+    name.clear();
+    sellingPrice.clear();
+    costPrice.clear();
+  }
+}
