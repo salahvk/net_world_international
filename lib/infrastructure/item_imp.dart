@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/util/check_dep_name.dart';
+import 'package:net_world_international/core/util/global_list.dart';
 import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/domain/failures/main_failures.dart';
 import 'package:net_world_international/domain/get_items_model.dart';
@@ -30,6 +31,8 @@ class ItemImp implements ItemServices {
       var jsonResponse = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = ItemGetConfig.fromJson(jsonResponse);
+
+        GlobalList().taxList.addAll(result.taxList ?? []);
         return Right(result);
       } else {
         return const Left(MainFailure.serverFailure());

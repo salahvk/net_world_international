@@ -60,7 +60,21 @@ dependencies:
   # esc_pos_bluetooth: ^0.4.1
   esc_pos_utils: ^1.1.0
   bluetooth_print: ^4.3.0
- 
+  mysql1: ^0.20.0
+  mysql_utils: ^2.1.1
+  mysql_client: ^0.0.27
+  connect_to_sql_server_directly: ^0.0.1
+  lottie: ^2.3.2
+  csv: ^5.0.2
+  percent_indicator: ^4.2.3
+  sqflite: ^2.2.8+4
+  progresso: ^0.3.0
+  # sqflite: ^2.2.8+4
+  # sql_server_socket:
+  #  git:
+  #   url: https://github.com/nippur72/SqlServerSocket/tree/master/DartClient
+
+
 
 
 
@@ -96,6 +110,7 @@ flutter:
   assets:
     - assets/
     - assets/svg/
+    - assets/lottie/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

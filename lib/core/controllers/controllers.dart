@@ -213,3 +213,25 @@ class PrintControllers {
     costPrice.clear();
   }
 }
+
+class ProductPurchaseController {
+  static TextEditingController supCode = TextEditingController();
+  static TextEditingController supName = TextEditingController();
+  static TextEditingController invNo = TextEditingController();
+  static TextEditingController invDate = TextEditingController();
+  static TextEditingController invTotal = TextEditingController();
+  static TextEditingController barCodeContorller = TextEditingController();
+  static TextEditingController nameController = TextEditingController();
+  static TextEditingController selling = TextEditingController();
+  static TextEditingController qty = TextEditingController();
+  static TextEditingController foc = TextEditingController();
+  static TextEditingController costPrice = TextEditingController();
+  static TextEditingController discount = TextEditingController();
+  static TextEditingController taxNameCon = TextEditingController();
+  static TextEditingController taxId = TextEditingController();
+  static TextEditingController ratetax = TextEditingController();
+  static TextEditingController total = TextEditingController();
+  //   static TextEditingController invNo = TextEditingController();
+  // static TextEditingController ratetax = TextEditingController();
+  // static TextEditingController total = TextEditingController();
+}

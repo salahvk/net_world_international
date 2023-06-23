@@ -1,3 +1,4 @@
+import 'package:net_world_international/core/util/global_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/category_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/department_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/second_category_list.dart';
@@ -51,4 +52,15 @@ String getTaxNameById(int id, List<TaxList> taxList) {
     }
   }
   return 'null';
+}
+
+TaxList getTaxListById(
+  int id,
+) {
+  for (var tax in GlobalList().taxList) {
+    if (tax.taxId == id) {
+      return tax;
+    }
+  }
+  return TaxList();
 }

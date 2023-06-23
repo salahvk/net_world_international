@@ -6,6 +6,7 @@ import 'package:net_world_international/presentation/screens/item_view_page.dart
 import 'package:net_world_international/presentation/screens/login_page.dart';
 import 'package:net_world_international/presentation/screens/main_screen.dart';
 import 'package:net_world_international/presentation/screens/make_payment.dart';
+import 'package:net_world_international/presentation/screens/product_purchase.dart';
 import 'package:net_world_international/presentation/screens/splash_screen.dart';
 
 class Routes {
@@ -17,6 +18,7 @@ class Routes {
   static const String changePassword = '/changePassword';
   static const String getHelp = '/getHelp';
   static const String viewPage = '/viewPage';
+  static const String productPurPage = '/productPurchasePage';
 }
 
 class RouteGenerator {
@@ -38,6 +40,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const GetHelpScreen());
       case Routes.viewPage:
         return MaterialPageRoute(builder: (_) => const ItemViewPage());
+      case Routes.productPurPage:
+        return MaterialPageRoute(builder: (_) => const ProductPurchasePage());
       default:
         return unDefinedRoute();
     }

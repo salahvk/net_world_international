@@ -10,6 +10,8 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox("token");
   await Hive.openBox("url");
+  await Hive.openBox("db");
+
   runApp(const MyApp());
 }
 
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         debugShowCheckedModeBanner: false,
-        // home: const ItemViewPage(),
+        // home: const ProductPurchasePage(),
         initialRoute: Routes.splashScreen,
         onGenerateRoute: RouteGenerator.getRoute,
       ),

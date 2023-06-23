@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/asset_manager.dart';
 import 'package:net_world_international/core/color_manager.dart';
+import 'package:net_world_international/core/routes_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/presentation/screens/add_item_screen.dart';
+import 'package:net_world_international/presentation/screens/db_import.dart';
+import 'package:net_world_international/presentation/screens/export_local_db.dart';
 import 'package:net_world_international/presentation/widget/scale_up_animation.dart';
 
 class OptionScreen extends StatefulWidget {
@@ -186,24 +189,36 @@ class _OptionScreenState extends State<OptionScreen> {
                             ),
                           ),
                           ScaleUpAnimation(
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20),
-                                  child: Image.asset(
-                                    'assets/icon_ShoppingCart.png',
-                                    width: 20,
-                                    height: 20,
-                                  ),
+                            child: Material(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(5),
+                              child: InkWell(
+                                splashColor: Colormanager.primary,
+                                borderRadius: BorderRadius.circular(5),
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, Routes.productPurPage);
+                                },
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 20),
+                                      child: Image.asset(
+                                        'assets/icon_ShoppingCart.png',
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Purchase",
+                                      style: getLightStyle(
+                                          color: Colormanager.textColor,
+                                          fontSize: 15),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  "Purchase",
-                                  style: getLightStyle(
-                                      color: Colormanager.textColor,
-                                      fontSize: 15),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                           ScaleUpAnimation(
@@ -396,45 +411,67 @@ class _OptionScreenState extends State<OptionScreen> {
                             ),
                           ),
                           ScaleUpAnimation(
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20),
-                                  child: Image.asset(
-                                    IconImages.import,
-                                    width: 20,
-                                    height: 20,
-                                  ),
+                            child: Material(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(5),
+                              child: InkWell(
+                                splashColor: Colormanager.primary,
+                                borderRadius: BorderRadius.circular(5),
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (ctx) {
+                                    return const DbImport();
+                                  }));
+                                },
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 20),
+                                      child: Image.asset(
+                                        IconImages.import,
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Import Live DB",
+                                      style: getLightStyle(
+                                          color: Colormanager.textColor,
+                                          fontSize: 15),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  "Import Live DB",
-                                  style: getLightStyle(
-                                      color: Colormanager.textColor,
-                                      fontSize: 15),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                           ScaleUpAnimation(
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20),
-                                  child: Image.asset(
-                                    IconImages.sync,
-                                    width: 20,
-                                    height: 20,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (c) {
+                                  return const ExportScreen();
+                                }));
+                              },
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 20, right: 20),
+                                    child: Image.asset(
+                                      IconImages.sync,
+                                      width: 20,
+                                      height: 20,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  "Sync with Live DB",
-                                  style: getLightStyle(
-                                      color: Colormanager.textColor,
-                                      fontSize: 15),
-                                ),
-                              ],
+                                  Text(
+                                    "Export Local DB",
+                                    style: getLightStyle(
+                                        color: Colormanager.textColor,
+                                        fontSize: 15),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],

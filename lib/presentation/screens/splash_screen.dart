@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: BlocBuilder<LoginBloc, LoginState>(
             builder: (context, state) {
               if ((state is Initial) || (state is Loading)) {
-                return builIntro(size);
+                return builIntro(size, context);
               }
               return Container();
             },
@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-Widget builIntro(Size size) {
+Widget builIntro(Size size, context) {
   return Stack(
     children: [
       Container(
@@ -89,6 +89,19 @@ Widget builIntro(Size size) {
                   Text(
                     "Net World International",
                     style: getRegularStyle(color: Colors.white, fontSize: 14),
+                  ),
+                  const Spacer(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (ctx) {
+                        return const MainScreen();
+                      }));
+                    },
+                    child: Text(
+                      "Go Offline",
+                      style: getRegularStyle(color: Colors.white, fontSize: 15),
+                    ),
                   )
                 ],
               ),

@@ -63,9 +63,11 @@ class LoginImp implements LoginServices {
         final result = UserDetailsModel.fromJson(jsonResponse);
         return Right(result);
       } else {
+        print("object1");
         return const Left(MainFailure.serverFailure());
       }
     } catch (e) {
+      print("S");
       log(e.toString());
       return const Left(MainFailure.clientFailure());
     }
