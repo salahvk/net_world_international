@@ -16,6 +16,14 @@ class ExportScreen extends StatefulWidget {
 class _ExportScreenState extends State<ExportScreen> {
   final _connectToSqlServerDirectlyPlugin = ConnectToSqlServerDirectly();
   Database? database;
+
+  deleteTable() async {
+    final Database database = await openDatabase('my_database.db');
+
+    // Execute the SQL statement to drop the table
+    await database.execute('DROP TABLE IF EXISTS PTempPurchaseMaster2');
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -49,6 +57,7 @@ class _ExportScreenState extends State<ExportScreen> {
                 onError(value.toString());
               } else {
                 print(value);
+                await deleteTable();
                 showSuccessAnimatedSnackBar(
                     context, "Local DB Exported Successfully");
                 await Future.delayed(const Duration(seconds: 2));
