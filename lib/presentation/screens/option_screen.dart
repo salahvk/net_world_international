@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/asset_manager.dart';
 import 'package:net_world_international/core/color_manager.dart';
@@ -30,6 +31,7 @@ class _OptionScreenState extends State<OptionScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final endPoint = Hive.box("url").get('endpoint');
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(

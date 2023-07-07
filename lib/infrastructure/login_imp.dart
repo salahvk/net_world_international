@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
+import 'package:hive/hive.dart';
 
 import 'package:injectable/injectable.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
@@ -18,7 +19,9 @@ class LoginImp implements LoginServices {
   @override
   Future<Either<MainFailure, LoginModel>> getLoginData() async {
     try {
-      final url = Uri.parse(ApiEndPoint.login);
+      final endPoint = Hive.box("url").get('endpoint');
+      final apiUrl = "$endPoint${ApiEndPoint.login}";
+      final url = Uri.parse(apiUrl);
       final headers = {'Content-Type': 'application/json'};
       final body = jsonEncode({
         'userName': LoginControllers.nameController.text,
@@ -51,7 +54,9 @@ class LoginImp implements LoginServices {
   @override
   Future<Either<MainFailure, UserDetailsModel>> getUserData() async {
     try {
-      final url = Uri.parse(ApiEndPoint.userDetails);
+      final endPoint = Hive.box("url").get('endpoint');
+      final apiUrl = "$endPoint${ApiEndPoint.userDetails}";
+      final url = Uri.parse(apiUrl);
       final headers = {'Content-Type': 'application/json'};
       final body = jsonEncode({
         'userid': '1',

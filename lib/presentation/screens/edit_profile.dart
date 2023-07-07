@@ -1,11 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/styles_manager.dart';
-import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/presentation/screens/home_screen.dart';
 import 'package:net_world_international/presentation/screens/option_screen.dart';
 import 'package:net_world_international/presentation/screens/profile_screen.dart';
@@ -28,6 +28,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   ];
   @override
   Widget build(BuildContext context) {
+    final endPoint = Hive.box("url").get('endpoint');
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,

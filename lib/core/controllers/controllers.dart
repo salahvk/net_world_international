@@ -235,3 +235,7 @@ class ProductPurchaseController {
   // static TextEditingController ratetax = TextEditingController();
   // static TextEditingController total = TextEditingController();
 }
+
+class UrlController {
+  static TextEditingController url = TextEditingController();
+}

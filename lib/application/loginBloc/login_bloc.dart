@@ -77,8 +77,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         var stream = http.ByteStream(DelegatingStream(image.openRead()));
         var length = await image.length();
-
-        var uri = Uri.parse(ApiEndPoint.uploadImage);
+        final endPoint = Hive.box("url").get('endpoint');
+        final apiUrl = "$endPoint${ApiEndPoint.uploadImage}";
+        var uri = Uri.parse(apiUrl);
         var request = http.MultipartRequest(
           "POST",
           uri,
@@ -120,7 +121,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<UpdateNameEvent>((event, emit) async {
       try {
         emit(Loading());
-        var uri = Uri.parse(ApiEndPoint.uploadImage);
+        final endPoint = Hive.box("url").get('endpoint');
+        final apiUrl = "$endPoint${ApiEndPoint.uploadImage}";
+        var uri = Uri.parse(apiUrl);
         var map = <String, dynamic>{};
         final fName = EditProfileControllers.firstController.text;
         final lName = EditProfileControllers.lastController.text;
@@ -291,8 +294,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final cuState = state;
 
       String? pageNumber = event.pageNumber.toString();
-
-      final url = Uri.parse("${ApiEndPoint.getItems}?page=$pageNumber");
+      final endPoint = Hive.box("url").get('endpoint');
+      final apiUrl = "$endPoint${ApiEndPoint.getItems}?page=$pageNumber";
+      final url = Uri.parse(apiUrl);
       final headers = {'Content-Type': 'application/json'};
       final response = await http.get(
         url,
@@ -326,7 +330,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<NextBarCodeEvent>((event, emit) async {
       final cuState = state;
       try {
-        final url = Uri.parse(ApiEndPoint.getNextItem);
+        final endPoint = Hive.box("url").get('endpoint');
+        final apiUrl = "$endPoint${ApiEndPoint.getNextItem}";
+        final url = Uri.parse(apiUrl);
         final headers = {'Content-Type': 'application/json'};
         final body = jsonEncode(
             {"barcode": event.barcode, "selectrow": event.selectedThrow});

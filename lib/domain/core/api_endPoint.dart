@@ -1,6 +1,4 @@
-String endPoint = "http://erpapp.ap-southeast-1.elasticbeanstalk.com";
-
-String api = "$endPoint/api";
+String api = "/api";
 
 class ApiEndPoint {
   static String login = "$api/User/Login";

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:net_world_international/presentation/widget/scale_up_animation.dart';
 import 'package:net_world_international/presentation/widget/translate_up_animation.dart';
 import 'package:net_world_international/application/loginBloc/login_bloc.dart';
@@ -27,6 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final endPoint = Hive.box("url").get('endpoint');
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(

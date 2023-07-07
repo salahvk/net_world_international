@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
+import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/domain/add_items_model.dart';
@@ -18,7 +19,9 @@ class AddItemImp implements AddItemServices {
   @override
   Future<Either<MainFailure, AddItems>> addToItemMaster() async {
     try {
-      final url = Uri.parse(ApiEndPoint.addItems);
+      final endPoint = Hive.box("url").get('endpoint');
+      final apiUrl = "$endPoint${ApiEndPoint.addItems}";
+      final url = Uri.parse(apiUrl);
       final headers = {'Content-Type': 'application/json'};
       String barcode;
       if (ItemMasterControllers.barCodeController2.text.isEmpty) {
@@ -111,7 +114,9 @@ class AddItemImp implements AddItemServices {
   @override
   Future<Either<MainFailure, AddItems>> updateToItemMaster() async {
     try {
-      final url = Uri.parse("${ApiEndPoint.itemUpdateById}$id");
+      final endPoint = Hive.box("url").get('endpoint');
+      final apiUrl = "$endPoint${ApiEndPoint.itemUpdateById}$id";
+      final url = Uri.parse(apiUrl);
       final headers = {'Content-Type': 'application/json'};
       String barcode;
       if (ItemMasterControllers.barCodeController2.text.isEmpty) {
@@ -205,7 +210,9 @@ class AddItemImp implements AddItemServices {
   Future<Either<MainFailure, AddItems>> addAlterBarCode() async {
     print(ItemMasterControllers.itemId.text);
     try {
-      final url = Uri.parse(ApiEndPoint.addAlterItems);
+      final endPoint = Hive.box("url").get('endpoint');
+      final apiUrl = "$endPoint${ApiEndPoint.addAlterItems}";
+      final url = Uri.parse(apiUrl);
       final headers = {'Content-Type': 'application/json'};
       final body = jsonEncode({
         "itemMasterId": ItemMasterControllers.itemId.text,

@@ -1,11 +1,11 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:circle_progress_bar/circle_progress_bar.dart';
-import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/presentation/widget/scale_up_animation.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final endPoint = Hive.box("url").get('endpoint');
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(

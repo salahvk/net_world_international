@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
+import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/util/check_dep_name.dart';
@@ -21,7 +22,9 @@ class ItemImp implements ItemServices {
   @override
   Future<Either<MainFailure, ItemGetConfig>> getItemConfig() async {
     try {
-      final url = Uri.parse(ApiEndPoint.getItemConfig);
+      final endPoint = Hive.box("url").get('endpoint');
+      final apiUrl = "$endPoint${ApiEndPoint.getItemConfig}";
+      final url = Uri.parse(apiUrl);
       final headers = {'Content-Type': 'application/json'};
       final response = await http.get(
         url,
@@ -46,7 +49,9 @@ class ItemImp implements ItemServices {
   @override
   Future<Either<MainFailure, GetitemsModel>> getItems() async {
     try {
-      final url = Uri.parse(ApiEndPoint.getItems);
+      final endPoint = Hive.box("url").get('endpoint');
+      final apiUrl = "$endPoint${ApiEndPoint.getItems}";
+      final url = Uri.parse(apiUrl);
       final headers = {'Content-Type': 'application/json'};
       final response = await http.get(
         url,
@@ -69,7 +74,9 @@ class ItemImp implements ItemServices {
   @override
   Future<Either<MainFailure, ItemViewById>> getItemById() async {
     try {
-      final url = Uri.parse("${ApiEndPoint.getItemById}$itemId");
+      final endPoint = Hive.box("url").get('endpoint');
+      final apiUrl = "$endPoint${ApiEndPoint.getItemById}$itemId";
+      final url = Uri.parse(apiUrl);
       final headers = {'Content-Type': 'application/json'};
 
       final response = await http.get(
@@ -144,8 +151,10 @@ class ItemImp implements ItemServices {
   @override
   Future<Either<MainFailure, ItemViewById>> getItemByBar() async {
     try {
-      final url = Uri.parse(
-          "${ApiEndPoint.itemByBarcode}${PrintControllers.barcode.text}");
+      final endPoint = Hive.box("url").get('endpoint');
+      final apiUrl =
+          "$endPoint${ApiEndPoint.itemByBarcode}${PrintControllers.barcode.text}";
+      final url = Uri.parse(apiUrl);
       print(url);
       final headers = {'Content-Type': 'application/json'};
       final response = await http.get(

@@ -3,9 +3,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
 import 'package:net_world_international/core/asset_manager.dart';
 import 'package:net_world_international/core/color_manager.dart';
+import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/routes_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
-import 'package:net_world_international/domain/core/api_endpoint.dart';
+import 'package:net_world_international/core/util/animated_snackbar.dart';
+import 'package:net_world_international/infrastructure/validate_url.dart';
 
 class UrlPage extends StatefulWidget {
   const UrlPage({super.key});
@@ -16,11 +18,16 @@ class UrlPage extends StatefulWidget {
 
 class _UrlPageState extends State<UrlPage> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  void _saveForm() {
-    final bool isValid = _formKey.currentState!.validate();
-    if (isValid) {
+  void _saveForm() async {
+    final isUrlValid = await validateUrl();
+    // final bool isValid = _formKey.currentState!.validate();
+    if (isUrlValid) {
+      final endPoint = UrlController.url.text;
       Hive.box("url").put('url_valid', "true");
+      Hive.box("url").put('endpoint', endPoint);
       Navigator.pushNamed(context, Routes.paymentScreen);
+    } else {
+      showAnimatedSnackBar(context, "Url Not valid");
     }
   }
 
@@ -73,12 +80,14 @@ class _UrlPageState extends State<UrlPage> {
                       child: Center(
                           child: TextFormField(
                         textAlign: TextAlign.center,
-                        validator: (value) {
-                          if (value!.isEmpty || value != endPoint) {
-                            return 'Invalid URL Address';
-                          }
-                          return null;
-                        },
+                        controller: UrlController.url,
+                        // validator: (value) {
+
+                        //   if (value!.isEmpty || value != endPoint) {
+                        //     return 'Invalid URL Address';
+                        //   }
+                        //   return null;
+                        // },
                         decoration: InputDecoration(
                             contentPadding: const EdgeInsets.symmetric(
                                 // vertical: 16.0,
