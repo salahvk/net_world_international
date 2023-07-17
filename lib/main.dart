@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         debugShowCheckedModeBanner: false,
-        // home: const ProductPurchasePage(),
+        // home: const ViewPageLoading(),
         initialRoute: Routes.splashScreen,
         onGenerateRoute: RouteGenerator.getRoute,
       ),

@@ -157,6 +157,8 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                                   splashColor: Colormanager.primary,
                                   borderRadius: BorderRadius.circular(5),
                                   onTap: () async {
+                                    Navigator.pushNamed(
+                                        context, Routes.viewPageLoading);
                                     final s = await ItemImp(
                                             itemId: state
                                                 .getItems?.items?[index].id
@@ -165,7 +167,7 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                                         .getItemById();
                                     s.fold(
                                         (falure) {},
-                                        (success) => Navigator.pushNamed(
+                                        (success) => Navigator.pushReplacementNamed(
                                             context, Routes.viewPage));
                                   },
                                   child: Container(

@@ -69,6 +69,7 @@ dependencies:
   percent_indicator: ^4.2.3
   sqflite: ^2.2.8+4
   progresso: ^0.3.0
+  shimmer: ^3.0.0
   # sqflite: ^2.2.8+4
   # sql_server_socket:
   #  git:
