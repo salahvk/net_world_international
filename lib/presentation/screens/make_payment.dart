@@ -17,12 +17,15 @@ class MakePaymentScreen extends StatelessWidget {
         children: [
           SvgPicture.asset(
             AssetSvg.headerImage,
+                 width: size.width,
           ),
           Center(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 200,
+                 SizedBox(
+                   height: size.width > 500
+                                ? size.height * .32
+                                : size.height * .2,
                 ),
                 SvgPicture.asset(AssetSvg.logoRounded),
                 const SizedBox(

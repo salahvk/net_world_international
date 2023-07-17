@@ -39,7 +39,7 @@ class RouteGenerator {
       case Routes.getHelp:
         return MaterialPageRoute(builder: (_) => const GetHelpScreen());
       case Routes.viewPage:
-        return MaterialPageRoute(builder: (_) => const ItemViewPage());
+        return FadePageRoute(page: const ItemViewPage());
       case Routes.productPurPage:
         return MaterialPageRoute(builder: (_) => const ProductPurchasePage());
       default:
@@ -59,4 +59,26 @@ class RouteGenerator {
       ),
     );
   }
+}
+
+
+class FadePageRoute<T> extends PageRouteBuilder<T> {
+  final Widget page;
+
+  FadePageRoute({required this.page})
+      : super(
+          pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) {
+            return page;
+          },
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        );
 }

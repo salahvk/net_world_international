@@ -20,6 +20,15 @@ class ItemViewPage extends StatefulWidget {
 
 class _ItemViewPageState extends State<ItemViewPage> {
   bool isAlterBarCodeVisible = false;
+  bool isPrint = false;
+  @override
+  void initState() {
+    super.initState();
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+          
+        });
+
+  }
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
@@ -200,10 +209,67 @@ class _ItemViewPageState extends State<ItemViewPage> {
                 // const Divider(
                 //   thickness: 1,
                 // ),
-                  const SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
-                const BarcodePrint(),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                                ItemMasterCloneControllers
+                                                        .clone();
+                        },
+                        child: Container(
+                          // width: 70,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colormanager.teritiory,
+                          ),
+                          child: Center(
+                              child: Text(
+                            "Clone",
+                            style: getRegularStyle(
+                                color: Colormanager.primary, fontSize: 10),
+                          )),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            isPrint = !isPrint;
+                          });
+                        },
+                        child: Container(
+                          width: 70,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colormanager.teritiory,
+                          ),
+                          child: Center(
+                              child: Text(
+                            "Print",
+                            style: getRegularStyle(
+                                color: Colormanager.primary, fontSize: 10),
+                          )),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                isPrint ? const BarcodePrint() : Container(),
                 const SizedBox(
                   height: 20,
                 ),

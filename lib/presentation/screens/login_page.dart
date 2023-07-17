@@ -34,6 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    print(size);
     return Scaffold(
       body: SingleChildScrollView(
         child: BlocListener<LoginBloc, LoginState>(
@@ -57,176 +58,192 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               SvgPicture.asset(
                 AssetSvg.headerImage,
+                width: size.width,
               ),
-              Center(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 200,
-                      ),
-                      SvgPicture.asset(AssetSvg.logoRounded),
-                      const SizedBox(
-                        height: 25,
-                      ),
-                      Text(
-                        "Welcome",
-                        style: getMediumtStyle(
-                            color: Colormanager.mainTextColor, fontSize: 25),
-                      ),
-                      SizedBox(
-                        width: size.width * .6,
-                        child: Text(
-                          "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate.",
-                          style: getLightStyle(
-                              color: Colormanager.subTextColor, fontSize: 9),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colormanager.buttonColor,
-                            // border: Border.all(color: Colormanager.primary),
-                            borderRadius: BorderRadius.circular(7)),
-                        width: size.width * .8,
-                        // height: 50,
-                        child: Center(
-                          child: TextFormField(
-                            controller: LoginControllers.nameController,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.only(
-                                  // vertical: 16.0,
-                                  top: size.width * .03),
-                              prefixIcon: const Icon(
-                                Icons.person,
-                                size: 15,
-                              ),
-                              errorBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors
-                                      .red, // Define the border color for error state
-                                  width: 1.0,
-                                ),
-                              ),
-                              border: InputBorder.none,
-                              hintText: 'Enter Your User Name',
-                              hintStyle: getLightStyle(
-                                  color: Colormanager.mainTextColor,
-                                  fontSize: 9),
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Enter User Name';
-                              }
-                              return null;
-                            },
-                            style: getMediumtStyle(
-                                color: Colormanager.textColor, fontSize: 12),
+              Column(
+                children: [
+                  Center(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: size.width > 500
+                                ? size.height * .32
+                                : size.height * .2,
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colormanager.buttonColor,
-                            // border: Border.all(color: Colormanager.primary),
-                            borderRadius: BorderRadius.circular(7)),
-                        width: size.width * .8,
-                        // height: 50,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          child: Center(
-                            child: TextFormField(
-                              controller: LoginControllers.passWordController,
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                    // vertical: 16.0,
-                                    top: size.width * .03),
-                                prefixIcon: const Icon(
-                                  Icons.lock,
-                                  size: 15,
+                          SvgPicture.asset(AssetSvg.logoRounded),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          Text(
+                            "Welcome",
+                            style: getMediumtStyle(
+                                color: Colormanager.mainTextColor,
+                                fontSize: 25),
+                          ),
+                          SizedBox(
+                            width: size.width * .6,
+                            child: Text(
+                              "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate.",
+                              style: getLightStyle(
+                                  color: Colormanager.subTextColor,
+                                  fontSize: 9),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colormanager.buttonColor,
+                                // border: Border.all(color: Colormanager.primary),
+                                borderRadius: BorderRadius.circular(7)),
+                            width: size.width * .8,
+                            // height: 50,
+                            child: Center(
+                              child: TextFormField(
+                                controller: LoginControllers.nameController,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.only(
+                                      // vertical: 16.0,
+                                      top: size.width * .03),
+                                  prefixIcon: const Icon(
+                                    Icons.person,
+                                    size: 15,
+                                  ),
+                                  errorBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors
+                                          .red, // Define the border color for error state
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  border: InputBorder.none,
+                                  hintText: 'Enter Your User Name',
+                                  hintStyle: getLightStyle(
+                                      color: Colormanager.mainTextColor,
+                                      fontSize: 9),
                                 ),
-                                suffixIcon: InkWell(
-                                  child: isPasswordVIsible
-                                      ? const Icon(
-                                          Icons.visibility_off,
-                                          size: 18,
-                                        )
-                                      : const Icon(
-                                          Icons.visibility,
-                                          size: 18,
-                                        ),
-                                  onTap: () {
-                                    setState(() {
-                                      isPasswordVIsible = !isPasswordVIsible;
-                                    });
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Enter User Name';
+                                  }
+                                  return null;
+                                },
+                                style: getMediumtStyle(
+                                    color: Colormanager.textColor,
+                                    fontSize: 12),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colormanager.buttonColor,
+                                // border: Border.all(color: Colormanager.primary),
+                                borderRadius: BorderRadius.circular(7)),
+                            width: size.width * .8,
+                            // height: 50,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              child: Center(
+                                child: TextFormField(
+                                  controller:
+                                      LoginControllers.passWordController,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.only(
+                                        // vertical: 16.0,
+                                        top: size.width * .03),
+                                    prefixIcon: const Icon(
+                                      Icons.lock,
+                                      size: 15,
+                                    ),
+                                    suffixIcon: InkWell(
+                                      child: isPasswordVIsible
+                                          ? const Icon(
+                                              Icons.visibility_off,
+                                              size: 18,
+                                            )
+                                          : const Icon(
+                                              Icons.visibility,
+                                              size: 18,
+                                            ),
+                                      onTap: () {
+                                        setState(() {
+                                          isPasswordVIsible =
+                                              !isPasswordVIsible;
+                                        });
+                                      },
+                                    ),
+                                    errorBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors
+                                            .red, // Define the border color for error state
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    border: InputBorder.none,
+                                    hintText: 'Enter Password',
+                                    hintStyle: getLightStyle(
+                                        color: Colormanager.mainTextColor,
+                                        fontSize: 9),
+                                  ),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Enter Password';
+                                    }
+                                    return null;
+                                  },
+                                  obscureText: isPasswordVIsible,
+                                  style: getMediumtStyle(
+                                      color: Colormanager.textColor,
+                                      fontSize: 12),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          InkWell(
+                            onTap: _saveForm,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  // color: Colormanager.buttonColor,
+                                  border:
+                                      Border.all(color: Colormanager.primary),
+                                  borderRadius: BorderRadius.circular(7)),
+                              width: size.width * .8,
+                              height: 40,
+                              child: Center(
+                                child: BlocBuilder<LoginBloc, LoginState>(
+                                  builder: (context, state) {
+                                    if (state is Loading) {
+                                      return const CircularProgressIndicator();
+                                    } else if (state is Error) {
+                                      log("Error Occured");
+                                    }
+                                    return Text(
+                                      "Login",
+                                      style: getMediumtStyle(
+                                          color: Colormanager.primary,
+                                          fontSize: 9),
+                                    );
                                   },
                                 ),
-                                errorBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors
-                                        .red, // Define the border color for error state
-                                    width: 1.0,
-                                  ),
-                                ),
-                                border: InputBorder.none,
-                                hintText: 'Enter Password',
-                                hintStyle: getLightStyle(
-                                    color: Colormanager.mainTextColor,
-                                    fontSize: 9),
                               ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Enter Password';
-                                }
-                                return null;
-                              },
-                              obscureText: isPasswordVIsible,
-                              style: getMediumtStyle(
-                                  color: Colormanager.textColor, fontSize: 12),
                             ),
-                          ),
-                        ),
+                          )
+                        ],
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      InkWell(
-                        onTap: _saveForm,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              // color: Colormanager.buttonColor,
-                              border: Border.all(color: Colormanager.primary),
-                              borderRadius: BorderRadius.circular(7)),
-                          width: size.width * .8,
-                          height: 40,
-                          child: Center(
-                            child: BlocBuilder<LoginBloc, LoginState>(
-                              builder: (context, state) {
-                                if (state is Loading) {
-                                  return const CircularProgressIndicator();
-                                } else if (state is Error) {
-                                  log("Error Occured");
-                                }
-                                return Text(
-                                  "Login",
-                                  style: getMediumtStyle(
-                                      color: Colormanager.primary, fontSize: 9),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
+                    ),
                   ),
-                ),
+                ],
               )
             ],
           ),

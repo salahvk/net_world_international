@@ -41,14 +41,19 @@ class _UrlPageState extends State<UrlPage> {
           children: [
             SvgPicture.asset(
               AssetSvg.headerImage,
+              fit: BoxFit.cover,
+         width: size.width,
+              // height: size.h,
             ),
             Center(
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: [
-                    const SizedBox(
-                      height: 190,
+                     SizedBox(
+                      height: size.width > 500
+                                ? size.height * .32
+                                : size.height * .2,
                     ),
                     SvgPicture.asset(AssetSvg.logoRounded),
                     const SizedBox(
