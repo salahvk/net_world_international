@@ -8,6 +8,7 @@ import 'package:net_world_international/core/styles_manager.dart';
 import 'package:net_world_international/core/util/animated_snackbar.dart';
 import 'package:net_world_international/infrastructure/add_item_imp.dart';
 import 'package:net_world_international/presentation/screens/add_item_screen.dart';
+import 'package:net_world_international/presentation/widget/barcode_print.dart';
 import 'package:net_world_international/presentation/widget/itemview_row.dart';
 
 class ItemViewPage extends StatefulWidget {
@@ -199,6 +200,10 @@ class _ItemViewPageState extends State<ItemViewPage> {
                 // const Divider(
                 //   thickness: 1,
                 // ),
+                  const SizedBox(
+                  height: 20,
+                ),
+                const BarcodePrint(),
                 const SizedBox(
                   height: 20,
                 ),
