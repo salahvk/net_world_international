@@ -30,7 +30,7 @@ class ItemImp implements ItemServices {
         url,
         headers: headers,
       );
-      log(response.body);
+      // log(response.body);
       var jsonResponse = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = ItemGetConfig.fromJson(jsonResponse);
@@ -115,6 +115,7 @@ class ItemImp implements ItemServices {
       ItemMasterCloneControllers.cshelfNoController.text = result.shelfNo ?? '';
       ItemMasterCloneControllers.ccostPriceController.text =
           result.costPrice.toString();
+      log(ItemMasterCloneControllers.ccostPriceController.text);
       ItemMasterCloneControllers.csellingPController.text =
           result.sellingPrice.toString();
       ItemMasterCloneControllers.ccostWithTaxController.text =
@@ -163,7 +164,7 @@ class ItemImp implements ItemServices {
       );
 
       var jsonResponse = jsonDecode(response.body);
-      log(response.body);
+      // log(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = ItemViewById.fromJson(jsonResponse);
         PrintControllers.name.text = result.name ?? '';

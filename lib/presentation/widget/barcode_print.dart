@@ -16,9 +16,29 @@ class BarcodePrint extends StatefulWidget {
 
 class _BarcodePrintState extends State<BarcodePrint> {
   bool isBarCodePrintable = false;
+  getItemByBarCode()async{
+      final itemFetch = await ItemImp().getItemByBar();
+
+                              itemFetch.fold((falure) {
+                                return setState(() {
+                                  showAnimatedSnackBar(
+                                      context, "No Barcode Found");
+                                  setState(() {
+                                    isBarCodePrintable = false;
+                                  });
+                                  PrintControllers.clearControllers();
+                                });
+                              }, (success) {
+                                showSuccessAnimatedSnackBar(
+                                    context, "Barcode Fetched");
+                                setState(() {
+                                  isBarCodePrintable = true;
+                                });
+                              });
+  }
   @override
   Widget build(BuildContext context) {
-     final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return Container(
       // width: size.width * .8,
       // height: size.height * .7,
@@ -106,7 +126,7 @@ class _BarcodePrintState extends State<BarcodePrint> {
               height: 5,
             ),
             SizedBox(
-              height: 40,
+              // height: 40,
               // width: size.width * .35,
               child: TextField(
                   keyboardType: TextInputType.number,
@@ -118,28 +138,21 @@ class _BarcodePrintState extends State<BarcodePrint> {
                         color: Colors.red,
                       ),
                     ),
-                    suffixIcon: InkWell(
-                      onTap: () async {
-                        print(PrintControllers.barcode.text);
-                        final itemFetch = await ItemImp().getItemByBar();
-
-                        itemFetch.fold((falure) {
-                          return setState(() {
-                            showAnimatedSnackBar(context, "No Barcode Found");
-                            setState(() {
-                              isBarCodePrintable = false;
-                            });
-                            PrintControllers.clearControllers();
-                          });
-                        }, (success) {
-                          showSuccessAnimatedSnackBar(
-                              context, "Barcode Fetched");
-                          setState(() {
-                            isBarCodePrintable = true;
-                          });
-                        });
-                      },
-                      child: const Icon(Icons.arrow_forward_rounded),
+                    suffixIcon: SizedBox(
+                      width: 50,
+                      child: Row(
+                        children: [
+                          InkWell(
+                              onTap: () {
+                                PrintControllers.barcode.clear();
+                              },
+                              child: const Icon(Icons.close)),
+                          InkWell(
+                            onTap: getItemByBarCode,
+                            child: const Icon(Icons.arrow_forward_rounded),
+                          ),
+                        ],
+                      ),
                     ),
                     enabledBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colormanager.primary),
@@ -291,7 +304,6 @@ class _BarcodePrintState extends State<BarcodePrint> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: Colormanager.teritiory,
-                        border: Border.all(color: Colormanager.primary),
                       ),
                       child: Center(
                           child: Text(
@@ -311,7 +323,6 @@ class _BarcodePrintState extends State<BarcodePrint> {
                     height: 30,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colormanager.primary),
                       color: Colormanager.teritiory,
                     ),
                     child: Center(
@@ -331,7 +342,6 @@ class _BarcodePrintState extends State<BarcodePrint> {
                     height: 30,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colormanager.primary),
                       color: Colormanager.teritiory,
                     ),
                     child: Center(

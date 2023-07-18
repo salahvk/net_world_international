@@ -9,14 +9,13 @@ import 'package:net_world_international/core/routes_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:net_world_international/core/util/animated_snackbar.dart';
 import 'package:net_world_international/core/util/arabic_transileteration.dart';
-import 'package:net_world_international/core/util/print_page.dart';
+import 'package:net_world_international/core/util/check_dep_name.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/category_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/department_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/second_category_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/supplier_master_list.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/tax_list.dart';
 import 'package:net_world_international/infrastructure/add_item_imp.dart';
-import 'package:net_world_international/infrastructure/item_imp.dart';
 import 'package:net_world_international/presentation/screens/home_screen.dart';
 import 'package:net_world_international/presentation/screens/item_master.dart';
 import 'package:net_world_international/presentation/screens/option_screen.dart';
@@ -65,7 +64,18 @@ class _AddItemScreenState extends State<AddItemScreen> {
   @override
   void initState() {
     super.initState();
-    widget.isUpdating ? null : ItemMasterControllers.cleanControllers();
+    if (widget.isUpdating) {
+      deftax =
+          getTaxListById(int.parse(ItemMasterCloneControllers.cdefTaxId.text));
+      onCostChange(ItemMasterControllers.costPriceController.text);
+      print(deftax?.taxRate);
+      getSellingTax();
+      ItemMasterControllers.marginController.clear();
+      ItemMasterControllers.marginPerController.clear();
+    } else {
+      ItemMasterControllers.cleanControllers();
+    }
+
     BlocProvider.of<LoginBloc>(context).add(
       OptionPageEvent(),
     );
@@ -296,11 +306,27 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                               selectedThrow: 'previous',
                                               barcode: barc),
                                         );
+                                        await Future.delayed(
+                                            const Duration(seconds: 1));
+
                                         setState(() {
+                                          deftax = getTaxListById(int.parse(
+                                              ItemMasterCloneControllers
+                                                  .cdefTaxId.text));
+                                          ItemMasterCloneControllers.cdefTaxName
+                                              .text = deftax?.taxName ?? '';
                                           isNextVisible = true;
                                           isBarCodeGen = true;
                                           onNextBarCode = true;
                                         });
+                                        print(ItemMasterControllers
+                                            .costPriceController.text);
+                                        await Future.delayed(
+                                            const Duration(seconds: 1));
+                                        onCostChange(ItemMasterControllers
+                                            .costPriceController.text);
+                                        print(deftax?.taxRate);
+                                        getSellingTax();
                                       },
                                       child: Container(
                                         width: 40,
@@ -360,10 +386,27 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                   selectedThrow: 'next',
                                                   barcode: barc),
                                             );
+                                            await Future.delayed(
+                                                const Duration(seconds: 1));
                                             setState(() {
+                                              deftax = getTaxListById(int.parse(
+                                                  ItemMasterCloneControllers
+                                                      .cdefTaxId.text));
+                                              ItemMasterCloneControllers
+                                                  .cdefTaxName
+                                                  .text = deftax?.taxName ?? '';
                                               isBarCodeGen = true;
                                               onNextBarCode = true;
                                             });
+
+                                            print(ItemMasterControllers
+                                                .costPriceController.text);
+                                            await Future.delayed(
+                                                const Duration(seconds: 1));
+                                            onCostChange(ItemMasterControllers
+                                                .costPriceController.text);
+                                            print(deftax?.taxRate);
+                                            getSellingTax();
                                           },
                                           child: Container(
                                             width: 40,
@@ -444,7 +487,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                             getRegularStyle(color: Colors.black, fontSize: 14),
                       ),
                       SizedBox(
-                        height: 50,
+                        // height: 50,
                         child: TextField(
                             controller: ItemMasterControllers.nameController,
                             decoration: InputDecoration(
@@ -621,9 +664,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                       },
 
                                       customButton: ItemMasterControllers
-                                              .departmentNameController
-                                              .text
-                                              .isEmpty
+                                                  .departmentNameController
+                                                  .text
+                                                  .isEmpty ||
+                                              ItemMasterControllers
+                                                      .departmentNameController
+                                                      .text ==
+                                                  'null'
                                           ? null
                                           : Row(
                                               children: [
@@ -719,9 +766,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                       },
 
                                       customButton: ItemMasterControllers
-                                              .categoryNameController
-                                              .text
-                                              .isEmpty
+                                                  .categoryNameController
+                                                  .text
+                                                  .isEmpty ||
+                                              ItemMasterControllers
+                                                      .categoryNameController
+                                                      .text ==
+                                                  'null'
                                           ? null
                                           : Row(
                                               children: [
@@ -819,9 +870,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                       },
 
                                       customButton: ItemMasterControllers
-                                              .subCategoryNameController
-                                              .text
-                                              .isEmpty
+                                                  .subCategoryNameController
+                                                  .text
+                                                  .isEmpty ||
+                                              ItemMasterControllers
+                                                      .subCategoryNameController
+                                                      .text ==
+                                                  'null'
                                           ? null
                                           : Row(
                                               children: [
@@ -923,9 +978,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                       },
 
                                       customButton: ItemMasterControllers
-                                              .supplierNameController
-                                              .text
-                                              .isEmpty
+                                                  .supplierNameController
+                                                  .text
+                                                  .isEmpty ||
+                                              ItemMasterControllers
+                                                      .supplierNameController
+                                                      .text ==
+                                                  'null'
                                           ? null
                                           : Row(
                                               children: [
@@ -1535,83 +1594,44 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(right: 3),
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(right: 3),
-                                            child: CurvedCheckbox(
-                                              value: isActiceChecked,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  isActiceChecked = value;
-                                                  isNoneStockChecked = false;
-                                                  isCounterStockChecked = false;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                          Text(
-                                            "Active",
-                                            style: getRegularStyle(
-                                                color: Colormanager.textColor,
-                                                fontSize: 10),
-                                          ),
-                                        ],
+                                      child: CurvedCheckbox(
+                                        text: "Active",
+                                        value: isActiceChecked,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            isActiceChecked = value;
+                                            isNoneStockChecked = false;
+                                            isCounterStockChecked = false;
+                                          });
+                                        },
                                       ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(right: 3),
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(right: 3),
-                                            child: CurvedCheckbox(
-                                              value: isNoneStockChecked,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  isNoneStockChecked = value;
-                                                  isActiceChecked = false;
-                                                  isCounterStockChecked = false;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                          Text(
-                                            "None Stock ",
-                                            style: getRegularStyle(
-                                                color: Colormanager.textColor,
-                                                fontSize: 10),
-                                          ),
-                                        ],
+                                      child: CurvedCheckbox(
+                                        text: "None Stock ",
+                                        value: isNoneStockChecked,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            isNoneStockChecked = value;
+                                            isActiceChecked = false;
+                                            isCounterStockChecked = false;
+                                          });
+                                        },
                                       ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(right: 3),
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(right: 3),
-                                            child: CurvedCheckbox(
-                                              value: isCounterStockChecked,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  isCounterStockChecked = value;
-                                                  isActiceChecked = false;
-                                                  isNoneStockChecked = false;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                          Text(
-                                            "Counter Stock",
-                                            style: getRegularStyle(
-                                                color: Colormanager.textColor,
-                                                fontSize: 10),
-                                          ),
-                                        ],
+                                      child: CurvedCheckbox(
+                                        text: 'Counter Stock',
+                                        value: isCounterStockChecked,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            isCounterStockChecked = value;
+                                            isActiceChecked = false;
+                                            isNoneStockChecked = false;
+                                          });
+                                        },
                                       ),
                                     ),
                                   ],
@@ -1825,9 +1845,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      isprint
-                          ? const BarcodePrint()
-                          : Container(),
+                      isprint ? const BarcodePrint() : Container(),
                       const SizedBox(
                         height: 20,
                       ),
@@ -1845,19 +1863,24 @@ class _AddItemScreenState extends State<AddItemScreen> {
       showAnimatedSnackBar(context, "Generate a BarCode");
     } else if (ItemMasterControllers.nameController.text.isEmpty) {
       showAnimatedSnackBar(context, "Enter Your Name");
-    } else if (ItemMasterControllers.shortNameController.text.isEmpty) {
-      showAnimatedSnackBar(context, "Enter Your Short Name");
-    } else if (ItemMasterControllers.arabicController.text.isEmpty) {
-      showAnimatedSnackBar(context, "Generate Your Arabic Name");
-    } else if (ItemMasterControllers.departmentController.text.isEmpty) {
+    }
+    //  else if (ItemMasterControllers.shortNameController.text.isEmpty) {
+    //   showAnimatedSnackBar(context, "Enter Your Short Name");
+    // }
+    //  else if (ItemMasterControllers.arabicController.text.isEmpty) {
+    //   showAnimatedSnackBar(context, "Generate Your Arabic Name");
+    // }
+     else if (ItemMasterControllers.departmentController.text.isEmpty) {
       showAnimatedSnackBar(context, "Select a Department");
-    } else if (ItemMasterControllers.categoryController.text.isEmpty) {
-      showAnimatedSnackBar(context, "Select a Category");
-    } else if (ItemMasterControllers.subCategoryController.text.isEmpty) {
-      showAnimatedSnackBar(context, "Select a sub Category");
-    } else if (ItemMasterControllers.supplierCodeController.text.isEmpty) {
-      showAnimatedSnackBar(context, "Select a Supplier");
-    } else if (ItemMasterControllers.costPriceController.text.isEmpty) {
+    }
+    //  else if (ItemMasterControllers.categoryController.text.isEmpty) {
+    //   showAnimatedSnackBar(context, "Select a Category");
+    // } else if (ItemMasterControllers.subCategoryController.text.isEmpty) {
+    //   showAnimatedSnackBar(context, "Select a sub Category");
+    // } else if (ItemMasterControllers.supplierCodeController.text.isEmpty) {
+    //   showAnimatedSnackBar(context, "Select a Supplier");
+    // }
+    else if (ItemMasterControllers.costPriceController.text.isEmpty) {
       showAnimatedSnackBar(context, "Enter a Cost");
     } else if (ItemMasterControllers.sellingPController.text.isEmpty) {
       showAnimatedSnackBar(context, "Selling Price is Mandatory");
@@ -1900,19 +1923,24 @@ class _AddItemScreenState extends State<AddItemScreen> {
       showAnimatedSnackBar(context, "Generate a BarCode");
     } else if (ItemMasterControllers.nameController.text.isEmpty) {
       showAnimatedSnackBar(context, "Enter Your Name");
-    } else if (ItemMasterControllers.shortNameController.text.isEmpty) {
-      showAnimatedSnackBar(context, "Enter Your Short Name");
-    } else if (ItemMasterControllers.arabicController.text.isEmpty) {
-      showAnimatedSnackBar(context, "Generate Your Arabic Name");
-    } else if (ItemMasterControllers.departmentController.text.isEmpty) {
+    }
+    //  else if (ItemMasterControllers.shortNameController.text.isEmpty) {
+    //   showAnimatedSnackBar(context, "Enter Your Short Name");
+    // }
+    //  else if (ItemMasterControllers.arabicController.text.isEmpty) {
+    //   showAnimatedSnackBar(context, "Generate Your Arabic Name");
+    // }
+     else if (ItemMasterControllers.departmentController.text.isEmpty) {
       showAnimatedSnackBar(context, "Select a Department");
-    } else if (ItemMasterControllers.categoryController.text.isEmpty) {
-      showAnimatedSnackBar(context, "Select a Category");
-    } else if (ItemMasterControllers.subCategoryController.text.isEmpty) {
-      showAnimatedSnackBar(context, "Select a sub Category");
-    } else if (ItemMasterControllers.supplierCodeController.text.isEmpty) {
-      showAnimatedSnackBar(context, "Select a Supplier");
-    } else if (ItemMasterControllers.costPriceController.text.isEmpty) {
+    }
+    //  else if (ItemMasterControllers.categoryController.text.isEmpty) {
+    //   showAnimatedSnackBar(context, "Select a Category");
+    // } else if (ItemMasterControllers.subCategoryController.text.isEmpty) {
+    //   showAnimatedSnackBar(context, "Select a sub Category");
+    // } else if (ItemMasterControllers.supplierCodeController.text.isEmpty) {
+    //   showAnimatedSnackBar(context, "Select a Supplier");
+    // }
+    else if (ItemMasterControllers.costPriceController.text.isEmpty) {
       showAnimatedSnackBar(context, "Enter a Cost");
     } else if (ItemMasterControllers.sellingPController.text.isEmpty) {
       showAnimatedSnackBar(context, "Selling Price is Mandatory");
@@ -1963,7 +1991,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
           value.toString();
     }
     if (value.isEmpty || deftax == null) {
-      showAnimatedSnackBar(context, "Choose a vat");
+      // showAnimatedSnackBar(context, "Choose a vat");
       return;
     }
     if (value.isEmpty) return;
@@ -1971,6 +1999,17 @@ class _AddItemScreenState extends State<AddItemScreen> {
     double s = double.parse(value);
     ItemMasterControllers.costWithTaxController.text =
         (s + (s / 100 * deftax?.taxRate)).toString();
+    if (ItemMasterControllers.marginController.text.isNotEmpty) {
+      onMarginCostChanged(ItemMasterControllers.marginController.text);
+    }
+  }
+
+  getSellingTax() {
+    double cost = double.parse(ItemMasterControllers.sellingPController.text);
+    ItemMasterControllers.sellingPriceWithTaxController.text =
+        (double.parse(ItemMasterControllers.sellingPController.text) +
+                (cost / 100 * deftax?.taxRate))
+            .toStringAsFixed(2);
   }
 
   // * onMarginCostChanged
@@ -2028,6 +2067,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
     double cot = double.parse(value);
     ItemMasterControllers.costPriceController.text =
         (cot / (1 + deftax?.taxRate / 100)).toStringAsFixed(2);
+    if (ItemMasterControllers.marginController.text.isNotEmpty) {
+      onMarginCostChanged(ItemMasterControllers.marginController.text);
+    }
   }
 
   onTaxSelect(value) {
@@ -2051,6 +2093,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
     }
     if (ItemMasterControllers.marginPerController.text.isNotEmpty) {
       onMarginPerChanged(ItemMasterControllers.marginPerController.text);
+    }
+    if (ItemMasterControllers.sellingPController.text.isNotEmpty) {
+      getSellingTax();
     }
   }
 

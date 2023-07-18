@@ -7,6 +7,7 @@ import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:net_world_international/core/util/animated_snackbar.dart';
 import 'package:net_world_international/infrastructure/add_item_imp.dart';
+import 'package:net_world_international/infrastructure/item_imp.dart';
 import 'package:net_world_international/presentation/screens/add_item_screen.dart';
 import 'package:net_world_international/presentation/widget/barcode_print.dart';
 import 'package:net_world_international/presentation/widget/itemview_row.dart';
@@ -24,11 +25,13 @@ class _ItemViewPageState extends State<ItemViewPage> {
   @override
   void initState() {
     super.initState();
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-          
-        });
-
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      PrintControllers.barcode.text =
+          ItemMasterCloneControllers.cbarCodeController.text;
+      await ItemImp().getItemByBar();
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
@@ -109,29 +112,21 @@ class _ItemViewPageState extends State<ItemViewPage> {
                 ItemViewRow(
                     key1: 'Name',
                     value: ItemMasterCloneControllers.cnameController.text),
-                const Divider(
-                  thickness: 1,
-                ),
+
                 ItemViewRow(
                     key1: 'Arabic Name',
                     value: ItemMasterCloneControllers.carabicController.text),
-                const Divider(
-                  thickness: 1,
-                ),
+
                 ItemViewRow(
                     key1: 'Department',
                     value: ItemMasterCloneControllers
                         .cdepartmentNameController.text),
-                const Divider(
-                  thickness: 1,
-                ),
+
                 ItemViewRow(
                     key1: 'Category',
                     value: ItemMasterCloneControllers
                         .ccategoryNameController.text),
-                const Divider(
-                  thickness: 1,
-                ),
+
                 // ItemViewRow(
                 //     key1: 'Brand',
                 //     value: ItemMasterCloneControllers.cnameController.text),
@@ -148,34 +143,24 @@ class _ItemViewPageState extends State<ItemViewPage> {
                 // ItemViewRow(
                 //     key1: 'Unit',
                 //     value: ItemMasterCloneControllers.cnameController.text),
-                const Divider(
-                  thickness: 1,
-                ),
+
                 ItemViewRow(
                     key1: 'Tax Name',
                     value: ItemMasterCloneControllers.cdefTaxName.text),
-                const Divider(
-                  thickness: 1,
-                ),
+
                 ItemViewRow(
                     key1: 'Rack No',
                     value: ItemMasterCloneControllers.crackNoController.text),
-                const Divider(
-                  thickness: 1,
-                ),
+
                 ItemViewRow(
                     key1: 'Shelf No',
                     value: ItemMasterCloneControllers.cshelfNoController.text),
-                const Divider(
-                  thickness: 1,
-                ),
+
                 ItemViewRow(
                     key1: 'Cost Price',
                     value:
                         ItemMasterCloneControllers.ccostPriceController.text),
-                const Divider(
-                  thickness: 1,
-                ),
+
                 ItemViewRow(
                     key1: 'Cost With Tax',
                     value:
@@ -193,15 +178,11 @@ class _ItemViewPageState extends State<ItemViewPage> {
                 // ItemViewRow(
                 //     key1: 'Margin \$',
                 //     value: ItemMasterCloneControllers.cmarginController.text),
-                const Divider(
-                  thickness: 1,
-                ),
+
                 ItemViewRow(
                     key1: 'Selling Price',
                     value: ItemMasterCloneControllers.csellingPController.text),
-                const Divider(
-                  thickness: 1,
-                ),
+
                 // ItemViewRow(
                 //     key1: 'Selling With Tax',
                 //     value: ItemMasterCloneControllers
@@ -217,10 +198,18 @@ class _ItemViewPageState extends State<ItemViewPage> {
                     Expanded(
                       child: InkWell(
                         onTap: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                                ItemMasterCloneControllers
-                                                        .clone();
+                          // Navigator.pop(context);
+                          // Navigator.pop(context);
+                          // ItemMasterCloneControllers.clone();
+                            ItemMasterCloneControllers.clone();
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (ctx) {
+                                  return const AddItemScreen(
+                                    isUpdating: true,
+                                  );
+                                }));
                         },
                         child: Container(
                           // width: 70,

@@ -33,7 +33,7 @@ class LoginImp implements LoginServices {
       log(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = LoginModel.fromJson(jsonResponse);
-        log(response.body);
+        // log(response.body);
         return Right(result);
       } else {
         return const Left(MainFailure.serverFailure());

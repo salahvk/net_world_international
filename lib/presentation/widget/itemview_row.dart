@@ -9,21 +9,27 @@ class ItemViewRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            key1,
-            style: getRegularStyle(color: Colormanager.textColor, fontSize: 14),
+    return value.isNotEmpty &&  value != 'null' ? Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                key1,
+                style: getRegularStyle(color: Colormanager.textColor, fontSize: 14),
+              ),
+              Text(
+                value != 'null' ? value : '',
+                style: getRegularStyle(color: Colormanager.textColor, fontSize: 14),
+              ),
+            ],
           ),
-          Text(
-            value,
-            style: getRegularStyle(color: Colormanager.textColor, fontSize: 14),
-          ),
-        ],
-      ),
-    );
+        ),   const Divider(
+                  thickness: 1,
+                ),
+      ],
+    ) : Container();
   }
 }
