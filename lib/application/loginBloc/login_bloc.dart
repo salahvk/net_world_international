@@ -50,8 +50,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               await ItemImp().getItemConfig();
           ItemGetConfig itemGetConfig =
               result1.getOrElse(() => ItemGetConfig());
-          String barcode1 = genBarcode(itemGetConfig);
-          String barcode2 = genBarcode2(itemGetConfig);
+          String barcode1 = await genBarcode(itemGetConfig);
+          String barcode2 = await genBarcode2(itemGetConfig);
           // itemGetConfig.;
 
           emit(LoggedIn(
@@ -109,8 +109,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         Either<MainFailure, ItemGetConfig> result1 =
             await ItemImp().getItemConfig();
         ItemGetConfig itemGetConfig = result1.getOrElse(() => ItemGetConfig());
-        String barcode1 = genBarcode(itemGetConfig);
-        String barcode2 = genBarcode2(itemGetConfig);
+        String barcode1 = await genBarcode(itemGetConfig);
+        String barcode2 = await genBarcode2(itemGetConfig);
         emit(LoggedIn(
             userModel: userModel,
             itemGetConfig: itemGetConfig,
@@ -148,8 +148,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         Either<MainFailure, ItemGetConfig> result1 =
             await ItemImp().getItemConfig();
         ItemGetConfig itemGetConfig = result1.getOrElse(() => ItemGetConfig());
-        String barcode1 = genBarcode(itemGetConfig);
-        String barcode2 = genBarcode2(itemGetConfig);
+        String barcode1 = await genBarcode(itemGetConfig);
+        String barcode2 = await genBarcode2(itemGetConfig);
         emit(LoggedIn(
             userModel: userModel,
             itemGetConfig: itemGetConfig,
@@ -180,8 +180,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
 
           await Future.delayed(const Duration(seconds: 3));
-          String barcode1 = genBarcode(itemGetConfig);
-          String barcode2 = genBarcode2(itemGetConfig);
+          String barcode1 = await genBarcode(itemGetConfig);
+          String barcode2 = await genBarcode2(itemGetConfig);
           emit(LoggedIn(
               userModel: userDetailsModel,
               itemGetConfig: itemGetConfig,
@@ -197,8 +197,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       ItemGetConfig itemGetConfig = result1.getOrElse(() => ItemGetConfig());
 
       final cuState = state;
-      String barcode1 = genBarcode(itemGetConfig);
-      String barcode2 = genBarcode2(itemGetConfig);
+      String barcode1 = await genBarcode(itemGetConfig);
+      String barcode2 = await genBarcode2(itemGetConfig);
 
       if (cuState is LoggedIn) {
         emit(LoggedIn(
@@ -253,8 +253,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       Either<MainFailure, GetitemsModel> items = await ItemImp().getItems();
       GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
 
-      String barcode1 = genBarcode(itemGetConfig);
-      String barcode2 = genBarcode2(itemGetConfig);
+      String barcode1 = await genBarcode(itemGetConfig);
+      String barcode2 = await genBarcode2(itemGetConfig);
       final cuState = state;
       if (cuState is LoggedIn) {
         emit(OptionPageState(
@@ -364,7 +364,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             result.basePrice.toString();
         ItemMasterControllers.supplierCodeController.text =
             result.suppliercode ?? '';
-        ItemMasterControllers.itemId.text = result.id.toString(); 
+        ItemMasterControllers.itemId.text = result.id.toString();
         //
         // ItemMasterControllers.nonStockController.text = result.nonStockItem.toString() == 1 ? true : false;
         //  "nonStockItem":

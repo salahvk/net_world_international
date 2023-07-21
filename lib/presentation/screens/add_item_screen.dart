@@ -187,7 +187,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                         children: [
                           Expanded(
                             child: SizedBox(
-                              height: 50,
+                              // height: 50,
                               child: TextField(
                                   keyboardType: TextInputType.number,
                                   controller:
@@ -1870,7 +1870,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
     //  else if (ItemMasterControllers.arabicController.text.isEmpty) {
     //   showAnimatedSnackBar(context, "Generate Your Arabic Name");
     // }
-     else if (ItemMasterControllers.departmentController.text.isEmpty) {
+    else if (ItemMasterControllers.departmentController.text.isEmpty) {
       showAnimatedSnackBar(context, "Select a Department");
     }
     //  else if (ItemMasterControllers.categoryController.text.isEmpty) {
@@ -1930,7 +1930,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
     //  else if (ItemMasterControllers.arabicController.text.isEmpty) {
     //   showAnimatedSnackBar(context, "Generate Your Arabic Name");
     // }
-     else if (ItemMasterControllers.departmentController.text.isEmpty) {
+    else if (ItemMasterControllers.departmentController.text.isEmpty) {
       showAnimatedSnackBar(context, "Select a Department");
     }
     //  else if (ItemMasterControllers.categoryController.text.isEmpty) {
