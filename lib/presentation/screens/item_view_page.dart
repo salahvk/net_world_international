@@ -201,15 +201,15 @@ class _ItemViewPageState extends State<ItemViewPage> {
                           // Navigator.pop(context);
                           // Navigator.pop(context);
                           // ItemMasterCloneControllers.clone();
-                            ItemMasterCloneControllers.clone();
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pushReplacement(context,
-                                    MaterialPageRoute(builder: (ctx) {
-                                  return const AddItemScreen(
-                                    isUpdating: true,
-                                  );
-                                }));
+                          ItemMasterCloneControllers.clone();
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (ctx) {
+                            return const AddItemScreen(
+                              isUpdating: true,
+                            );
+                          }));
                         },
                         child: Container(
                           // width: 70,
@@ -320,14 +320,41 @@ class _ItemViewPageState extends State<ItemViewPage> {
                                   BlocBuilder<LoginBloc, LoginState>(
                                     builder: (context, state) {
                                       if (state is OptionPageState) {
-                                        AlterUnitControllers.barcodeAlt.text =
-                                            state.barCode2 ?? '';
-                                        return BarcodeWidget(
-                                          barcode: Barcode.code128(),
-                                          data: state.barCode2 ?? '',
-                                          width: w * .6,
-                                          height: 100,
-                                        );
+                                        // AlterUnitControllers.barcodeAltText
+                                        //     .text = state.barCode2 ?? '';
+                                        // AlterUnitControllers.barcodeAlt.text =
+                                        //     state.barCode2 ?? '';
+                                        // AlterUnitControllers.barcodeAltText
+                                        //     .text = state.barCode2 ?? '';
+                                        // return BarcodeWidget(
+                                        //   barcode: Barcode.code128(),
+                                        //   data: AlterUnitControllers
+                                        //       .barcodeAlt.text,
+                                        //   width: w * .6,
+                                        //   height: 100,
+                                        // );
+                                        print("object");
+                                        print(AlterUnitControllers
+                                            .barcodeAlt.text);
+                                        print(AlterUnitControllers
+                                            .barcodeAltText.text);
+
+                                        return AlterUnitControllers
+                                                    .barcodeAltText.text !=
+                                                state.barCode2
+                                            ? BarcodeWidget(
+                                                barcode: Barcode.code128(),
+                                                data: AlterUnitControllers
+                                                    .barcodeAltText.text,
+                                                // width: 100,
+                                                height: 100,
+                                              )
+                                            : BarcodeWidget(
+                                                barcode: Barcode.code128(),
+                                                data: state.barCode2 ?? '',
+                                                // width: 100,
+                                                height: 100,
+                                              );
                                       }
                                       return Container();
                                     },
@@ -336,6 +363,114 @@ class _ItemViewPageState extends State<ItemViewPage> {
                                     height: 10,
                                   )
                                 ],
+                              ),
+                              Row(children: [
+                                Expanded(
+                                  child: SizedBox(
+                                    // height: 50,
+                                    child: TextField(
+                                        keyboardType: TextInputType.number,
+                                        controller:
+                                            AlterUnitControllers.barcodeAltText,
+                                        decoration: InputDecoration(
+                                          hintText: "Barcode",
+                                          hintStyle: getRegularStyle(
+                                              color: Colors.grey, fontSize: 12),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            borderSide: const BorderSide(
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            borderSide: const BorderSide(
+                                                color: Colormanager.amber),
+                                            // borderRadius: BorderRadius.circular(5)
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            borderSide: const BorderSide(
+                                                color: Color.fromARGB(
+                                                    255, 2, 76, 136)),
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                BlocBuilder<LoginBloc, LoginState>(
+                                  builder: (context, state) {
+                                    if (state is OptionPageState) {
+                                      return Material(
+                                        color: Colormanager.teritiory,
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: InkWell(
+                                          splashColor: Colormanager.primary,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          onTap: () {
+                                            setState(() {
+                                              AlterUnitControllers.barcodeAlt
+                                                  .clear();
+                                            });
+
+                                            // setState(() {
+                                            //   // isBarCodeGen = true;
+
+                                            //   AlterUnitControllers.barcodeAlt
+                                            //       .clear();
+                                            //   if (AlterUnitControllers
+                                            //       .barcodeAlt.text.isEmpty) {
+                                            //     AlterUnitControllers
+                                            //             .barcodeAlt.text =
+                                            //         state.barCode2 ?? '';
+                                            //   }
+                                            // });
+                                          },
+                                          child: Container(
+                                            width: 80,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: Center(
+                                                child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const Icon(
+                                                  Icons.add_circle_outline,
+                                                  size: 12,
+                                                  color: Colormanager.primary,
+                                                ),
+                                                const SizedBox(
+                                                  width: 3,
+                                                ),
+                                                Text(
+                                                  "Generate",
+                                                  style: getRegularStyle(
+                                                      color:
+                                                          Colormanager.primary,
+                                                      fontSize: 11),
+                                                ),
+                                              ],
+                                            )),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    return Container();
+                                  },
+                                ),
+                              ]),
+                              const SizedBox(
+                                height: 15,
                               ),
                               Row(
                                 mainAxisAlignment:

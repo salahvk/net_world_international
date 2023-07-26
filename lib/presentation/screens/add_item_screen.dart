@@ -33,7 +33,7 @@ class AddItemScreen extends StatefulWidget {
 }
 
 class _AddItemScreenState extends State<AddItemScreen> {
-  bool isActiceChecked = false;
+  bool isActiceChecked = true;
   bool isNoneStockChecked = false;
   bool isCounterStockChecked = false;
   bool isBarCodeGen = false;
@@ -72,6 +72,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
       getSellingTax();
       ItemMasterControllers.marginController.clear();
       ItemMasterControllers.marginPerController.clear();
+      isBarCodeGen = true;
     } else {
       ItemMasterControllers.cleanControllers();
     }
@@ -130,70 +131,409 @@ class _AddItemScreenState extends State<AddItemScreen> {
           : SafeArea(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.arrow_back_ios,
-                                size: 10,
-                                color: Colors.black,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "Item Master",
-                                style: getMediumtStyle(
-                                    color: Colors.black, fontSize: 10),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          SizedBox(
-                            width: size.width * .3,
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (ctx) {
-                                    return const ItemMasterScreen();
-                                  }));
+                    padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                    child: BlocBuilder<LoginBloc, LoginState>(
+                        builder: (context, state) {
+                      if (state is OptionPageState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
                                 },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colormanager.primary,
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.arrow_back_ios,
+                                      size: 10,
+                                      color: Colors.black,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      "Item Master",
+                                      style: getMediumtStyle(
+                                          color: Colors.black, fontSize: 10),
+                                    ),
+                                  ],
                                 ),
-                                child: const Text("View Items")),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "Barcode",
-                        style:
-                            getRegularStyle(color: Colors.black, fontSize: 14),
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: SizedBox(
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                SizedBox(
+                                  width: size.width * .3,
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(builder: (ctx) {
+                                          return const ItemMasterScreen();
+                                        }));
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colormanager.primary,
+                                      ),
+                                      child: const Text("View Items")),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              "Barcode",
+                              style: getRegularStyle(
+                                  color: Colors.black, fontSize: 14),
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: SizedBox(
+                                    // height: 50,
+                                    child: TextField(
+                                        keyboardType: TextInputType.number,
+                                        controller: ItemMasterControllers
+                                            .barCodeController,
+                                        decoration: InputDecoration(
+                                          hintText: "Barcode",
+                                          hintStyle: getRegularStyle(
+                                              color: Colors.grey, fontSize: 12),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            borderSide: const BorderSide(
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            borderSide: const BorderSide(
+                                                color: Colormanager.amber),
+                                            // borderRadius: BorderRadius.circular(5)
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            borderSide: const BorderSide(
+                                                color: Color.fromARGB(
+                                                    255, 2, 76, 136)),
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                BlocBuilder<LoginBloc, LoginState>(
+                                  builder: (context, state) {
+                                    if (state is OptionPageState) {
+                                      return Material(
+                                        color: Colormanager.teritiory,
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: InkWell(
+                                          splashColor: Colormanager.primary,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          onTap: () {
+                                            setState(() {
+                                              isBarCodeGen = true;
+                                              ItemMasterControllers
+                                                  .barCodeController2
+                                                  .clear();
+                                              if (ItemMasterControllers
+                                                  .barCodeController
+                                                  .text
+                                                  .isEmpty) {
+                                                ItemMasterControllers
+                                                        .barCodeController
+                                                        .text =
+                                                    state.barCode1 ?? '';
+                                              }
+                                            });
+                                          },
+                                          child: Container(
+                                            width: 80,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: Center(
+                                                child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const Icon(
+                                                  Icons.add_circle_outline,
+                                                  size: 12,
+                                                  color: Colormanager.primary,
+                                                ),
+                                                const SizedBox(
+                                                  width: 3,
+                                                ),
+                                                Text(
+                                                  "Generate",
+                                                  style: getRegularStyle(
+                                                      color:
+                                                          Colormanager.primary,
+                                                      fontSize: 11),
+                                                ),
+                                              ],
+                                            )),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    return Container();
+                                  },
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 5, right: 5),
+                                  child: BlocBuilder<LoginBloc, LoginState>(
+                                    builder: (context, state) {
+                                      if (state is OptionPageState) {
+                                        return Material(
+                                          color: Colormanager.teritiory,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          child: InkWell(
+                                            splashColor: Colormanager.primary,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            onTap: () async {
+                                              // await prevBarCode(ItemMasterControllers
+                                              //     .barCodeController.text);
+                                              ItemMasterControllers
+                                                  .barCodeController
+                                                  .clear();
+                                              final barc = ItemMasterControllers
+                                                      .barCodeController2
+                                                      .text
+                                                      .isNotEmpty
+                                                  ? ItemMasterControllers
+                                                      .barCodeController2.text
+                                                  : state.itemGetConfig
+                                                          ?.lastbarcode?[0] ??
+                                                      '';
+
+                                              BlocProvider.of<LoginBloc>(
+                                                      context)
+                                                  .add(
+                                                NextBarCodeEvent(
+                                                    selectedThrow: 'previous',
+                                                    barcode: barc),
+                                              );
+
+                                              await Future.delayed(
+                                                  const Duration(seconds: 1));
+
+                                              setState(() {
+                                                deftax = getTaxListById(int.parse(
+                                                    ItemMasterCloneControllers
+                                                        .cdefTaxId.text));
+                                                ItemMasterCloneControllers
+                                                        .cdefTaxName.text =
+                                                    deftax?.taxName ?? '';
+                                                isNextVisible = true;
+                                                isBarCodeGen = true;
+                                                onNextBarCode = true;
+                                              });
+                                              print(ItemMasterControllers
+                                                  .costPriceController.text);
+
+                                              await Future.delayed(
+                                                  const Duration(seconds: 1));
+                                              onCostChange(ItemMasterControllers
+                                                  .costPriceController.text);
+                                              print(deftax?.taxRate);
+
+                                              getSellingTax();
+                                              getMarginValues();
+                                            },
+                                            child: Container(
+                                              width: 40,
+                                              height: 50,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              child: const Center(
+                                                  child: Icon(Icons.arrow_back,
+                                                      size: 22,
+                                                      color: Colormanager
+                                                          .primary)),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      return Container();
+                                    },
+                                  ),
+                                ),
+                                isNextVisible
+                                    ? BlocBuilder<LoginBloc, LoginState>(
+                                        builder: (context, state) {
+                                          if (state is OptionPageState) {
+                                            return Material(
+                                              color: Colormanager.teritiory,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: InkWell(
+                                                splashColor:
+                                                    Colormanager.primary,
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                onTap: () async {
+                                                  if (ItemMasterControllers
+                                                          .barCodeController2
+                                                          .text ==
+                                                      state.itemGetConfig
+                                                          ?.lastbarcode?[0]) {
+                                                    setState(() {
+                                                      isNextVisible = false;
+                                                    });
+                                                    return;
+                                                  }
+                                                  // await nextBarCode(
+                                                  ItemMasterControllers
+                                                      .barCodeController
+                                                      .clear();
+                                                  final barc =
+                                                      ItemMasterControllers
+                                                              .barCodeController2
+                                                              .text
+                                                              .isNotEmpty
+                                                          ? ItemMasterControllers
+                                                              .barCodeController2
+                                                              .text
+                                                          : '4321';
+
+                                                  BlocProvider.of<LoginBloc>(
+                                                          context)
+                                                      .add(
+                                                    NextBarCodeEvent(
+                                                        selectedThrow: 'next',
+                                                        barcode: barc),
+                                                  );
+                                                  await Future.delayed(
+                                                      const Duration(
+                                                          seconds: 1));
+                                                  setState(() {
+                                                    deftax = getTaxListById(
+                                                        int.parse(
+                                                            ItemMasterCloneControllers
+                                                                .cdefTaxId
+                                                                .text));
+                                                    ItemMasterCloneControllers
+                                                            .cdefTaxName.text =
+                                                        deftax?.taxName ?? '';
+                                                    isBarCodeGen = true;
+                                                    onNextBarCode = true;
+                                                  });
+
+                                                  print(ItemMasterControllers
+                                                      .costPriceController
+                                                      .text);
+                                                  await Future.delayed(
+                                                      const Duration(
+                                                          seconds: 1));
+                                                  onCostChange(
+                                                      ItemMasterControllers
+                                                          .costPriceController
+                                                          .text);
+                                                  print(deftax?.taxRate);
+                                                  getSellingTax();
+                                                },
+                                                child: Container(
+                                                  width: 40,
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    // color: Colormanager.teritiory,
+                                                  ),
+                                                  child: const Center(
+                                                      child: Icon(
+                                                    Icons.arrow_forward_rounded,
+                                                    size: 22,
+                                                    color: Colormanager.primary,
+                                                  )),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                          return Container();
+                                        },
+                                      )
+                                    : Container()
+                              ],
+                            ),
+                            BlocBuilder<LoginBloc, LoginState>(
+                              builder: (context, state) {
+                                if (state is OptionPageState &&
+                                    isBarCodeGen == true) {
+                                  // if (ItemMasterControllers
+                                  //     .barCodeController.text.isEmpty) {
+                                  //   barcode = state.barCode1;
+                                  // }
+
+                                  return Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      ItemMasterControllers
+                                              .barCodeController2.text.isEmpty
+                                          ? BarcodeWidget(
+                                              barcode: Barcode.code128(),
+                                              data: ItemMasterControllers
+                                                  .barCodeController.text,
+                                              // width: 100,
+                                              height: 100,
+                                            )
+                                          : BarcodeWidget(
+                                              barcode: Barcode.code128(),
+                                              data: ItemMasterControllers
+                                                  .barCodeController2.text,
+                                              // width: 100,
+                                              height: 100,
+                                            ),
+                                    ],
+                                  );
+                                }
+                                //  else if (state is OptionPageState &&
+                                //     onNextBarCode == true) {
+                                //   BarcodeWidget(
+                                //     barcode: Barcode.code128(),
+                                //     data:
+                                //         ItemMasterControllers.barCodeController2.text,
+                                //     // width: 100,
+                                //     height: 100,
+                                //   );
+                                // }
+                                return Container();
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Name",
+                              style: getRegularStyle(
+                                  color: Colors.black, fontSize: 14),
+                            ),
+                            SizedBox(
                               // height: 50,
                               child: TextField(
-                                  keyboardType: TextInputType.number,
                                   controller:
-                                      ItemMasterControllers.barCodeController,
+                                      ItemMasterControllers.nameController,
                                   decoration: InputDecoration(
-                                    hintText: "Barcode",
+                                    hintText: "Name",
                                     hintStyle: getRegularStyle(
                                         color: Colors.grey, fontSize: 12),
                                     border: OutlineInputBorder(
@@ -206,7 +546,6 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: const BorderSide(
                                           color: Colormanager.amber),
-                                      // borderRadius: BorderRadius.circular(5)
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
@@ -216,905 +555,1133 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                     ),
                                   )),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          BlocBuilder<LoginBloc, LoginState>(
-                            builder: (context, state) {
-                              if (state is OptionPageState) {
-                                return Material(
-                                  color: Colormanager.teritiory,
-                                  borderRadius: BorderRadius.circular(5),
-                                  child: InkWell(
-                                    splashColor: Colormanager.primary,
-                                    borderRadius: BorderRadius.circular(5),
-                                    onTap: () {
-                                      setState(() {
-                                        isBarCodeGen = true;
-                                        ItemMasterControllers.barCodeController2
-                                            .clear();
-                                        if (ItemMasterControllers
-                                            .barCodeController.text.isEmpty) {
-                                          ItemMasterControllers
-                                              .barCodeController
-                                              .text = state.barCode1 ?? '';
-                                        }
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 80,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: Center(
-                                          child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          const Icon(
-                                            Icons.add_circle_outline,
-                                            size: 12,
-                                            color: Colormanager.primary,
-                                          ),
-                                          const SizedBox(
-                                            width: 3,
-                                          ),
-                                          Text(
-                                            "Generate",
-                                            style: getRegularStyle(
-                                                color: Colormanager.primary,
-                                                fontSize: 11),
-                                          ),
-                                        ],
-                                      )),
-                                    ),
-                                  ),
-                                );
-                              }
-                              return Container();
-                            },
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5, right: 5),
-                            child: BlocBuilder<LoginBloc, LoginState>(
-                              builder: (context, state) {
-                                if (state is OptionPageState) {
-                                  return Material(
-                                    color: Colormanager.teritiory,
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: InkWell(
-                                      splashColor: Colormanager.primary,
-                                      borderRadius: BorderRadius.circular(5),
-                                      onTap: () async {
-                                        // await prevBarCode(ItemMasterControllers
-                                        //     .barCodeController.text);
-                                        ItemMasterControllers.barCodeController
-                                            .clear();
-                                        final barc = ItemMasterControllers
-                                                .barCodeController2
-                                                .text
-                                                .isNotEmpty
-                                            ? ItemMasterControllers
-                                                .barCodeController2.text
-                                            : state.itemGetConfig
-                                                    ?.lastbarcode?[0] ??
-                                                '';
-                                        BlocProvider.of<LoginBloc>(context).add(
-                                          NextBarCodeEvent(
-                                              selectedThrow: 'previous',
-                                              barcode: barc),
-                                        );
-                                        await Future.delayed(
-                                            const Duration(seconds: 1));
-
-                                        setState(() {
-                                          deftax = getTaxListById(int.parse(
-                                              ItemMasterCloneControllers
-                                                  .cdefTaxId.text));
-                                          ItemMasterCloneControllers.cdefTaxName
-                                              .text = deftax?.taxName ?? '';
-                                          isNextVisible = true;
-                                          isBarCodeGen = true;
-                                          onNextBarCode = true;
-                                        });
-                                        print(ItemMasterControllers
-                                            .costPriceController.text);
-                                        await Future.delayed(
-                                            const Duration(seconds: 1));
-                                        onCostChange(ItemMasterControllers
-                                            .costPriceController.text);
-                                        print(deftax?.taxRate);
-                                        getSellingTax();
-                                      },
-                                      child: Container(
-                                        width: 40,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: const Center(
-                                            child: Icon(Icons.arrow_back,
-                                                size: 22,
-                                                color: Colormanager.primary)),
-                                      ),
-                                    ),
-                                  );
-                                }
-                                return Container();
-                              },
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
-                          isNextVisible
-                              ? BlocBuilder<LoginBloc, LoginState>(
-                                  builder: (context, state) {
-                                    if (state is OptionPageState) {
-                                      return Material(
-                                        color: Colormanager.teritiory,
-                                        borderRadius: BorderRadius.circular(5),
-                                        child: InkWell(
-                                          splashColor: Colormanager.primary,
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          onTap: () async {
-                                            if (ItemMasterControllers
-                                                    .barCodeController2.text ==
-                                                state.itemGetConfig
-                                                    ?.lastbarcode?[0]) {
-                                              setState(() {
-                                                isNextVisible = false;
-                                              });
-                                              return;
-                                            }
-                                            // await nextBarCode(
-                                            ItemMasterControllers
-                                                .barCodeController
-                                                .clear();
-                                            final barc = ItemMasterControllers
-                                                    .barCodeController2
-                                                    .text
-                                                    .isNotEmpty
-                                                ? ItemMasterControllers
-                                                    .barCodeController2.text
-                                                : '4321';
-
-                                            BlocProvider.of<LoginBloc>(context)
-                                                .add(
-                                              NextBarCodeEvent(
-                                                  selectedThrow: 'next',
-                                                  barcode: barc),
-                                            );
-                                            await Future.delayed(
-                                                const Duration(seconds: 1));
-                                            setState(() {
-                                              deftax = getTaxListById(int.parse(
-                                                  ItemMasterCloneControllers
-                                                      .cdefTaxId.text));
-                                              ItemMasterCloneControllers
-                                                  .cdefTaxName
-                                                  .text = deftax?.taxName ?? '';
-                                              isBarCodeGen = true;
-                                              onNextBarCode = true;
-                                            });
-
-                                            print(ItemMasterControllers
-                                                .costPriceController.text);
-                                            await Future.delayed(
-                                                const Duration(seconds: 1));
-                                            onCostChange(ItemMasterControllers
-                                                .costPriceController.text);
-                                            print(deftax?.taxRate);
-                                            getSellingTax();
-                                          },
-                                          child: Container(
-                                            width: 40,
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              // color: Colormanager.teritiory,
-                                            ),
-                                            child: const Center(
-                                                child: Icon(
-                                              Icons.arrow_forward_rounded,
-                                              size: 22,
-                                              color: Colormanager.primary,
-                                            )),
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                    return Container();
-                                  },
-                                )
-                              : Container()
-                        ],
-                      ),
-                      BlocBuilder<LoginBloc, LoginState>(
-                        builder: (context, state) {
-                          if (state is OptionPageState &&
-                              isBarCodeGen == true) {
-                            // if (ItemMasterControllers
-                            //     .barCodeController.text.isEmpty) {
-                            //   barcode = state.barCode1;
-                            // }
-
-                            return Column(
-                              children: [
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                ItemMasterControllers
-                                        .barCodeController2.text.isEmpty
-                                    ? BarcodeWidget(
-                                        barcode: Barcode.code128(),
-                                        data: ItemMasterControllers
-                                            .barCodeController.text,
-                                        // width: 100,
-                                        height: 100,
-                                      )
-                                    : BarcodeWidget(
-                                        barcode: Barcode.code128(),
-                                        data: ItemMasterControllers
-                                            .barCodeController2.text,
-                                        // width: 100,
-                                        height: 100,
-                                      ),
-                              ],
-                            );
-                          }
-                          //  else if (state is OptionPageState &&
-                          //     onNextBarCode == true) {
-                          //   BarcodeWidget(
-                          //     barcode: Barcode.code128(),
-                          //     data:
-                          //         ItemMasterControllers.barCodeController2.text,
-                          //     // width: 100,
-                          //     height: 100,
-                          //   );
-                          // }
-                          return Container();
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Name",
-                        style:
-                            getRegularStyle(color: Colors.black, fontSize: 14),
-                      ),
-                      SizedBox(
-                        // height: 50,
-                        child: TextField(
-                            controller: ItemMasterControllers.nameController,
-                            decoration: InputDecoration(
-                              hintText: "Name",
-                              hintStyle: getRegularStyle(
-                                  color: Colors.grey, fontSize: 12),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(
-                                  color: Colors.red,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    const BorderSide(color: Colormanager.amber),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 2, 76, 136)),
-                              ),
-                            )),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Short Name",
-                        style:
-                            getRegularStyle(color: Colors.black, fontSize: 14),
-                      ),
-                      SizedBox(
-                        height: 50,
-                        child: TextField(
-                            controller:
-                                ItemMasterControllers.shortNameController,
-                            decoration: InputDecoration(
-                              hintText: "Short Name",
-                              hintStyle: getRegularStyle(
-                                  color: Colors.grey, fontSize: 12),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(
-                                  color: Colors.red,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(
-                                    color: Colormanager.primary),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 2, 76, 136)),
-                              ),
-                            )),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Arabic Name",
-                        style:
-                            getRegularStyle(color: Colors.black, fontSize: 14),
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: SizedBox(
+                            Text(
+                              "Short Name",
+                              style: getRegularStyle(
+                                  color: Colors.black, fontSize: 14),
+                            ),
+                            SizedBox(
                               height: 50,
                               child: TextField(
-                                  keyboardType: TextInputType.none,
                                   controller:
-                                      ItemMasterControllers.arabicController,
-                                  decoration: const InputDecoration(
+                                      ItemMasterControllers.shortNameController,
+                                  decoration: InputDecoration(
+                                    hintText: "Short Name",
+                                    hintStyle: getRegularStyle(
+                                        color: Colors.grey, fontSize: 12),
                                     border: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: const BorderSide(
                                         color: Colors.red,
                                       ),
                                     ),
                                     enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: const BorderSide(
                                           color: Colormanager.primary),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: const BorderSide(
                                           color:
                                               Color.fromARGB(255, 2, 76, 136)),
                                     ),
                                   )),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Material(
-                            color: Colormanager.teritiory,
-                            borderRadius: BorderRadius.circular(5),
-                            child: InkWell(
-                              splashColor: Colormanager.primary,
-                              borderRadius: BorderRadius.circular(5),
-                              onTap: transiletrate,
-                              child: Container(
-                                width: 40,
-                                height: 50,
-                                decoration: BoxDecoration(
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Arabic Name",
+                              style: getRegularStyle(
+                                  color: Colors.black, fontSize: 14),
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: SizedBox(
+                                    height: 50,
+                                    child: TextField(
+                                        keyboardType: TextInputType.none,
+                                        controller: ItemMasterControllers
+                                            .arabicController,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colormanager.primary),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Color.fromARGB(
+                                                    255, 2, 76, 136)),
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Material(
+                                  color: Colormanager.teritiory,
                                   borderRadius: BorderRadius.circular(5),
-                                ),
-                                child:
-                                    const Center(child: Icon(Icons.translate)),
-                              ),
+                                  child: InkWell(
+                                    splashColor: Colormanager.primary,
+                                    borderRadius: BorderRadius.circular(5),
+                                    onTap: transiletrate,
+                                    child: Container(
+                                      width: 40,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: const Center(
+                                          child: Icon(Icons.translate)),
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Department",
-                        style:
-                            getRegularStyle(color: Colors.black, fontSize: 14),
-                      ),
-                      BlocBuilder<LoginBloc, LoginState>(
-                        builder: (context, state) {
-                          if (state is OptionPageState) {
-                            return SizedBox(
-                              height: 60,
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                child: Container(
-                                  // width: size.width * .44,
-                                  decoration: BoxDecoration(
-                                      color: Colormanager.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                          color: Colormanager.amber)),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton2<DepartmentList>(
-                                      isExpanded: true,
-                                      iconStyleData: const IconStyleData(),
-                                      hint: Text("Select Department",
-                                          style: getRegularStyle(
-                                              color: const Color.fromARGB(
-                                                  255, 173, 173, 173),
-                                              fontSize: 15)),
-                                      items: state
-                                          .itemGetConfig?.departmentList!
-                                          .map((item) =>
-                                              DropdownMenuItem<DepartmentList>(
-                                                value: item,
-                                                child: Text(item.name ?? '',
-                                                    style: getRegularStyle(
-                                                        color: Colormanager
-                                                            .mainTextColor,
-                                                        fontSize: 15)),
-                                              ))
-                                          .toList(),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Department",
+                              style: getRegularStyle(
+                                  color: Colors.black, fontSize: 14),
+                            ),
+                            BlocBuilder<LoginBloc, LoginState>(
+                              builder: (context, state) {
+                                if (state is OptionPageState) {
+                                  return SizedBox(
+                                    height: 60,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 10, 0, 0),
+                                      child: Container(
+                                        // width: size.width * .44,
+                                        decoration: BoxDecoration(
+                                            color: Colormanager.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                                color: Colormanager.amber)),
+                                        child: DropdownButtonHideUnderline(
+                                          child:
+                                              DropdownButton2<DepartmentList>(
+                                            isExpanded: true,
+                                            iconStyleData:
+                                                const IconStyleData(),
+                                            hint: Text("Select Department",
+                                                style: getRegularStyle(
+                                                    color: const Color.fromARGB(
+                                                        255, 173, 173, 173),
+                                                    fontSize: 15)),
+                                            items: state
+                                                .itemGetConfig?.departmentList!
+                                                .map((item) => DropdownMenuItem<
+                                                        DepartmentList>(
+                                                      value: item,
+                                                      child: Text(
+                                                          item.name ?? '',
+                                                          style: getRegularStyle(
+                                                              color: Colormanager
+                                                                  .mainTextColor,
+                                                              fontSize: 15)),
+                                                    ))
+                                                .toList(),
 
-                                      onChanged: (value) {
-                                        setState(() {
-                                          ItemMasterControllers
-                                              .departmentNameController
-                                              .text = value?.name as String;
-                                        });
-                                        // ItemMasterControllers
-                                        //     .departmentNameController
-                                        //     .text = defDepartment ?? '';
-                                        ItemMasterControllers
-                                            .departmentController
-                                            .text = value?.id.toString() ?? '';
-                                      },
-
-                                      customButton: ItemMasterControllers
-                                                  .departmentNameController
-                                                  .text
-                                                  .isEmpty ||
+                                            onChanged: (value) {
+                                              setState(() {
+                                                ItemMasterControllers
+                                                        .departmentNameController
+                                                        .text =
+                                                    value?.name as String;
+                                              });
+                                              // ItemMasterControllers
+                                              //     .departmentNameController
+                                              //     .text = defDepartment ?? '';
                                               ItemMasterControllers
-                                                      .departmentNameController
-                                                      .text ==
-                                                  'null'
-                                          ? null
-                                          : Row(
-                                              children: [
-                                                Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                            .fromLTRB(
-                                                        10, 15, 10, 15),
-                                                    child: Text(
-                                                        ItemMasterControllers
+                                                      .departmentController
+                                                      .text =
+                                                  value?.id.toString() ?? '';
+                                            },
+
+                                            customButton: ItemMasterControllers
+                                                        .departmentNameController
+                                                        .text
+                                                        .isEmpty ||
+                                                    ItemMasterControllers
                                                             .departmentNameController
-                                                            .text,
-                                                        style: getRegularStyle(
-                                                            color: Colormanager
-                                                                .textColor,
-                                                            fontSize: 12)),
+                                                            .text ==
+                                                        'null'
+                                                ? null
+                                                : Row(
+                                                    children: [
+                                                      Center(
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  10,
+                                                                  15,
+                                                                  10,
+                                                                  15),
+                                                          child: Text(
+                                                              ItemMasterControllers
+                                                                  .departmentNameController
+                                                                  .text,
+                                                              style: getRegularStyle(
+                                                                  color: Colormanager
+                                                                      .textColor,
+                                                                  fontSize:
+                                                                      12)),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                      //This to clear the search value when you close the menu
-                                      // onMenuStateChange: (isOpen) {
-                                      //   if (!isOpen) {
-                                      //     AddressEditControllers
-                                      //         .searchController
-                                      //         .clear();
-                                      //   }
-                                      // }
+                                            //This to clear the search value when you close the menu
+                                            // onMenuStateChange: (isOpen) {
+                                            //   if (!isOpen) {
+                                            //     AddressEditControllers
+                                            //         .searchController
+                                            //         .clear();
+                                            //   }
+                                            // }
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Category",
-                        style:
-                            getRegularStyle(color: Colors.black, fontSize: 14),
-                      ),
-                      BlocBuilder<LoginBloc, LoginState>(
-                        builder: (context, state) {
-                          if (state is OptionPageState) {
-                            return SizedBox(
-                              height: 60,
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                child: Container(
-                                  // width: size.width * .44,
-                                  decoration: BoxDecoration(
-                                      color: Colormanager.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                          color: Colormanager.primary)),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton2<CategoryList>(
-                                      isExpanded: true,
-                                      iconStyleData: const IconStyleData(),
-                                      hint: Text("Select Category",
-                                          style: getRegularStyle(
-                                              color: const Color.fromARGB(
-                                                  255, 173, 173, 173),
-                                              fontSize: 15)),
-                                      items: state.itemGetConfig?.categoryList!
-                                          .map((item) =>
-                                              DropdownMenuItem<CategoryList>(
-                                                value: item,
-                                                child: Text(item.name ?? '',
-                                                    style: getRegularStyle(
-                                                        color: Colormanager
-                                                            .mainTextColor,
-                                                        fontSize: 15)),
-                                              ))
-                                          .toList(),
-                                      // value: defCategory,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          ItemMasterControllers
-                                              .categoryNameController
-                                              .text = value?.name as String;
-                                        });
-                                        // ItemMasterControllers
-                                        //     .categoryNameController
-                                        //     .text = defCategory ?? '';
-                                        ItemMasterControllers.categoryController
-                                            .text = value?.id.toString() ?? '';
-                                      },
-
-                                      customButton: ItemMasterControllers
-                                                  .categoryNameController
-                                                  .text
-                                                  .isEmpty ||
-                                              ItemMasterControllers
-                                                      .categoryNameController
-                                                      .text ==
-                                                  'null'
-                                          ? null
-                                          : Row(
-                                              children: [
-                                                Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                            .fromLTRB(
-                                                        10, 15, 10, 15),
-                                                    child: Text(
-                                                        ItemMasterControllers
-                                                            .categoryNameController
-                                                            .text,
-                                                        style: getRegularStyle(
-                                                            color: Colormanager
-                                                                .textColor,
-                                                            fontSize: 12)),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                      //This to clear the search value when you close the menu
-                                      // onMenuStateChange: (isOpen) {
-                                      //   if (!isOpen) {
-                                      //     AddressEditControllers
-                                      //         .searchController
-                                      //         .clear();
-                                      //   }
-                                      // }
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Sub Category",
-                        style:
-                            getRegularStyle(color: Colors.black, fontSize: 14),
-                      ),
-                      BlocBuilder<LoginBloc, LoginState>(
-                        builder: (context, state) {
-                          if (state is OptionPageState) {
-                            return SizedBox(
-                              height: 60,
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                child: Container(
-                                  // width: size.width * .44,
-                                  decoration: BoxDecoration(
-                                      color: Colormanager.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                          color: Colormanager.primary)),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton2<SecondCategoryList>(
-                                      isExpanded: true,
-                                      iconStyleData: const IconStyleData(),
-                                      hint: Text("Select Sub Category",
-                                          style: getRegularStyle(
-                                              color: const Color.fromARGB(
-                                                  255, 173, 173, 173),
-                                              fontSize: 15)),
-                                      items: state
-                                          .itemGetConfig?.secondCategoryList!
-                                          .map((item) => DropdownMenuItem<
-                                                  SecondCategoryList>(
-                                                value: item,
-                                                child: Text(item.name ?? '',
-                                                    style: getRegularStyle(
-                                                        color: Colormanager
-                                                            .mainTextColor,
-                                                        fontSize: 15)),
-                                              ))
-                                          .toList(),
-                                      // value: secCategory,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          ItemMasterControllers
-                                              .subCategoryNameController
-                                              .text = value?.name as String;
-                                        });
-                                        // ItemMasterControllers
-                                        //     .subCategoryNameController
-                                        //     .text = secCategory ?? '';
-                                        ItemMasterControllers
-                                            .subCategoryController
-                                            .text = value?.id.toString() ?? '';
-                                      },
-
-                                      customButton: ItemMasterControllers
-                                                  .subCategoryNameController
-                                                  .text
-                                                  .isEmpty ||
-                                              ItemMasterControllers
-                                                      .subCategoryNameController
-                                                      .text ==
-                                                  'null'
-                                          ? null
-                                          : Row(
-                                              children: [
-                                                Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                            .fromLTRB(
-                                                        10, 15, 10, 15),
-                                                    child: Text(
-                                                        ItemMasterControllers
-                                                            .subCategoryNameController
-                                                            .text,
-                                                        style: getRegularStyle(
-                                                            color: Colormanager
-                                                                .textColor,
-                                                            fontSize: 12)),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                      //This to clear the search value when you close the menu
-                                      // onMenuStateChange: (isOpen) {
-                                      //   if (!isOpen) {
-                                      //     AddressEditControllers
-                                      //         .searchController
-                                      //         .clear();
-                                      //   }
-                                      // }
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Supplier",
-                        style:
-                            getRegularStyle(color: Colors.black, fontSize: 14),
-                      ),
-                      BlocBuilder<LoginBloc, LoginState>(
-                        builder: (context, state) {
-                          if (state is OptionPageState) {
-                            return SizedBox(
-                              height: 60,
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                child: Container(
-                                  // width: size.width * .44,
-                                  decoration: BoxDecoration(
-                                      color: Colormanager.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                          color: Colormanager.primary)),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton2<SupplierMasterList>(
-                                      isExpanded: true,
-                                      iconStyleData: const IconStyleData(),
-                                      hint: Text("Select Supplier",
-                                          style: getRegularStyle(
-                                              color: const Color.fromARGB(
-                                                  255, 173, 173, 173),
-                                              fontSize: 15)),
-                                      items: state
-                                          .itemGetConfig?.supplierMasterList!
-                                          .map((item) => DropdownMenuItem<
-                                                  SupplierMasterList>(
-                                                value: item,
-                                                child: Text(item.name ?? '',
-                                                    style: getRegularStyle(
-                                                        color: Colormanager
-                                                            .mainTextColor,
-                                                        fontSize: 15)),
-                                              ))
-                                          .toList(),
-                                      // value: defSupplier,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          ItemMasterControllers
-                                              .supplierNameController
-                                              .text = value?.name as String;
-                                        });
-                                        // ItemMasterControllers
-                                        //     .supplierNameController
-                                        //     .text = defSupplier ?? '';
-                                        ItemMasterControllers.supplierController
-                                            .text = value?.id.toString() ?? '';
-                                        ItemMasterControllers.remarksController
-                                            .text = value?.remarks ?? '';
-                                        ItemMasterControllers
-                                            .supplierCodeController
-                                            .text = value?.code ?? '';
-                                      },
-
-                                      customButton: ItemMasterControllers
-                                                  .supplierNameController
-                                                  .text
-                                                  .isEmpty ||
-                                              ItemMasterControllers
-                                                      .supplierNameController
-                                                      .text ==
-                                                  'null'
-                                          ? null
-                                          : Row(
-                                              children: [
-                                                Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                            .fromLTRB(
-                                                        10, 15, 10, 15),
-                                                    child: Text(
-                                                        ItemMasterControllers
-                                                            .supplierNameController
-                                                            .text,
-                                                        style: getRegularStyle(
-                                                            color: Colormanager
-                                                                .textColor,
-                                                            fontSize: 12)),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                      //This to clear the search value when you close the menu
-                                      // onMenuStateChange: (isOpen) {
-                                      //   if (!isOpen) {
-                                      //     AddressEditControllers
-                                      //         .searchController
-                                      //         .clear();
-                                      //   }
-                                      // }
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        // width: size.width * .8,
-                        // height: size.height * .7,
-                        decoration: BoxDecoration(
-                          color: Colormanager.background,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 3,
-                              blurRadius: 3,
-                              offset: const Offset(0, 3),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              },
                             ),
-                          ],
-                          border: Border.all(
-                            width: 1,
-                            color: Colors.grey.withOpacity(0.1),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: BlocBuilder<LoginBloc, LoginState>(
-                                      builder: (context, state) {
-                                        if (state is OptionPageState) {
-                                          return SizedBox(
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Category",
+                              style: getRegularStyle(
+                                  color: Colors.black, fontSize: 14),
+                            ),
+                            BlocBuilder<LoginBloc, LoginState>(
+                              builder: (context, state) {
+                                if (state is OptionPageState) {
+                                  return SizedBox(
+                                    height: 60,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 10, 0, 0),
+                                      child: Container(
+                                        // width: size.width * .44,
+                                        decoration: BoxDecoration(
+                                            color: Colormanager.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                                color: Colormanager.primary)),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton2<CategoryList>(
+                                              isExpanded: true,
+                                              iconStyleData:
+                                                  const IconStyleData(),
+                                              hint: Text(
+                                                  "Select Category",
+                                                  style: getRegularStyle(
+                                                      color: const Color
+                                                              .fromARGB(
+                                                          255, 173, 173, 173),
+                                                      fontSize: 15)),
+                                              items: state
+                                                  .itemGetConfig?.categoryList!
+                                                  .map((item) =>
+                                                      DropdownMenuItem<
+                                                          CategoryList>(
+                                                        value: item,
+                                                        child: Text(
+                                                            item.name ?? '',
+                                                            style: getRegularStyle(
+                                                                color: Colormanager
+                                                                    .mainTextColor,
+                                                                fontSize: 15)),
+                                                      ))
+                                                  .toList(),
+                                              // value: defCategory,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  ItemMasterControllers
+                                                          .categoryNameController
+                                                          .text =
+                                                      value?.name as String;
+                                                });
+                                                // ItemMasterControllers
+                                                //     .categoryNameController
+                                                //     .text = defCategory ?? '';
+                                                ItemMasterControllers
+                                                        .categoryController
+                                                        .text =
+                                                    value?.id.toString() ?? '';
+                                              },
+                                              customButton: ItemMasterControllers
+                                                          .categoryNameController
+                                                          .text
+                                                          .isEmpty ||
+                                                      ItemMasterControllers
+                                                              .categoryNameController
+                                                              .text ==
+                                                          'null'
+                                                  ? null
+                                                  : Row(
+                                                      children: [
+                                                        Center(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    10,
+                                                                    15,
+                                                                    10,
+                                                                    15),
+                                                            child: Text(
+                                                                ItemMasterControllers
+                                                                    .categoryNameController
+                                                                    .text,
+                                                                style: getRegularStyle(
+                                                                    color: Colormanager
+                                                                        .textColor,
+                                                                    fontSize:
+                                                                        12)),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                              menuItemStyleData:
+                                                  const MenuItemStyleData(
+                                                height: 40,
+                                                padding: EdgeInsets.fromLTRB(
+                                                    12, 0, 12, 0),
+                                              ),
+                                              dropdownStyleData:
+                                                  DropdownStyleData(
+                                                maxHeight: size.height * .5,
+                                              ),
+                                              dropdownSearchData:
+                                                  DropdownSearchData(
+                                                searchInnerWidgetHeight: 20,
+                                                searchController:
+                                                    ItemMasterControllers
+                                                        .searchCatController,
+                                                searchInnerWidget: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: 8,
+                                                    bottom: 4,
+                                                    right: 8,
+                                                    left: 8,
+                                                  ),
+                                                  child: TextFormField(
+                                                    controller:
+                                                        ItemMasterControllers
+                                                            .searchCatController,
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          const EdgeInsets
+                                                              .symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 8,
+                                                      ),
+                                                      hintText:
+                                                          "Search Category",
+                                                      hintStyle:
+                                                          const TextStyle(
+                                                              fontSize: 12),
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                searchMatchFn:
+                                                    (item, searchValue) {
+                                                  return (item.value!.name
+                                                      .toString()
+                                                      .toLowerCase()
+                                                      .contains(searchValue));
+                                                },
+                                              ),
+                                              onMenuStateChange: (isOpen) {
+                                                if (!isOpen) {
+                                                  ItemMasterControllers
+                                                      .searchCatController
+                                                      .clear();
+                                                }
+                                              }
+                                              //This to clear the search value when you close the menu
+                                              // onMenuStateChange: (isOpen) {
+                                              //   if (!isOpen) {
+                                              //     AddressEditControllers
+                                              //         .searchController
+                                              //         .clear();
+                                              //   }
+                                              // }
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Sub Category",
+                              style: getRegularStyle(
+                                  color: Colors.black, fontSize: 14),
+                            ),
+                            BlocBuilder<LoginBloc, LoginState>(
+                              builder: (context, state) {
+                                if (state is OptionPageState) {
+                                  return SizedBox(
+                                    height: 60,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 10, 0, 0),
+                                      child: Container(
+                                        // width: size.width * .44,
+                                        decoration: BoxDecoration(
+                                            color: Colormanager.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                                color: Colormanager.primary)),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton2<
+                                                  SecondCategoryList>(
+                                              isExpanded: true,
+                                              iconStyleData:
+                                                  const IconStyleData(),
+                                              hint: Text("Select Sub Category",
+                                                  style: getRegularStyle(
+                                                      color: const Color.fromARGB(
+                                                          255, 173, 173, 173),
+                                                      fontSize: 15)),
+                                              items: state.itemGetConfig
+                                                  ?.secondCategoryList!
+                                                  .map((item) =>
+                                                      DropdownMenuItem<
+                                                          SecondCategoryList>(
+                                                        value: item,
+                                                        child: Text(
+                                                            item.name ?? '',
+                                                            style: getRegularStyle(
+                                                                color: Colormanager
+                                                                    .mainTextColor,
+                                                                fontSize: 15)),
+                                                      ))
+                                                  .toList(),
+                                              // value: secCategory,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  ItemMasterControllers
+                                                      .subCategoryNameController
+                                                      .text = value?.name as String;
+                                                });
+                                                // ItemMasterControllers
+                                                //     .subCategoryNameController
+                                                //     .text = secCategory ?? '';
+                                                ItemMasterControllers
+                                                        .subCategoryController
+                                                        .text =
+                                                    value?.id.toString() ?? '';
+                                              },
+                                              customButton: ItemMasterControllers
+                                                          .subCategoryNameController
+                                                          .text
+                                                          .isEmpty ||
+                                                      ItemMasterControllers
+                                                              .subCategoryNameController
+                                                              .text ==
+                                                          'null'
+                                                  ? null
+                                                  : Row(
+                                                      children: [
+                                                        Center(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    10,
+                                                                    15,
+                                                                    10,
+                                                                    15),
+                                                            child: Text(
+                                                                ItemMasterControllers
+                                                                    .subCategoryNameController
+                                                                    .text,
+                                                                style: getRegularStyle(
+                                                                    color: Colormanager
+                                                                        .textColor,
+                                                                    fontSize:
+                                                                        12)),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                              menuItemStyleData:
+                                                  const MenuItemStyleData(
+                                                height: 40,
+                                                padding: EdgeInsets.fromLTRB(
+                                                    12, 0, 12, 0),
+                                              ),
+                                              dropdownStyleData:
+                                                  DropdownStyleData(
+                                                maxHeight: size.height * .5,
+                                              ),
+                                              dropdownSearchData:
+                                                  DropdownSearchData(
+                                                searchInnerWidgetHeight: 20,
+                                                searchController:
+                                                    ItemMasterControllers
+                                                        .searchSubCatController,
+                                                searchInnerWidget: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: 8,
+                                                    bottom: 4,
+                                                    right: 8,
+                                                    left: 8,
+                                                  ),
+                                                  child: TextFormField(
+                                                    controller:
+                                                        ItemMasterControllers
+                                                            .searchSubCatController,
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          const EdgeInsets
+                                                              .symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 8,
+                                                      ),
+                                                      hintText:
+                                                          "Search Category",
+                                                      hintStyle:
+                                                          const TextStyle(
+                                                              fontSize: 12),
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                searchMatchFn:
+                                                    (item, searchValue) {
+                                                  return (item.value!.name
+                                                      .toString()
+                                                      .toLowerCase()
+                                                      .contains(searchValue));
+                                                },
+                                              ),
+                                              onMenuStateChange: (isOpen) {
+                                                if (!isOpen) {
+                                                  ItemMasterControllers
+                                                      .searchSubCatController
+                                                      .clear();
+                                                }
+                                              }
+                                              //This to clear the search value when you close the menu
+                                              // onMenuStateChange: (isOpen) {
+                                              //   if (!isOpen) {
+                                              //     AddressEditControllers
+                                              //         .searchController
+                                              //         .clear();
+                                              //   }
+                                              // }
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Supplier",
+                              style: getRegularStyle(
+                                  color: Colors.black, fontSize: 14),
+                            ),
+                            BlocBuilder<LoginBloc, LoginState>(
+                              builder: (context, state) {
+                                if (state is OptionPageState) {
+                                  return SizedBox(
+                                    height: 60,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 10, 0, 0),
+                                      child: Container(
+                                        // width: size.width * .44,
+                                        decoration: BoxDecoration(
+                                            color: Colormanager.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                                color: Colormanager.primary)),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton2<
+                                                  SupplierMasterList>(
+                                              isExpanded: true,
+                                              iconStyleData:
+                                                  const IconStyleData(),
+                                              hint: Text("Select Supplier",
+                                                  style: getRegularStyle(
+                                                      color: const Color.fromARGB(
+                                                          255, 173, 173, 173),
+                                                      fontSize: 15)),
+                                              items: state.itemGetConfig
+                                                  ?.supplierMasterList!
+                                                  .map((item) =>
+                                                      DropdownMenuItem<
+                                                          SupplierMasterList>(
+                                                        value: item,
+                                                        child: Text(
+                                                            item.name ?? '',
+                                                            style: getRegularStyle(
+                                                                color: Colormanager
+                                                                    .mainTextColor,
+                                                                fontSize: 15)),
+                                                      ))
+                                                  .toList(),
+                                              // value: defSupplier,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  ItemMasterControllers
+                                                          .supplierNameController
+                                                          .text =
+                                                      value?.name as String;
+                                                });
+                                                // ItemMasterControllers
+                                                //     .supplierNameController
+                                                //     .text = defSupplier ?? '';
+                                                ItemMasterControllers
+                                                        .supplierController
+                                                        .text =
+                                                    value?.id.toString() ?? '';
+                                                ItemMasterControllers
+                                                        .remarksController
+                                                        .text =
+                                                    value?.remarks ?? '';
+                                                ItemMasterControllers
+                                                    .supplierCodeController
+                                                    .text = value?.code ?? '';
+                                              },
+                                              customButton: ItemMasterControllers
+                                                          .supplierNameController
+                                                          .text
+                                                          .isEmpty ||
+                                                      ItemMasterControllers
+                                                              .supplierNameController
+                                                              .text ==
+                                                          'null'
+                                                  ? null
+                                                  : Row(
+                                                      children: [
+                                                        Center(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    10,
+                                                                    15,
+                                                                    10,
+                                                                    15),
+                                                            child: Text(
+                                                                ItemMasterControllers
+                                                                    .supplierNameController
+                                                                    .text,
+                                                                style: getRegularStyle(
+                                                                    color: Colormanager
+                                                                        .textColor,
+                                                                    fontSize:
+                                                                        12)),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                              menuItemStyleData:
+                                                  const MenuItemStyleData(
+                                                height: 40,
+                                                padding: EdgeInsets.fromLTRB(
+                                                    12, 0, 12, 0),
+                                              ),
+                                              dropdownStyleData:
+                                                  DropdownStyleData(
+                                                maxHeight: size.height * .5,
+                                              ),
+                                              dropdownSearchData:
+                                                  DropdownSearchData(
+                                                searchInnerWidgetHeight: 20,
+                                                searchController:
+                                                    ItemMasterControllers
+                                                        .searchSupController,
+                                                searchInnerWidget: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: 8,
+                                                    bottom: 4,
+                                                    right: 8,
+                                                    left: 8,
+                                                  ),
+                                                  child: TextFormField(
+                                                    controller:
+                                                        ItemMasterControllers
+                                                            .searchSupController,
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          const EdgeInsets
+                                                              .symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 8,
+                                                      ),
+                                                      hintText:
+                                                          "Search Supplier",
+                                                      hintStyle:
+                                                          const TextStyle(
+                                                              fontSize: 12),
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                searchMatchFn:
+                                                    (item, searchValue) {
+                                                  return (item.value!.name
+                                                      .toString()
+                                                      .toLowerCase()
+                                                      .contains(searchValue));
+                                                },
+                                              ),
+                                              onMenuStateChange: (isOpen) {
+                                                if (!isOpen) {
+                                                  ItemMasterControllers
+                                                      .searchSupController
+                                                      .clear();
+                                                }
+                                              }
+                                              //This to clear the search value when you close the menu
+                                              // onMenuStateChange: (isOpen) {
+                                              //   if (!isOpen) {
+                                              //     AddressEditControllers
+                                              //         .searchController
+                                              //         .clear();
+                                              //   }
+                                              // }
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              // width: size.width * .8,
+                              // height: size.height * .7,
+                              decoration: BoxDecoration(
+                                color: Colormanager.background,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 3,
+                                    blurRadius: 3,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                                border: Border.all(
+                                  width: 1,
+                                  color: Colors.grey.withOpacity(0.1),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: BlocBuilder<LoginBloc,
+                                              LoginState>(
+                                            builder: (context, state) {
+                                              if (state is OptionPageState) {
+                                                return SizedBox(
+                                                  width: size.width * .35,
+                                                  height: 40,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(0, 0, 0, 0),
+                                                    child: Container(
+                                                      // width: size.width * .44,
+                                                      decoration: BoxDecoration(
+                                                          color: Colormanager
+                                                              .primary,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          border: Border.all(
+                                                              color: Colormanager
+                                                                  .primary)),
+                                                      child:
+                                                          DropdownButtonHideUnderline(
+                                                        child: DropdownButton2<
+                                                            TaxList>(
+                                                          isExpanded: true,
+                                                          iconStyleData:
+                                                              const IconStyleData(),
+                                                          hint: Text("Vat",
+                                                              style: getRegularStyle(
+                                                                  color:
+                                                                      Colormanager
+                                                                          .white,
+                                                                  fontSize:
+                                                                      12)),
+                                                          items: state
+                                                              .itemGetConfig
+                                                              ?.taxList!
+                                                              .map((item) =>
+                                                                  DropdownMenuItem<
+                                                                      TaxList>(
+                                                                    value: item,
+                                                                    child: Text(
+                                                                        item.taxName ??
+                                                                            '',
+                                                                        style: getRegularStyle(
+                                                                            color:
+                                                                                Colormanager.mainTextColor,
+                                                                            fontSize: 12)),
+                                                                  ))
+                                                              .toList(),
+                                                          // value: defTaxName,
+                                                          onChanged: (value) {
+                                                            onTaxSelect(value);
+                                                          },
+
+                                                          customButton:
+                                                              ItemMasterCloneControllers
+                                                                      .cdefTaxName
+                                                                      .text
+                                                                      .isEmpty
+                                                                  ? null
+                                                                  : Row(
+                                                                      children: [
+                                                                        Center(
+                                                                          child:
+                                                                              Padding(
+                                                                            padding: const EdgeInsets.fromLTRB(
+                                                                                10,
+                                                                                0,
+                                                                                0,
+                                                                                0),
+                                                                            child:
+                                                                                Text(ItemMasterCloneControllers.cdefTaxName.text, style: getRegularStyle(color: Colormanager.white, fontSize: 12)),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                          //This to clear the search value when you close the menu
+                                                          // onMenuStateChange: (isOpen) {
+                                                          //   if (!isOpen) {
+                                                          //     AddressEditControllers
+                                                          //         .searchController
+                                                          //         .clear();
+                                                          //   }
+                                                          // }
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              } else {
+                                                return Container();
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Container(
                                             width: size.width * .35,
                                             height: 40,
+                                            decoration: BoxDecoration(
+                                                color: Colormanager.primary,
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.fromLTRB(
-                                                      0, 0, 0, 0),
-                                              child: Container(
-                                                // width: size.width * .44,
-                                                decoration: BoxDecoration(
-                                                    color: Colormanager.primary,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    border: Border.all(
-                                                        color: Colormanager
-                                                            .primary)),
-                                                child:
-                                                    DropdownButtonHideUnderline(
-                                                  child:
-                                                      DropdownButton2<TaxList>(
-                                                    isExpanded: true,
-                                                    iconStyleData:
-                                                        const IconStyleData(),
-                                                    hint: Text("Vat",
+                                                      8, 0, 3, 0),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    deftax?.taxRate
+                                                            .toString() ??
+                                                        'Unit',
+                                                    style: getRegularStyle(
+                                                        color:
+                                                            Colormanager.white,
+                                                        fontSize: 12),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "Rack No",
                                                         style: getRegularStyle(
-                                                            color: Colormanager
-                                                                .white,
-                                                            fontSize: 12)),
-                                                    items: state
-                                                        .itemGetConfig?.taxList!
-                                                        .map((item) =>
-                                                            DropdownMenuItem<
-                                                                TaxList>(
-                                                              value: item,
-                                                              child: Text(
-                                                                  item.taxName ??
-                                                                      '',
+                                                            color: Colors.black,
+                                                            fontSize: 10),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 5.0,
+                                                            right: 5),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4.5),
+                                                      border: Border.all(
+                                                        color: Colormanager
+                                                            .primary,
+                                                        width: 1.0,
+                                                      ),
+                                                    ),
+                                                    child: TextField(
+                                                      controller:
+                                                          ItemMasterControllers
+                                                              .rackNoController,
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        border:
+                                                            InputBorder.none,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Shelf No",
+                                                    style: getRegularStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 10),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 5.0, right: 5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.5),
+                                                  border: Border.all(
+                                                    color: Colormanager.primary,
+                                                    width: 1.0,
+                                                  ),
+                                                ),
+                                                child: TextField(
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  controller:
+                                                      ItemMasterControllers
+                                                          .shelfNoController,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border: InputBorder.none,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: BlocBuilder<LoginBloc,
+                                              LoginState>(
+                                            builder: (context, state) {
+                                              if (state is OptionPageState) {
+                                                return Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          "Unit",
+                                                          style:
+                                                              getRegularStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 10),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    SizedBox(
+                                                      width: size.width * .35,
+                                                      height: 40,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .fromLTRB(
+                                                                0, 0, 0, 0),
+                                                        child: Container(
+                                                          // width: size.width * .44,
+                                                          decoration: BoxDecoration(
+                                                              color:
+                                                                  Colormanager
+                                                                      .primary,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                              border: Border.all(
+                                                                  color: Colormanager
+                                                                      .primary)),
+                                                          child:
+                                                              DropdownButtonHideUnderline(
+                                                            child:
+                                                                DropdownButton2<
+                                                                    TaxList>(
+                                                              isExpanded: true,
+                                                              iconStyleData:
+                                                                  const IconStyleData(),
+                                                              hint: Text("Vat",
                                                                   style: getRegularStyle(
                                                                       color: Colormanager
-                                                                          .mainTextColor,
+                                                                          .white,
                                                                       fontSize:
                                                                           12)),
-                                                            ))
-                                                        .toList(),
-                                                    // value: defTaxName,
-                                                    onChanged: (value) {
-                                                      onTaxSelect(value);
-                                                    },
+                                                              items: state
+                                                                  .itemGetConfig
+                                                                  ?.taxList!
+                                                                  .map((item) =>
+                                                                      DropdownMenuItem<
+                                                                          TaxList>(
+                                                                        value:
+                                                                            item,
+                                                                        child: Text(
+                                                                            item.taxName ??
+                                                                                '',
+                                                                            style:
+                                                                                getRegularStyle(color: Colormanager.mainTextColor, fontSize: 12)),
+                                                                      ))
+                                                                  .toList(),
+                                                              // value: defTaxName,
+                                                              onChanged:
+                                                                  (value) {
+                                                                onTaxSelect(
+                                                                    value);
+                                                              },
 
-                                                    customButton:
-                                                        ItemMasterCloneControllers
-                                                                .cdefTaxName
-                                                                .text
-                                                                .isEmpty
-                                                            ? null
-                                                            : Row(
+                                                              customButton:
+                                                                  // ItemMasterCloneControllers
+                                                                  //         .cdefTaxName
+                                                                  //         .text
+                                                                  //         .isEmpty
+                                                                  //     ? null
+                                                                  //     :
+                                                                  Row(
                                                                 children: [
                                                                   Center(
                                                                     child:
@@ -1126,9 +1693,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                                               0,
                                                                               0),
                                                                       child: Text(
-                                                                          ItemMasterCloneControllers
-                                                                              .cdefTaxName
-                                                                              .text,
+                                                                          "Selling Price",
                                                                           style: getRegularStyle(
                                                                               color: Colormanager.white,
                                                                               fontSize: 12)),
@@ -1136,616 +1701,659 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                                   ),
                                                                 ],
                                                               ),
-                                                    //This to clear the search value when you close the menu
-                                                    // onMenuStateChange: (isOpen) {
-                                                    //   if (!isOpen) {
-                                                    //     AddressEditControllers
-                                                    //         .searchController
-                                                    //         .clear();
-                                                    //   }
-                                                    // }
+                                                              //This to clear the search value when you close the menu
+                                                              // onMenuStateChange: (isOpen) {
+                                                              //   if (!isOpen) {
+                                                              //     AddressEditControllers
+                                                              //         .searchController
+                                                              //         .clear();
+                                                              //   }
+                                                              // }
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              } else {
+                                                return Container();
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Contain",
+                                                    style: getRegularStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 10),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 5.0, right: 5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.5),
+                                                  border: Border.all(
+                                                    color: Colormanager.primary,
+                                                    width: 1.0,
+                                                  ),
+                                                ),
+                                                child: TextField(
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  controller:
+                                                      ItemMasterControllers
+                                                          .containController,
+                                                  onChanged: (value) {
+                                                    // onCostWithTaxChanged(value);
+                                                  },
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border: InputBorder.none,
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          );
-                                        } else {
-                                          return Container();
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      width: size.width * .35,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                          color: Colormanager.primary,
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            8, 0, 3, 0),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              deftax?.taxRate.toString() ??
-                                                  'Unit',
-                                              style: getRegularStyle(
-                                                  color: Colormanager.white,
-                                                  fontSize: 12),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "Rack No",
-                                                  style: getRegularStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 5.0, right: 5),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(4.5),
-                                                border: Border.all(
-                                                  color: Colormanager.primary,
-                                                  width: 1.0,
-                                                ),
-                                              ),
-                                              child: TextField(
-                                                controller:
-                                                    ItemMasterControllers
-                                                        .rackNoController,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                decoration:
-                                                    const InputDecoration(
-                                                  border: InputBorder.none,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Shelf No",
-                                              style: getRegularStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 5.0, right: 5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4.5),
-                                            border: Border.all(
-                                              color: Colormanager.primary,
-                                              width: 1.0,
-                                            ),
+                                              // Container(
+                                              //   width: size.width * .35,
+                                              //   height: 40,
+                                              //   decoration: BoxDecoration(
+                                              //       color: Colormanager.primary,
+                                              //       borderRadius:
+                                              //           BorderRadius.circular(
+                                              //               5)),
+                                              //   child: Padding(
+                                              //     padding:
+                                              //         const EdgeInsets.fromLTRB(
+                                              //             8, 0, 3, 0),
+                                              //     child: Row(
+                                              //       children: [
+                                              //         Text(
+                                              //           'Selling With Tax',
+                                              //           style: getRegularStyle(
+                                              //               color: Colormanager
+                                              //                   .white,
+                                              //               fontSize: 12),
+                                              //         ),
+                                              //       ],
+                                              //     ),
+                                              //   ),
+                                              // ),
+                                            ],
                                           ),
-                                          child: TextField(
-                                            keyboardType: TextInputType.number,
-                                            controller: ItemMasterControllers
-                                                .shelfNoController,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Cost Price",
-                                              style: getRegularStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 5.0, right: 5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4.5),
-                                            border: Border.all(
-                                              color: Colormanager.amber,
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          child: TextField(
-                                            keyboardType: TextInputType.number,
-                                            controller: ItemMasterControllers
-                                                .costPriceController,
-                                            onChanged: (value) {
-                                              onCostChange(value);
-                                            },
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Cost With Tax",
-                                              style: getRegularStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 5.0, right: 5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4.5),
-                                            border: Border.all(
-                                              color: Colormanager.primary,
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          child: TextField(
-                                            keyboardType: TextInputType.number,
-                                            controller: ItemMasterControllers
-                                                .costWithTaxController,
-                                            onChanged: (value) {
-                                              onCostWithTaxChanged(value);
-                                            },
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "Margin %",
-                                                  style: getRegularStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 5.0, right: 5),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(4.5),
-                                                border: Border.all(
-                                                  color: Colormanager.primary,
-                                                  width: 1.0,
-                                                ),
-                                              ),
-
-                                              // width: size.width * .35,
-                                              child: TextFormField(
-                                                controller:
-                                                    ItemMasterControllers
-                                                        .marginPerController,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                onChanged: (value) {
-                                                  print(value);
-                                                  onMarginPerChanged(value);
-                                                },
-                                                decoration:
-                                                    const InputDecoration(
-                                                  border: InputBorder.none,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Margin \$",
-                                              style: getRegularStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 5.0, right: 5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4.5),
-                                            border: Border.all(
-                                              color: Colormanager.primary,
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: TextField(
-                                              controller: ItemMasterControllers
-                                                  .marginController,
-                                              onChanged: (value) {
-                                                onMarginCostChanged(value);
-                                              },
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              decoration: const InputDecoration(
-                                                border: InputBorder.none,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Selling Price",
-                                              style: getRegularStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 5.0, right: 5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4.5),
-                                            border: Border.all(
-                                              color: Colormanager.amber,
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          child: TextField(
-                                            controller: ItemMasterControllers
-                                                .sellingPController,
-                                            keyboardType: TextInputType.none,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Selling With Tax",
-                                              style: getRegularStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 5.0, right: 5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4.5),
-                                            border: Border.all(
-                                              color: Colormanager.primary,
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          child: TextField(
-                                            controller: ItemMasterControllers
-                                                .sellingPriceWithTaxController,
-                                            keyboardType: TextInputType.none,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 10, bottom: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 3),
-                                      child: CurvedCheckbox(
-                                        text: "Active",
-                                        value: isActiceChecked,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            isActiceChecked = value;
-                                            isNoneStockChecked = false;
-                                            isCounterStockChecked = false;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 3),
-                                      child: CurvedCheckbox(
-                                        text: "None Stock ",
-                                        value: isNoneStockChecked,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            isNoneStockChecked = value;
-                                            isActiceChecked = false;
-                                            isCounterStockChecked = false;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 3),
-                                      child: CurvedCheckbox(
-                                        text: 'Counter Stock',
-                                        value: isCounterStockChecked,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            isCounterStockChecked = value;
-                                            isActiceChecked = false;
-                                            isNoneStockChecked = false;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Material(
-                                      color: Colormanager.teritiory,
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: InkWell(
-                                        splashColor: Colormanager.primary,
-                                        borderRadius: BorderRadius.circular(5),
-                                        onTap: () {
-                                          isNextVisible || widget.isUpdating
-                                              ? updateItemMasterdata(
-                                                  ItemMasterControllers
-                                                      .itemId.text)
-                                              : saveItemMasterdata();
-                                        },
-                                        child: Container(
-                                          width: 70,
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                            // border: Border.all(
-                                            //     color: Colormanager.primary),
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            // color: Colormanager.teritiory,
-                                          ),
-                                          child: Center(
-                                              child: Text(
-                                            "Save",
-                                            style: getRegularStyle(
-                                                color: Colormanager.primary,
-                                                fontSize: 10),
-                                          )),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Expanded(
-                                    child: Material(
-                                      color: Colormanager.teritiory,
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: InkWell(
-                                        splashColor: Colormanager.primary,
-                                        borderRadius: BorderRadius.circular(5),
-                                        onTap: () {
-                                          ItemMasterControllers
-                                              .cleanControllers();
-                                        },
-                                        child: Container(
-                                          width: 70,
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: Center(
-                                              child: Text(
-                                            "Clear",
-                                            style: getRegularStyle(
-                                                color: Colormanager.primary,
-                                                fontSize: 10),
-                                          )),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  isSaved || isNextVisible
-                                      ? const SizedBox(
-                                          width: 5,
                                         )
-                                      : Container(),
-                                  isSaved || isNextVisible
-                                      ? BlocBuilder<LoginBloc, LoginState>(
-                                          builder: (context, state) {
-                                            if (state is OptionPageState) {
-                                              return Expanded(
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Cost Price",
+                                                    style: getRegularStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 10),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 5.0, right: 5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.5),
+                                                  border: Border.all(
+                                                    color: Colormanager.amber,
+                                                    width: 1.0,
+                                                  ),
+                                                ),
+                                                child: TextField(
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  controller:
+                                                      ItemMasterControllers
+                                                          .costPriceController,
+                                                  onChanged: (value) {
+                                                    onCostChange(value);
+                                                  },
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border: InputBorder.none,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Cost With Tax",
+                                                    style: getRegularStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 10),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 5.0, right: 5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.5),
+                                                  border: Border.all(
+                                                    color: Colormanager.primary,
+                                                    width: 1.0,
+                                                  ),
+                                                ),
+                                                child: TextField(
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  controller:
+                                                      ItemMasterControllers
+                                                          .costWithTaxController,
+                                                  onChanged: (value) {
+                                                    onCostWithTaxChanged(value);
+                                                  },
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border: InputBorder.none,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "Margin %",
+                                                        style: getRegularStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 10),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 5.0,
+                                                            right: 5),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4.5),
+                                                      border: Border.all(
+                                                        color: Colormanager
+                                                            .primary,
+                                                        width: 1.0,
+                                                      ),
+                                                    ),
+
+                                                    // width: size.width * .35,
+                                                    child: TextFormField(
+                                                      controller:
+                                                          ItemMasterControllers
+                                                              .marginPerController,
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      onChanged: (value) {
+                                                        print(value);
+                                                        onMarginPerChanged(
+                                                            value);
+                                                      },
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        border:
+                                                            InputBorder.none,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Margin \$",
+                                                    style: getRegularStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 10),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 5.0, right: 5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.5),
+                                                  border: Border.all(
+                                                    color: Colormanager.primary,
+                                                    width: 1.0,
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: TextField(
+                                                    controller:
+                                                        ItemMasterControllers
+                                                            .marginController,
+                                                    onChanged: (value) {
+                                                      onMarginCostChanged(
+                                                          value);
+                                                    },
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                      border: InputBorder.none,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Selling Price",
+                                                    style: getRegularStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 10),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 5.0, right: 5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.5),
+                                                  border: Border.all(
+                                                    color: Colormanager.amber,
+                                                    width: 1.0,
+                                                  ),
+                                                ),
+                                                child: TextField(
+                                                  controller:
+                                                      ItemMasterControllers
+                                                          .sellingPController,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  onChanged: (value) {
+                                                    onSellingPriceChange();
+                                                  },
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border: InputBorder.none,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Selling With Tax",
+                                                    style: getRegularStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 10),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 5.0, right: 5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.5),
+                                                  border: Border.all(
+                                                    color: Colormanager.primary,
+                                                    width: 1.0,
+                                                  ),
+                                                ),
+                                                child: TextField(
+                                                  controller: ItemMasterControllers
+                                                      .sellingPriceWithTaxController,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  onChanged: (value) {
+                                                    onSellingTaxPriceChange();
+                                                  },
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border: InputBorder.none,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, bottom: 10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 3),
+                                            child: CurvedCheckbox(
+                                              text: "Active",
+                                              value:
+                                                  state.itemViewById?.active ??
+                                                      isActiceChecked,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  isActiceChecked = value;
+                                                  isNoneStockChecked = false;
+                                                  isCounterStockChecked = false;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 3),
+                                            child: CurvedCheckbox(
+                                              text: "None Stock ",
+                                              value: isNoneStockChecked,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  state.itemViewById?.active =
+                                                      null;
+                                                  isNoneStockChecked = value;
+                                                  isActiceChecked = false;
+                                                  isCounterStockChecked = false;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 3),
+                                            child: CurvedCheckbox(
+                                              text: 'Counter Stock',
+                                              value: isCounterStockChecked,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  state.itemViewById?.active =
+                                                      null;
+                                                  isCounterStockChecked = value;
+                                                  isActiceChecked = false;
+                                                  isNoneStockChecked = false;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Material(
+                                            color: Colormanager.teritiory,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            child: InkWell(
+                                              splashColor: Colormanager.primary,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              onTap: () {
+                                                isNextVisible ||
+                                                        widget.isUpdating
+                                                    ? updateItemMasterdata(
+                                                        ItemMasterControllers
+                                                            .itemId.text)
+                                                    : saveItemMasterdata();
+                                              },
+                                              child: Container(
+                                                width: 70,
+                                                height: 30,
+                                                decoration: BoxDecoration(
+                                                  // border: Border.all(
+                                                  //     color: Colormanager.primary),
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  // color: Colormanager.teritiory,
+                                                ),
+                                                child: Center(
+                                                    child: Text(
+                                                  "Save",
+                                                  style: getRegularStyle(
+                                                      color:
+                                                          Colormanager.primary,
+                                                      fontSize: 10),
+                                                )),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Expanded(
+                                          child: Material(
+                                            color: Colormanager.teritiory,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            child: InkWell(
+                                              splashColor: Colormanager.primary,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              onTap: () {
+                                                ItemMasterControllers
+                                                    .cleanControllers();
+                                              },
+                                              child: Container(
+                                                width: 70,
+                                                height: 30,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                                child: Center(
+                                                    child: Text(
+                                                  "Clear",
+                                                  style: getRegularStyle(
+                                                      color:
+                                                          Colormanager.primary,
+                                                      fontSize: 10),
+                                                )),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        isSaved || isNextVisible
+                                            ? const SizedBox(
+                                                width: 5,
+                                              )
+                                            : Container(),
+                                        isSaved || isNextVisible
+                                            ? BlocBuilder<LoginBloc,
+                                                LoginState>(
+                                                builder: (context, state) {
+                                                  if (state
+                                                      is OptionPageState) {
+                                                    return Expanded(
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          ItemMasterCloneControllers
+                                                              .clone();
+
+                                                          setState(() {
+                                                            // defSupplier =
+                                                            //     ItemMasterControllers
+                                                            //         .supplierNameController
+                                                            //         .text;
+                                                            // defDepartment =
+                                                            //     ItemMasterControllers
+                                                            //         .departmentNameController
+                                                            //         .text;
+                                                            // defCategory =
+                                                            //     ItemMasterControllers
+                                                            //         .categoryNameController
+                                                            //         .text;
+                                                            // secCategory =
+                                                            //     ItemMasterControllers
+                                                            //         .subCategoryNameController
+                                                            //         .text;
+                                                            isBarCodeGen = true;
+                                                          });
+                                                          ItemMasterControllers
+                                                              .barCodeController
+                                                              .text = state
+                                                                  .barCode1 ??
+                                                              '';
+                                                        },
+                                                        child: Container(
+                                                          width: 70,
+                                                          height: 30,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5),
+                                                            color: Colormanager
+                                                                .teritiory,
+                                                          ),
+                                                          child: Center(
+                                                              child: Text(
+                                                            "Clone",
+                                                            style: getRegularStyle(
+                                                                color:
+                                                                    Colormanager
+                                                                        .primary,
+                                                                fontSize: 10),
+                                                          )),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                  return Container();
+                                                },
+                                              )
+                                            : Container(),
+                                        isSaved || isNextVisible
+                                            ? const SizedBox(
+                                                width: 5,
+                                              )
+                                            : Container(),
+                                        isSaved || isNextVisible
+                                            ? Expanded(
                                                 child: InkWell(
                                                   onTap: () {
-                                                    ItemMasterCloneControllers
-                                                        .clone();
-
-                                                    setState(() {
-                                                      // defSupplier =
-                                                      //     ItemMasterControllers
-                                                      //         .supplierNameController
-                                                      //         .text;
-                                                      // defDepartment =
-                                                      //     ItemMasterControllers
-                                                      //         .departmentNameController
-                                                      //         .text;
-                                                      // defCategory =
-                                                      //     ItemMasterControllers
-                                                      //         .categoryNameController
-                                                      //         .text;
-                                                      // secCategory =
-                                                      //     ItemMasterControllers
-                                                      //         .subCategoryNameController
-                                                      //         .text;
-                                                      isBarCodeGen = true;
-                                                    });
-                                                    ItemMasterControllers
-                                                            .barCodeController
-                                                            .text =
-                                                        state.barCode1 ?? '';
+                                                    Navigator.pushNamed(context,
+                                                        Routes.viewPage);
                                                   },
                                                   child: Container(
                                                     width: 70,
@@ -1759,7 +2367,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                     ),
                                                     child: Center(
                                                         child: Text(
-                                                      "Clone",
+                                                      "View",
                                                       style: getRegularStyle(
                                                           color: Colormanager
                                                               .primary,
@@ -1767,91 +2375,61 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                     )),
                                                   ),
                                                 ),
-                                              );
-                                            }
-                                            return Container();
-                                          },
-                                        )
-                                      : Container(),
-                                  isSaved || isNextVisible
-                                      ? const SizedBox(
-                                          width: 5,
-                                        )
-                                      : Container(),
-                                  isSaved || isNextVisible
-                                      ? Expanded(
-                                          child: InkWell(
-                                            onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, Routes.viewPage);
-                                            },
-                                            child: Container(
-                                              width: 70,
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                color: Colormanager.teritiory,
-                                              ),
-                                              child: Center(
-                                                  child: Text(
-                                                "View",
-                                                style: getRegularStyle(
-                                                    color: Colormanager.primary,
-                                                    fontSize: 10),
-                                              )),
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
-                                  isSaved || isNextVisible
-                                      ? const SizedBox(
-                                          width: 5,
-                                        )
-                                      : Container(),
-                                  isSaved || isNextVisible
-                                      ? Expanded(
-                                          child: InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                isprint = !isprint;
-                                              });
-                                            },
-                                            child: Container(
-                                              width: 70,
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                color: Colormanager.teritiory,
-                                              ),
-                                              child: Center(
-                                                  child: Text(
-                                                "Print",
-                                                style: getRegularStyle(
-                                                    color: Colormanager.primary,
-                                                    fontSize: 10),
-                                              )),
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
-                                ],
+                                              )
+                                            : Container(),
+                                        isSaved || isNextVisible
+                                            ? const SizedBox(
+                                                width: 5,
+                                              )
+                                            : Container(),
+                                        isSaved || isNextVisible
+                                            ? Expanded(
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      isprint = !isprint;
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                    width: 70,
+                                                    height: 30,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: Colormanager
+                                                          .teritiory,
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Print",
+                                                      style: getRegularStyle(
+                                                          color: Colormanager
+                                                              .primary,
+                                                          fontSize: 10),
+                                                    )),
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      isprint ? const BarcodePrint() : Container(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            isprint ? const BarcodePrint() : Container(),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        );
+                      }
+                      return Container();
+                    })),
               ),
             ),
     );
@@ -2002,6 +2580,40 @@ class _AddItemScreenState extends State<AddItemScreen> {
     if (ItemMasterControllers.marginController.text.isNotEmpty) {
       onMarginCostChanged(ItemMasterControllers.marginController.text);
     }
+  }
+
+  final costp = ItemMasterControllers.costPriceController.text;
+  final costPTax = ItemMasterControllers.costWithTaxController.text;
+  final sellingT = ItemMasterControllers.sellingPriceWithTaxController.text;
+  final sellingP = ItemMasterControllers.sellingPController.text;
+
+  onSellingPriceChange() {
+    // final sellingP = ItemMasterControllers.sellingPriceWithTaxController.text;
+    getMarginValues();
+    getSellingTax();
+  }
+
+  onSellingTaxPriceChange() {
+    print("object");
+    double s = double.parse(costp);
+    final tax = (s / 100 * deftax?.taxRate);
+    print(tax);
+    ItemMasterControllers.sellingPController.text = (double.parse(
+                ItemMasterControllers.sellingPriceWithTaxController.text) -
+            tax)
+        .toStringAsFixed(2);
+    print(ItemMasterControllers.sellingPController.text);
+    getMarginValues();
+  }
+
+  getMarginValues() {
+    final sell = double.parse(ItemMasterControllers.sellingPController.text);
+    final cost = double.parse(ItemMasterControllers.costPriceController.text);
+    ItemMasterControllers.marginController.text =
+        (sell - cost).toStringAsFixed(2);
+    ItemMasterControllers.marginPerController.text = ((100 / sell) *
+            double.parse(ItemMasterControllers.marginController.text))
+        .toStringAsFixed(2);
   }
 
   getSellingTax() {

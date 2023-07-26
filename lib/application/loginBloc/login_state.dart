@@ -54,6 +54,7 @@ class OptionPageState extends LoginState {
   String? barCode1;
   String? barCode2;
   GetitemsModel? getItems;
+  ItemViewById? itemViewById;
   OptionPageState(
       {this.userModel,
       this.isEmpty,
@@ -61,5 +62,6 @@ class OptionPageState extends LoginState {
       this.itemGetConfig,
       this.barCode1,
       this.barCode2,
-      this.getItems});
+      this.getItems,
+      this.itemViewById});
 }

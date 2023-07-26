@@ -1,3 +1,4 @@
+import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/item_get_config.dart';
 import 'package:hive/hive.dart';
@@ -99,5 +100,6 @@ Future<String> genBarcode2(ItemGetConfig itemGetConfig) async {
     url,
     headers: headers,
   );
+  AlterUnitControllers.barcodeAltText.text = response.body;
   return response.body;
 }

@@ -64,6 +64,7 @@ class LoginImp implements LoginServices {
 
       final response = await http.post(url, headers: headers, body: body);
       var jsonResponse = jsonDecode(response.body);
+      log(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = UserDetailsModel.fromJson(jsonResponse);
         return Right(result);

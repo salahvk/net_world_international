@@ -34,6 +34,7 @@ class ItemMasterControllers {
   static TextEditingController subCategoryNameController =
       TextEditingController();
   static TextEditingController supplierCodeController = TextEditingController();
+  static TextEditingController containController = TextEditingController();
   static TextEditingController remarksController = TextEditingController();
   static TextEditingController rackNoController = TextEditingController();
   static TextEditingController shelfNoController = TextEditingController();
@@ -44,6 +45,9 @@ class ItemMasterControllers {
   static TextEditingController sellingPController = TextEditingController();
   static TextEditingController sellingPriceWithTaxController =
       TextEditingController();
+  static TextEditingController searchSupController = TextEditingController();
+  static TextEditingController searchSubCatController = TextEditingController();
+  static TextEditingController searchCatController = TextEditingController();
   static cleanControllers() {
     departmentNameController.clear();
     supplierController.clear();
@@ -192,6 +196,7 @@ class ItemMasterCloneControllers {
 class AlterUnitControllers {
   static TextEditingController itemMasterCode = TextEditingController();
   static TextEditingController barcodeAlt = TextEditingController();
+  static TextEditingController barcodeAltText = TextEditingController();
   static TextEditingController weightingScaleItem = TextEditingController();
   static TextEditingController unitId = TextEditingController();
   static TextEditingController contain = TextEditingController();

@@ -6,7 +6,6 @@ import 'package:net_world_international/core/asset_manager.dart';
 import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/routes_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
-import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/presentation/screens/add_item_screen.dart';
 import 'package:net_world_international/presentation/screens/db_import.dart';
 import 'package:net_world_international/presentation/screens/export_local_db.dart';
@@ -81,7 +80,7 @@ class _OptionScreenState extends State<OptionScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      state.userModel?.name ?? '',
+                                      state.userModel?.username ?? '',
                                       style: getMediumtStyle(
                                           color: Colors.white, fontSize: 15),
                                     ),

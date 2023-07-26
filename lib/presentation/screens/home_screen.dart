@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      state.userModel?.name ?? '',
+                                      state.userModel?.username ?? '',
                                       style: getMediumtStyle(
                                           color: Colors.white, fontSize: 15),
                                     ),

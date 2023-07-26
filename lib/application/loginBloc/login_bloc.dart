@@ -365,6 +365,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         ItemMasterControllers.supplierCodeController.text =
             result.suppliercode ?? '';
         ItemMasterControllers.itemId.text = result.id.toString();
+        ItemMasterControllers.barCodeController.text =
+            ItemMasterControllers.barCodeController2.text;
         //
         // ItemMasterControllers.nonStockController.text = result.nonStockItem.toString() == 1 ? true : false;
         //  "nonStockItem":
@@ -402,7 +404,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               barCode1: cuState.barCode1,
               barCode2: cuState.barCode2,
               getItems: cuState.getItems,
-              itemGetConfig: cuState.itemGetConfig));
+              itemGetConfig: cuState.itemGetConfig,
+              itemViewById: result));
         }
       } catch (e) {
         print(e);
