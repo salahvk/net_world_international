@@ -57,7 +57,11 @@ class LoginImp implements LoginServices {
       final endPoint = Hive.box("url").get('endpoint');
       final apiUrl = "$endPoint${ApiEndPoint.userDetails}";
       final url = Uri.parse(apiUrl);
-      final headers = {'Content-Type': 'application/json'};
+      final accessToken = Hive.box("token").get('api_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
       final body = jsonEncode({
         'userid': '1',
       });

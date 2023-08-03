@@ -78,6 +78,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         var stream = http.ByteStream(DelegatingStream(image.openRead()));
         var length = await image.length();
         final endPoint = Hive.box("url").get('endpoint');
+        final accessToken = Hive.box("token").get('api_token');
+
         final apiUrl = "$endPoint${ApiEndPoint.uploadImage}";
         var uri = Uri.parse(apiUrl);
         var request = http.MultipartRequest(
@@ -92,6 +94,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         );
 
         request.fields['userId'] = '1';
+        request.headers['Authorization'] = 'Bearer $accessToken';
 
         request.files.add(multipartFile);
         await request.send();
@@ -129,11 +132,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         final lName = EditProfileControllers.lastController.text;
         map['name'] = "$fName $lName";
         map['userId'] = '1';
+        final accessToken = Hive.box("token").get('api_token');
+        final headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken'
+        };
 
-        await http.post(
-          uri,
-          body: map,
-        );
+        await http.post(uri, body: map, headers: headers);
 
         Either<MainFailure, UserDetailsModel> userData =
             await LoginImp().getUserData();
@@ -297,7 +302,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final endPoint = Hive.box("url").get('endpoint');
       final apiUrl = "$endPoint${ApiEndPoint.getItems}?page=$pageNumber";
       final url = Uri.parse(apiUrl);
-      final headers = {'Content-Type': 'application/json'};
+      final accessToken = Hive.box("token").get('api_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
       final response = await http.get(
         url,
         headers: headers,
@@ -333,7 +342,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         final endPoint = Hive.box("url").get('endpoint');
         final apiUrl = "$endPoint${ApiEndPoint.getNextItem}";
         final url = Uri.parse(apiUrl);
-        final headers = {'Content-Type': 'application/json'};
+        final accessToken = Hive.box("token").get('api_token');
+        final headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken'
+        };
         final body = jsonEncode(
             {"barcode": event.barcode, "selectrow": event.selectedThrow});
 

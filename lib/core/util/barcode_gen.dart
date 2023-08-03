@@ -41,7 +41,11 @@ Future<String> genBarcode(ItemGetConfig itemGetConfig) async {
   final endPoint = Hive.box("url").get('endpoint');
   final apiUrl = "$endPoint${ApiEndPoint.genBarcode}";
   final url = Uri.parse(apiUrl);
-  final headers = {'Content-Type': 'application/json'};
+  final accessToken = Hive.box("token").get('api_token');
+  final headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $accessToken'
+  };
   final response = await http.get(
     url,
     headers: headers,
@@ -95,7 +99,11 @@ Future<String> genBarcode2(ItemGetConfig itemGetConfig) async {
   final endPoint = Hive.box("url").get('endpoint');
   final apiUrl = "$endPoint${ApiEndPoint.genAlternateBarcode}";
   final url = Uri.parse(apiUrl);
-  final headers = {'Content-Type': 'application/json'};
+  final accessToken = Hive.box("token").get('api_token');
+  final headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $accessToken'
+  };
   final response = await http.get(
     url,
     headers: headers,

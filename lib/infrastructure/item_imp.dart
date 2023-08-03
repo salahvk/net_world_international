@@ -25,7 +25,11 @@ class ItemImp implements ItemServices {
       final endPoint = Hive.box("url").get('endpoint');
       final apiUrl = "$endPoint${ApiEndPoint.getItemConfig}";
       final url = Uri.parse(apiUrl);
-      final headers = {'Content-Type': 'application/json'};
+      final accessToken = Hive.box("token").get('api_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
       final response = await http.get(
         url,
         headers: headers,
@@ -52,7 +56,11 @@ class ItemImp implements ItemServices {
       final endPoint = Hive.box("url").get('endpoint');
       final apiUrl = "$endPoint${ApiEndPoint.getItems}";
       final url = Uri.parse(apiUrl);
-      final headers = {'Content-Type': 'application/json'};
+      final accessToken = Hive.box("token").get('api_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
       final response = await http.get(
         url,
         headers: headers,
@@ -77,7 +85,11 @@ class ItemImp implements ItemServices {
       final endPoint = Hive.box("url").get('endpoint');
       final apiUrl = "$endPoint${ApiEndPoint.getItemById}$itemId";
       final url = Uri.parse(apiUrl);
-      final headers = {'Content-Type': 'application/json'};
+      final accessToken = Hive.box("token").get('api_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
 
       final response = await http.get(
         url,
@@ -157,7 +169,11 @@ class ItemImp implements ItemServices {
           "$endPoint${ApiEndPoint.itemByBarcode}${PrintControllers.barcode.text}";
       final url = Uri.parse(apiUrl);
       print(url);
-      final headers = {'Content-Type': 'application/json'};
+      final accessToken = Hive.box("token").get('api_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
       final response = await http.get(
         url,
         headers: headers,

@@ -22,7 +22,11 @@ class AddItemImp implements AddItemServices {
       final endPoint = Hive.box("url").get('endpoint');
       final apiUrl = "$endPoint${ApiEndPoint.addItems}";
       final url = Uri.parse(apiUrl);
-      final headers = {'Content-Type': 'application/json'};
+      final accessToken = Hive.box("token").get('api_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
       String barcode;
       if (ItemMasterControllers.barCodeController2.text.isEmpty) {
         barcode = ItemMasterControllers.barCodeController.text;
@@ -117,7 +121,11 @@ class AddItemImp implements AddItemServices {
       final endPoint = Hive.box("url").get('endpoint');
       final apiUrl = "$endPoint${ApiEndPoint.itemUpdateById}$id";
       final url = Uri.parse(apiUrl);
-      final headers = {'Content-Type': 'application/json'};
+      final accessToken = Hive.box("token").get('api_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
       String barcode;
       if (ItemMasterControllers.barCodeController2.text.isEmpty) {
         barcode = ItemMasterControllers.barCodeController.text;
@@ -213,7 +221,11 @@ class AddItemImp implements AddItemServices {
       final endPoint = Hive.box("url").get('endpoint');
       final apiUrl = "$endPoint${ApiEndPoint.addAlterItems}";
       final url = Uri.parse(apiUrl);
-      final headers = {'Content-Type': 'application/json'};
+      final accessToken = Hive.box("token").get('api_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
       final body = jsonEncode({
         "itemMasterId": ItemMasterControllers.itemId.text,
         // "itemMasterId": '',
