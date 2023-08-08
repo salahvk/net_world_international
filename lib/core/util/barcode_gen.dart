@@ -1,6 +1,6 @@
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/domain/core/api_endpoint.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/item_get_config.dart';
+import 'package:net_world_international/domain/item_config/item_config.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 

@@ -10,11 +10,7 @@ import 'package:net_world_international/core/styles_manager.dart';
 import 'package:net_world_international/core/util/animated_snackbar.dart';
 import 'package:net_world_international/core/util/arabic_transileteration.dart';
 import 'package:net_world_international/core/util/check_dep_name.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/category_list.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/department_list.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/second_category_list.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/supplier_master_list.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/tax_list.dart';
+import 'package:net_world_international/domain/item_config/item_config.dart';
 import 'package:net_world_international/infrastructure/add_item_imp.dart';
 import 'package:net_world_international/presentation/screens/home_screen.dart';
 import 'package:net_world_international/presentation/screens/item_master.dart';
@@ -23,6 +19,7 @@ import 'package:net_world_international/presentation/screens/profile_screen.dart
 import 'package:net_world_international/presentation/widget/barcode_print.dart';
 import 'package:net_world_international/presentation/widget/curved_checkbox.dart';
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:net_world_international/presentation/widget/screen_boxes.dart';
 
 class AddItemScreen extends StatefulWidget {
   final bool isUpdating;
@@ -251,6 +248,12 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                         .barCodeController
                                                         .text =
                                                     state.barCode1 ?? '';
+                                              } else {
+                                                BlocProvider.of<LoginBloc>(
+                                                        context)
+                                                    .add(
+                                                  SearchBarcodeEvent(),
+                                                );
                                               }
                                             });
                                           },
@@ -316,9 +319,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                       .isNotEmpty
                                                   ? ItemMasterControllers
                                                       .barCodeController2.text
-                                                  : state.itemGetConfig
-                                                          ?.lastbarcode?[0] ??
-                                                      '';
+                                                  : state.barCode1 ?? '';
 
                                               BlocProvider.of<LoginBloc>(
                                                       context)
@@ -388,16 +389,16 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(5),
                                                 onTap: () async {
-                                                  if (ItemMasterControllers
-                                                          .barCodeController2
-                                                          .text ==
-                                                      state.itemGetConfig
-                                                          ?.lastbarcode?[0]) {
-                                                    setState(() {
-                                                      isNextVisible = false;
-                                                    });
-                                                    return;
-                                                  }
+                                                  // if (ItemMasterControllers
+                                                  //         .barCodeController2
+                                                  //         .text ==
+                                                  //     state.itemGetConfig
+                                                  //         ?.lastbarcode?[0]) {
+                                                  //   setState(() {
+                                                  //     isNextVisible = false;
+                                                  //   });
+                                                  //   return;
+                                                  // }
                                                   // await nextBarCode(
                                                   ItemMasterControllers
                                                       .barCodeController
@@ -436,8 +437,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                   });
 
                                                   print(ItemMasterControllers
-                                                      .costPriceController
-                                                      .text);
+                                                      .nameController.text);
                                                   await Future.delayed(
                                                       const Duration(
                                                           seconds: 1));
@@ -484,9 +484,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
                                   return Column(
                                     children: [
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
+                                      ScreenBoxes.boxh10,
                                       ItemMasterControllers
                                               .barCodeController2.text.isEmpty
                                           ? BarcodeWidget(
@@ -494,14 +492,14 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                               data: ItemMasterControllers
                                                   .barCodeController.text,
                                               // width: 100,
-                                              height: 100,
+                                              height: 65,
                                             )
                                           : BarcodeWidget(
                                               barcode: Barcode.code128(),
                                               data: ItemMasterControllers
                                                   .barCodeController2.text,
                                               // width: 100,
-                                              height: 100,
+                                              height: 65,
                                             ),
                                     ],
                                   );
@@ -520,7 +518,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                               },
                             ),
                             const SizedBox(
-                              height: 20,
+                              height: 5,
                             ),
                             Text(
                               "Name",
@@ -555,9 +553,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                     ),
                                   )),
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            ScreenBoxes.boxh10,
                             Text(
                               "Short Name",
                               style: getRegularStyle(
@@ -591,9 +587,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                     ),
                                   )),
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            ScreenBoxes.boxh10,
                             Text(
                               "Arabic Name",
                               style: getRegularStyle(
@@ -649,9 +643,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                 )
                               ],
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            ScreenBoxes.boxh10,
                             Text(
                               "Department",
                               style: getRegularStyle(
@@ -663,8 +655,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                   return SizedBox(
                                     height: 60,
                                     child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 0, 0),
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                       child: Container(
                                         // width: size.width * .44,
                                         decoration: BoxDecoration(
@@ -674,88 +666,152 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             border: Border.all(
                                                 color: Colormanager.amber)),
                                         child: DropdownButtonHideUnderline(
-                                          child:
-                                              DropdownButton2<DepartmentList>(
-                                            isExpanded: true,
-                                            iconStyleData:
-                                                const IconStyleData(),
-                                            hint: Text("Select Department",
-                                                style: getRegularStyle(
-                                                    color: const Color.fromARGB(
-                                                        255, 173, 173, 173),
-                                                    fontSize: 15)),
-                                            items: state
-                                                .itemGetConfig?.departmentList!
-                                                .map((item) => DropdownMenuItem<
-                                                        DepartmentList>(
-                                                      value: item,
-                                                      child: Text(
-                                                          item.name ?? '',
-                                                          style: getRegularStyle(
-                                                              color: Colormanager
-                                                                  .mainTextColor,
-                                                              fontSize: 15)),
-                                                    ))
-                                                .toList(),
-
-                                            onChanged: (value) {
-                                              setState(() {
+                                          child: DropdownButton2<
+                                                  DepartmentList>(
+                                              isExpanded: true,
+                                              iconStyleData:
+                                                  const IconStyleData(),
+                                              hint: Text("Select Department",
+                                                  style: getRegularStyle(
+                                                      color: const Color.fromARGB(
+                                                          255, 173, 173, 173),
+                                                      fontSize: 15)),
+                                              items: state.itemGetConfig
+                                                  ?.departmentList!
+                                                  .map((item) =>
+                                                      DropdownMenuItem<
+                                                          DepartmentList>(
+                                                        value: item,
+                                                        child: Text(
+                                                            item.name ?? '',
+                                                            style: getRegularStyle(
+                                                                color: Colormanager
+                                                                    .mainTextColor,
+                                                                fontSize: 15)),
+                                                      ))
+                                                  .toList(),
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  ItemMasterControllers
+                                                          .departmentNameController
+                                                          .text =
+                                                      value?.name as String;
+                                                });
+                                                // ItemMasterControllers
+                                                //     .departmentNameController
+                                                //     .text = defDepartment ?? '';
                                                 ItemMasterControllers
-                                                        .departmentNameController
+                                                        .departmentController
                                                         .text =
-                                                    value?.name as String;
-                                              });
-                                              // ItemMasterControllers
-                                              //     .departmentNameController
-                                              //     .text = defDepartment ?? '';
-                                              ItemMasterControllers
-                                                      .departmentController
-                                                      .text =
-                                                  value?.id.toString() ?? '';
-                                            },
-
-                                            customButton: ItemMasterControllers
-                                                        .departmentNameController
-                                                        .text
-                                                        .isEmpty ||
-                                                    ItemMasterControllers
-                                                            .departmentNameController
-                                                            .text ==
-                                                        'null'
-                                                ? null
-                                                : Row(
-                                                    children: [
-                                                      Center(
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  10,
-                                                                  15,
-                                                                  10,
-                                                                  15),
-                                                          child: Text(
-                                                              ItemMasterControllers
-                                                                  .departmentNameController
-                                                                  .text,
-                                                              style: getRegularStyle(
-                                                                  color: Colormanager
-                                                                      .textColor,
-                                                                  fontSize:
-                                                                      12)),
+                                                    value?.id.toString() ?? '';
+                                              },
+                                              customButton: ItemMasterControllers
+                                                          .departmentNameController
+                                                          .text
+                                                          .isEmpty ||
+                                                      ItemMasterControllers
+                                                              .departmentNameController
+                                                              .text ==
+                                                          'null'
+                                                  ? null
+                                                  : Row(
+                                                      children: [
+                                                        Center(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    10,
+                                                                    15,
+                                                                    10,
+                                                                    15),
+                                                            child: Text(
+                                                                ItemMasterControllers
+                                                                    .departmentNameController
+                                                                    .text,
+                                                                style: getRegularStyle(
+                                                                    color: Colormanager
+                                                                        .textColor,
+                                                                    fontSize:
+                                                                        12)),
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
+                                              menuItemStyleData:
+                                                  const MenuItemStyleData(
+                                                height: 40,
+                                                padding: EdgeInsets.fromLTRB(
+                                                    12, 0, 12, 0),
+                                              ),
+                                              dropdownStyleData:
+                                                  DropdownStyleData(
+                                                maxHeight: size.height * .5,
+                                              ),
+                                              dropdownSearchData:
+                                                  DropdownSearchData(
+                                                searchInnerWidgetHeight: 20,
+                                                searchController:
+                                                    ItemMasterControllers
+                                                        .searchdepController,
+                                                searchInnerWidget: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: 8,
+                                                    bottom: 4,
+                                                    right: 8,
+                                                    left: 8,
                                                   ),
-                                            //This to clear the search value when you close the menu
-                                            // onMenuStateChange: (isOpen) {
-                                            //   if (!isOpen) {
-                                            //     AddressEditControllers
-                                            //         .searchController
-                                            //         .clear();
-                                            //   }
-                                            // }
-                                          ),
+                                                  child: TextFormField(
+                                                    controller:
+                                                        ItemMasterControllers
+                                                            .searchdepController,
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          const EdgeInsets
+                                                              .symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 8,
+                                                      ),
+                                                      hintText:
+                                                          "Search Department",
+                                                      hintStyle:
+                                                          const TextStyle(
+                                                              fontSize: 12),
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                searchMatchFn:
+                                                    (item, searchValue) {
+                                                  return (item.value!.name
+                                                      .toString()
+                                                      .toLowerCase()
+                                                      .contains(searchValue));
+                                                },
+                                              ),
+                                              onMenuStateChange: (isOpen) {
+                                                if (!isOpen) {
+                                                  ItemMasterControllers
+                                                      .searchdepController
+                                                      .clear();
+                                                }
+                                              }
+                                              //This to clear the search value when you close the menu
+                                              // onMenuStateChange: (isOpen) {
+                                              //   if (!isOpen) {
+                                              //     AddressEditControllers
+                                              //         .searchController
+                                              //         .clear();
+                                              //   }
+                                              // }
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -765,9 +821,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                 }
                               },
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            ScreenBoxes.boxh10,
                             Text(
                               "Category",
                               style: getRegularStyle(
@@ -779,8 +833,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                   return SizedBox(
                                     height: 60,
                                     child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 0, 0),
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                       child: Container(
                                         // width: size.width * .44,
                                         decoration: BoxDecoration(
@@ -947,9 +1001,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                 }
                               },
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            ScreenBoxes.boxh10,
                             Text(
                               "Sub Category",
                               style: getRegularStyle(
@@ -961,8 +1013,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                   return SizedBox(
                                     height: 60,
                                     child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 0, 0),
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                       child: Container(
                                         // width: size.width * .44,
                                         decoration: BoxDecoration(
@@ -972,29 +1024,31 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             border: Border.all(
                                                 color: Colormanager.primary)),
                                         child: DropdownButtonHideUnderline(
-                                          child: DropdownButton2<
-                                                  SecondCategoryList>(
+                                          child: DropdownButton2<CategoryList>(
                                               isExpanded: true,
                                               iconStyleData:
                                                   const IconStyleData(),
                                               hint: Text("Select Sub Category",
                                                   style: getRegularStyle(
-                                                      color: const Color.fromARGB(
+                                                      color: const Color
+                                                              .fromARGB(
                                                           255, 173, 173, 173),
                                                       fontSize: 15)),
                                               items: state.itemGetConfig
                                                   ?.secondCategoryList!
-                                                  .map((item) =>
-                                                      DropdownMenuItem<
-                                                          SecondCategoryList>(
-                                                        value: item,
-                                                        child: Text(
-                                                            item.name ?? '',
-                                                            style: getRegularStyle(
-                                                                color: Colormanager
-                                                                    .mainTextColor,
-                                                                fontSize: 15)),
-                                                      ))
+                                                  .map(
+                                                      (item) =>
+                                                          DropdownMenuItem<
+                                                              CategoryList>(
+                                                            value: item,
+                                                            child: Text(
+                                                                item.name ?? '',
+                                                                style: getRegularStyle(
+                                                                    color: Colormanager
+                                                                        .mainTextColor,
+                                                                    fontSize:
+                                                                        15)),
+                                                          ))
                                                   .toList(),
                                               // value: secCategory,
                                               onChanged: (value) {
@@ -1127,9 +1181,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                 }
                               },
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            ScreenBoxes.boxh10,
                             Text(
                               "Supplier",
                               style: getRegularStyle(
@@ -1141,8 +1193,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                   return SizedBox(
                                     height: 60,
                                     child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 0, 0),
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                       child: Container(
                                         // width: size.width * .44,
                                         decoration: BoxDecoration(
@@ -1315,9 +1367,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                 }
                               },
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            ScreenBoxes.boxh10,
                             Container(
                               // width: size.width * .8,
                               // height: size.height * .7,
@@ -2595,7 +2645,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
   onSellingTaxPriceChange() {
     print("object");
-    double s = double.parse(costp);
+    double s = double.parse(ItemMasterControllers.costPriceController.text);
     final tax = (s / 100 * deftax?.taxRate);
     print(tax);
     ItemMasterControllers.sellingPController.text = (double.parse(

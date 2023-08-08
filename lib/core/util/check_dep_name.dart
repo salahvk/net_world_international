@@ -1,9 +1,5 @@
 import 'package:net_world_international/core/util/global_list.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/category_list.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/department_list.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/second_category_list.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/supplier_master_list.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/tax_list.dart';
+import 'package:net_world_international/domain/item_config/item_config.dart';
 
 String getDepNameById(int id, List<DepartmentList> departmentList) {
   for (var department in departmentList) {
@@ -23,7 +19,7 @@ String getCategoryNameById(int id, List<CategoryList> categoryList) {
   return 'null';
 }
 
-String getSecondCategoryId(int id, List<SecondCategoryList> categoryList) {
+String getSecondCategoryId(int id, List<CategoryList> categoryList) {
   for (var category in categoryList) {
     if (category.id == id) {
       return category.name ?? '';

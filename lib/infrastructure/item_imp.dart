@@ -9,7 +9,7 @@ import 'package:net_world_international/core/util/global_list.dart';
 import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/domain/failures/main_failures.dart';
 import 'package:net_world_international/domain/get_items_model.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/item_get_config.dart';
+import 'package:net_world_international/domain/item_config/item_config.dart';
 import 'package:net_world_international/domain/item_view_model.dart';
 import 'package:net_world_international/domain/services/item_services.dart';
 import 'package:http/http.dart' as http;
@@ -61,6 +61,7 @@ class ItemImp implements ItemServices {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
       };
+      print(accessToken);
       final response = await http.get(
         url,
         headers: headers,
@@ -196,4 +197,89 @@ class ItemImp implements ItemServices {
       return const Left(MainFailure.clientFailure());
     }
   }
+
+  // @override
+  // Future<Either<MainFailure, ItemViewById>> scanBarCode() async {
+  //   try {
+  //     final endPoint = Hive.box("url").get('endpoint');
+  //     final apiUrl =
+  //         "$endPoint${ApiEndPoint.itemByBarcode}${ItemMasterControllers.barCodeController.text}";
+  //     final url = Uri.parse(apiUrl);
+  //     final accessToken = Hive.box("token").get('api_token');
+  //     final headers = {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'Bearer $accessToken'
+  //     };
+  //     final response = await http.get(
+  //       url,
+  //       headers: headers,
+  //     );
+
+  //     var jsonResponse = jsonDecode(response.body);
+  //     // log(response.body);
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       final result = ItemViewById.fromJson(jsonResponse);
+  //            ItemMasterControllers.barCodeController2.text = result.barcode ?? '';
+  //       ItemMasterControllers.nameController.text = result.name ?? '';
+  //       ItemMasterControllers.shortNameController.text = result.shortName ?? '';
+  //       ItemMasterControllers.arabicController.text = result.arabicname ?? '';
+  //       ItemMasterControllers.rackNoController.text = result.rackNo ?? '';
+  //       ItemMasterControllers.shelfNoController.text = result.shelfNo ?? '';
+  //       ItemMasterControllers.departmentController.text =
+  //           result.departmentId.toString();
+  //       ItemMasterControllers.categoryController.text =
+  //           result.categoryId.toString();
+  //       ItemMasterControllers.subCategoryController.text =
+  //           result.secondCategoryid.toString();
+  //       ItemMasterControllers.supplierController.text =
+  //           result.supplierItemCode.toString();
+  //       ItemMasterControllers.costPriceController.text =
+  //           result.costPrice.toString();
+  //       ItemMasterControllers.sellingPController.text =
+  //           result.sellingPrice.toString();
+  //       ItemMasterControllers.costWithTaxController.text =
+  //           result.basePrice.toString();
+  //       ItemMasterControllers.supplierCodeController.text =
+  //           result.suppliercode ?? '';
+  //       ItemMasterControllers.itemId.text = result.id.toString();
+  //       ItemMasterControllers.barCodeController.text =
+  //           ItemMasterControllers.barCodeController2.text;
+  //       //
+  //       // ItemMasterControllers.nonStockController.text = result.nonStockItem.toString() == 1 ? true : false;
+  //       //  "nonStockItem":
+  //       //     (ItemMasterControllers.nonStockController.text.toLowerCase() ==
+  //       //         'true'),
+  //       // "counterStock":
+  //       //     (ItemMasterControllers.counterStockController.text.toLowerCase() ==
+  //       //         'true'),
+  //       // "active": (ItemMasterControllers.activeController.text.toLowerCase() ==
+  //       //     'true'),
+  //       //
+  //       ItemMasterCloneControllers.cdefTaxId.text = result.taxId.toString();
+  //                 final departmentName = getDepNameById(
+  //             result.departmentId, cuState.itemGetConfig!.departmentList!);
+  //         ItemMasterControllers.departmentNameController.text = departmentName;
+
+  //         final categoryName = getCategoryNameById(
+  //             result.categoryId, cuState.itemGetConfig!.categoryList!);
+  //         ItemMasterControllers.categoryNameController.text = categoryName;
+
+  //         final subcategoryName = getSecondCategoryId(result.secondCategoryid,
+  //             cuState.itemGetConfig!.secondCategoryList!);
+  //         ItemMasterControllers.subCategoryNameController.text =
+  //             subcategoryName;
+
+  //         final supplierName = getSupplierNameById(
+  //             result.supplierItemCode ?? '',
+  //             cuState.itemGetConfig!.supplierMasterList!);
+  //         ItemMasterControllers.supplierNameController.text = supplierName;
+  //       return Right(result);
+  //     } else {
+  //       return const Left(MainFailure.serverFailure());
+  //     }
+  //   } catch (e) {
+  //     log(e.toString());
+  //     return const Left(MainFailure.clientFailure());
+  //   }
+  // }
 }

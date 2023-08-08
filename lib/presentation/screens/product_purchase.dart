@@ -11,8 +11,8 @@ import 'package:net_world_international/core/util/animated_snackbar.dart';
 import 'package:net_world_international/core/util/check_dep_name.dart';
 import 'package:net_world_international/core/util/global_list.dart';
 import 'package:net_world_international/domain/db/db_supplier.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/supplier_master_list.dart';
-import 'package:net_world_international/domain/item_get_config/item_get_config/tax_list.dart';
+import 'package:net_world_international/domain/item_config/item_config.dart';
+
 import 'package:net_world_international/presentation/screens/home_screen.dart';
 import 'package:net_world_international/presentation/screens/option_screen.dart';
 import 'package:net_world_international/presentation/screens/profile_screen.dart';

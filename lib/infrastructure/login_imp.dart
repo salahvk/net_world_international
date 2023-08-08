@@ -77,7 +77,6 @@ class LoginImp implements LoginServices {
         return const Left(MainFailure.serverFailure());
       }
     } catch (e) {
-      print("S");
       log(e.toString());
       return const Left(MainFailure.clientFailure());
     }

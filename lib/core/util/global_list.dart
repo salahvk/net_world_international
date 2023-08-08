@@ -1,4 +1,4 @@
-import 'package:net_world_international/domain/item_get_config/item_get_config/tax_list.dart';
+import 'package:net_world_international/domain/item_config/item_config.dart';
 
 class GlobalList {
   static final GlobalList _instance = GlobalList._internal();

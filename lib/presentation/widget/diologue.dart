@@ -66,7 +66,6 @@ class LogoutDialog extends StatelessWidget {
                     )),
                     onPressed: () async {
                       await Hive.box("token").clear();
-
                       BlocProvider.of<LoginBloc>(context).add(
                         NavigateToHomeScreenEvent(),
                       );

@@ -36,3 +36,5 @@ class ItemViewByIdEvent extends LoginEvent {
   final String? id;
   ItemViewByIdEvent({this.id});
 }
+
+class SearchBarcodeEvent extends LoginEvent {}
