@@ -434,5 +434,105 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         }
       }
     });
+
+    on<SearchBarcodeEvent>((event, emit) async {
+      final cuState = state;
+      try {
+        final endPoint = Hive.box("url").get('endpoint');
+        final apiUrl =
+            "$endPoint${ApiEndPoint.itemByBarcode}${ItemMasterControllers.barCodeController.text}";
+        final url = Uri.parse(apiUrl);
+        final accessToken = Hive.box("token").get('api_token');
+        final headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken'
+        };
+        final response = await http.get(
+          url,
+          headers: headers,
+        );
+
+        var jsonResponse = jsonDecode(response.body);
+        log(response.body);
+        final result = ItemViewById.fromJson(jsonResponse);
+        ItemMasterControllers.barCodeController2.text = result.barcode ?? '';
+        ItemMasterControllers.nameController.text = result.name ?? '';
+        ItemMasterControllers.shortNameController.text = result.shortName ?? '';
+        ItemMasterControllers.arabicController.text = result.arabicname ?? '';
+        ItemMasterControllers.rackNoController.text = result.rackNo ?? '';
+        ItemMasterControllers.shelfNoController.text = result.shelfNo ?? '';
+        ItemMasterControllers.departmentController.text =
+            result.departmentId.toString();
+        ItemMasterControllers.categoryController.text =
+            result.categoryId.toString();
+        ItemMasterControllers.subCategoryController.text =
+            result.secondCategoryid.toString();
+        ItemMasterControllers.supplierController.text =
+            result.supplierItemCode.toString();
+        ItemMasterControllers.costPriceController.text =
+            result.costPrice.toString();
+        ItemMasterControllers.sellingPController.text =
+            result.sellingPrice.toString();
+        ItemMasterControllers.costWithTaxController.text =
+            result.basePrice.toString();
+        ItemMasterControllers.supplierCodeController.text =
+            result.suppliercode ?? '';
+        ItemMasterControllers.itemId.text = result.id.toString();
+        ItemMasterControllers.barCodeController.text =
+            ItemMasterControllers.barCodeController2.text;
+        //
+        // ItemMasterControllers.nonStockController.text = result.nonStockItem.toString() == 1 ? true : false;
+        //  "nonStockItem":
+        //     (ItemMasterControllers.nonStockController.text.toLowerCase() ==
+        //         'true'),
+        // "counterStock":
+        //     (ItemMasterControllers.counterStockController.text.toLowerCase() ==
+        //         'true'),
+        // "active": (ItemMasterControllers.activeController.text.toLowerCase() ==
+        //     'true'),
+        //
+        ItemMasterCloneControllers.cdefTaxId.text = result.taxId.toString();
+
+        if (cuState is OptionPageState) {
+          final departmentName = getDepNameById(
+              result.departmentId, cuState.itemGetConfig!.departmentList!);
+          ItemMasterControllers.departmentNameController.text = departmentName;
+
+          final categoryName = getCategoryNameById(
+              result.categoryId, cuState.itemGetConfig!.categoryList!);
+          ItemMasterControllers.categoryNameController.text = categoryName;
+
+          final subcategoryName = getSecondCategoryId(result.secondCategoryid,
+              cuState.itemGetConfig!.secondCategoryList!);
+          ItemMasterControllers.subCategoryNameController.text =
+              subcategoryName;
+
+          final supplierName = getSupplierNameById(
+              result.supplierItemCode ?? '',
+              cuState.itemGetConfig!.supplierMasterList!);
+          ItemMasterControllers.supplierNameController.text = supplierName;
+          emit(OptionPageState(
+              loginModel: cuState.loginModel,
+              userModel: cuState.userModel,
+              barCode1: cuState.barCode1,
+              barCode2: cuState.barCode2,
+              getItems: cuState.getItems,
+              itemGetConfig: cuState.itemGetConfig,
+              itemViewById: result));
+        }
+      } catch (e) {
+        // print(e);
+        // ItemMasterControllers.barCodeController2.text = '4321';
+        if (cuState is OptionPageState) {
+          emit(OptionPageState(
+              loginModel: cuState.loginModel,
+              userModel: cuState.userModel,
+              barCode1: cuState.barCode1,
+              barCode2: cuState.barCode2,
+              getItems: cuState.getItems,
+              itemGetConfig: cuState.itemGetConfig));
+        }
+      }
+    });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:net_world_international/domain/item_get_config/item_get_config/unit_list.dart';
 
 import 'ac_company_datum.dart';
 import 'barcode_config.dart';
@@ -24,6 +25,8 @@ class ItemGetConfig {
   List<CategoryList>? categoryList;
   @JsonKey(name: 'DepartmentList')
   List<DepartmentList>? departmentList;
+  @JsonKey(name: 'UnitList')
+  List<UnitList>? unitList;
   @JsonKey(name: 'TaxList')
   List<TaxList>? taxList;
   @JsonKey(name: 'SecondCategoryList')
@@ -38,6 +41,7 @@ class ItemGetConfig {
     this.barcodeConfig,
     this.categoryList,
     this.departmentList,
+    this.unitList,
     this.taxList,
     this.secondCategoryList,
     this.supplierMasterList,

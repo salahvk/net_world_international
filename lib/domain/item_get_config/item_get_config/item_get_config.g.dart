@@ -28,6 +28,9 @@ ItemGetConfig _$ItemGetConfigFromJson(Map<String, dynamic> json) =>
       departmentList: (json['DepartmentList'] as List<dynamic>?)
           ?.map((e) => DepartmentList.fromJson(e as Map<String, dynamic>))
           .toList(),
+      unitList: (json['UnitList'] as List<dynamic>?)
+          ?.map((e) => UnitList.fromJson(e as Map<String, dynamic>))
+          .toList(),
       taxList: (json['TaxList'] as List<dynamic>?)
           ?.map((e) => TaxList.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -47,6 +50,7 @@ Map<String, dynamic> _$ItemGetConfigToJson(ItemGetConfig instance) =>
       'BarcodeConfig': instance.barcodeConfig,
       'CategoryList': instance.categoryList,
       'DepartmentList': instance.departmentList,
+      'UnitList': instance.unitList,
       'TaxList': instance.taxList,
       'SecondCategoryList': instance.secondCategoryList,
       'SupplierMasterList': instance.supplierMasterList,

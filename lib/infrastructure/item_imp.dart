@@ -38,7 +38,8 @@ class ItemImp implements ItemServices {
       var jsonResponse = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = ItemGetConfig.fromJson(jsonResponse);
-
+        print(jsonResponse['UnitList']);
+        print(result.unitList);
         GlobalList().taxList.addAll(result.taxList ?? []);
         return Right(result);
       } else {
@@ -46,6 +47,7 @@ class ItemImp implements ItemServices {
       }
     } catch (e) {
       log(e.toString());
+      print("h");
       return const Left(MainFailure.clientFailure());
     }
   }
