@@ -165,10 +165,12 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                                                 .toString(),
                                             state: cuState)
                                         .getItemById();
-                                    s.fold(
-                                        (falure) {},
-                                        (success) => Navigator.pushReplacementNamed(
-                                            context, Routes.viewPage));
+                                    s.fold((falure) {
+                                      print(falure);
+                                    },
+                                        (success) =>
+                                            Navigator.pushReplacementNamed(
+                                                context, Routes.viewPage));
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -205,7 +207,8 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                                             child: Text(
                                               getDepNameById(
                                                   state.getItems?.items?[index]
-                                                      .departmentId,
+                                                          .departmentId ??
+                                                      0,
                                                   state.itemGetConfig
                                                           ?.departmentList ??
                                                       []),

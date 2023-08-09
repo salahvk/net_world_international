@@ -1,12 +1,33 @@
 class ItemViewById {
+  Items? items;
+
+  ItemViewById({this.items});
+
+  ItemViewById.fromJson(Map<String?, dynamic> json) {
+    items = json['items'] != null ? Items.fromJson(json['items']) : null;
+  }
+
+  bool get active => false;
+
+  set active(bool active) {}
+
+  Map<String?, dynamic> toJson() {
+    final Map<String?, dynamic> data = <String?, dynamic>{};
+    if (items != null) {
+      data['items'] = items?.toJson();
+    }
+    return data;
+  }
+}
+
+class Items {
   dynamic id;
-  String? itemMasterCode;
   String? name;
   String? shortName;
   dynamic categoryId;
   dynamic unitId;
-  double? sellingPrice;
-  double? costPrice;
+  dynamic sellingPrice;
+  dynamic costPrice;
   String? barcode;
   dynamic reorderLevel;
   dynamic reorderQty;
@@ -21,9 +42,6 @@ class ItemViewById {
   String? shelfNo;
   String? rackNo;
   dynamic fOCitem;
-  dynamic sellingUnitId;
-  dynamic leadtime;
-  dynamic sellingpricePackingUnit;
   String? suppliercode;
   dynamic discount;
   bool? active;
@@ -38,14 +56,9 @@ class ItemViewById {
   String? arabicname;
   String? remarks;
   dynamic taxId;
-  dynamic basePrice;
-  dynamic counterStock;
-  String? arabicBarcodeName;
-  dynamic weighingItemType;
 
-  ItemViewById(
+  Items(
       {this.id,
-      this.itemMasterCode,
       this.name,
       this.shortName,
       this.categoryId,
@@ -66,9 +79,6 @@ class ItemViewById {
       this.shelfNo,
       this.rackNo,
       this.fOCitem,
-      this.sellingUnitId,
-      this.leadtime,
-      this.sellingpricePackingUnit,
       this.suppliercode,
       this.discount,
       this.active,
@@ -82,15 +92,10 @@ class ItemViewById {
       this.modUser,
       this.arabicname,
       this.remarks,
-      this.taxId,
-      this.basePrice,
-      this.counterStock,
-      this.arabicBarcodeName,
-      this.weighingItemType});
+      this.taxId});
 
-  ItemViewById.fromJson(Map<String, dynamic> json) {
+  Items.fromJson(Map<String?, dynamic> json) {
     id = json['Id'];
-    itemMasterCode = json['ItemMasterCode'];
     name = json['Name'];
     shortName = json['ShortName'];
     categoryId = json['CategoryId'];
@@ -111,9 +116,6 @@ class ItemViewById {
     shelfNo = json['ShelfNo'];
     rackNo = json['RackNo'];
     fOCitem = json['FOCitem'];
-    sellingUnitId = json['SellingUnitId'];
-    leadtime = json['Leadtime'];
-    sellingpricePackingUnit = json['SellingpricePackingUnit'];
     suppliercode = json['suppliercode'];
     discount = json['Discount'];
     active = json['Active'];
@@ -128,16 +130,11 @@ class ItemViewById {
     arabicname = json['Arabicname'];
     remarks = json['Remarks'];
     taxId = json['TaxId'];
-    basePrice = json['BasePrice'];
-    counterStock = json['CounterStock'];
-    arabicBarcodeName = json['ArabicBarcodeName'];
-    weighingItemType = json['WeighingItemType'];
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+  Map<String?, dynamic> toJson() {
+    final Map<String?, dynamic> data = <String?, dynamic>{};
     data['Id'] = id;
-    data['ItemMasterCode'] = itemMasterCode;
     data['Name'] = name;
     data['ShortName'] = shortName;
     data['CategoryId'] = categoryId;
@@ -158,9 +155,6 @@ class ItemViewById {
     data['ShelfNo'] = shelfNo;
     data['RackNo'] = rackNo;
     data['FOCitem'] = fOCitem;
-    data['SellingUnitId'] = sellingUnitId;
-    data['Leadtime'] = leadtime;
-    data['SellingpricePackingUnit'] = sellingpricePackingUnit;
     data['suppliercode'] = suppliercode;
     data['Discount'] = discount;
     data['Active'] = active;
@@ -175,10 +169,6 @@ class ItemViewById {
     data['Arabicname'] = arabicname;
     data['Remarks'] = remarks;
     data['TaxId'] = taxId;
-    data['BasePrice'] = basePrice;
-    data['CounterStock'] = counterStock;
-    data['ArabicBarcodeName'] = arabicBarcodeName;
-    data['WeighingItemType'] = weighingItemType;
     return data;
   }
 }

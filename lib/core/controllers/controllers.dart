@@ -49,6 +49,7 @@ class ItemMasterControllers {
   static TextEditingController searchSubCatController = TextEditingController();
   static TextEditingController searchCatController = TextEditingController();
   static TextEditingController searchdepController = TextEditingController();
+  static TextEditingController searchUnitController = TextEditingController();
   static cleanControllers() {
     departmentNameController.clear();
     supplierController.clear();

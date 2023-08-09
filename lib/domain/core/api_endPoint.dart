@@ -14,7 +14,6 @@ class ApiEndPoint {
   static String getItemById = "$api/Item/";
   static String itemUpdateById = "$api/Item/UpdateItem/";
   static String itemByBarcode = "$api/Item/barcode/";
-  static String genBarcode = "$api/Item/generateBarcode?StarChar=1&MaxId=1";
-  static String genAlternateBarcode =
-      "$api/Item/genAlternateBarcode?AltBarcodeStartChar=5&MaxId=1";
+  // static String genBarcode = "$api/Item/generateBarcode?StarChar=1&MaxId=1";
+  static String genBarcode = "$api/ItemBarcodeGenerate/MainItem";
 }

@@ -70,6 +70,8 @@ dependencies:
   sqflite: ^2.2.8+4
   progresso: ^0.3.0
   shimmer: ^3.0.0
+  flutter_barcode_scanner: ^2.0.0
+  platform_device_id: ^1.0.1
   # sqflite: ^2.2.8+4
   # sql_server_socket:
   #  git:

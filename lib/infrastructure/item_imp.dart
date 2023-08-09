@@ -71,6 +71,9 @@ class ItemImp implements ItemServices {
       var jsonResponse = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = GetitemsModel.fromJson(jsonResponse);
+        print("1");
+        print(result.items);
+        print("1");
         return Right(result);
       } else {
         return const Left(MainFailure.serverFailure());
@@ -99,63 +102,72 @@ class ItemImp implements ItemServices {
       );
 
       var jsonResponse = jsonDecode(response.body);
+
       final result = ItemViewById.fromJson(jsonResponse);
-      log(response.body);
+      // log(response.body);
+      print(result.items?.barcode);
       ItemMasterCloneControllers.cdepartmentController.text =
-          result.departmentId.toString();
+          result.items?.departmentId.toString() ?? '';
       ItemMasterCloneControllers.ccategoryController.text =
-          result.categoryId.toString();
+          result.items?.categoryId.toString() ?? '';
       ItemMasterCloneControllers.csubCategoryController.text =
-          result.secondCategoryid.toString();
+          result.items?.secondCategoryid.toString() ?? '';
       ItemMasterCloneControllers.cdepartmentController.text =
-          result.departmentId.toString();
+          result.items?.departmentId.toString() ?? '';
       // ItemMasterControllers.categoryController.text =
       //     result.categoryId.toString();
-      ItemMasterCloneControllers.cdefTaxId.text = result.taxId.toString();
+      ItemMasterCloneControllers.cdefTaxId.text =
+          result.items?.taxId.toString() ?? '';
       ItemMasterControllers.supplierController.text =
-          result.supplierItemCode.toString();
+          result.items?.supplierItemCode.toString() ?? '';
       ItemMasterCloneControllers.csupplierCodeController.text =
-          result.suppliercode.toString();
+          result.items?.suppliercode.toString() ?? '';
       ItemMasterControllers.itemId.text = itemId ?? '';
-      AlterUnitControllers.itemMasterCode.text = result.itemMasterCode ?? '';
-      ItemMasterCloneControllers.cnameController.text = result.name ?? '';
+      // AlterUnitControllers.itemMasterCode.text = result.itemMasterCode ?? '';
+      ItemMasterCloneControllers.cnameController.text =
+          result.items?.name ?? '';
       ItemMasterCloneControllers.cshortNameController.text =
-          result.shortName ?? '';
-      ItemMasterCloneControllers.carabicController.text =
-          result.arabicname ?? '';
-      ItemMasterCloneControllers.cbarCodeController.text = result.barcode ?? '';
-      ItemMasterControllers.barCodeController.text = result.barcode ?? '';
-      ItemMasterCloneControllers.crackNoController.text = result.rackNo ?? '';
-      ItemMasterCloneControllers.cshelfNoController.text = result.shelfNo ?? '';
+          result.items?.shortName ?? '';
+      // ItemMasterCloneControllers.carabicController.text =
+      //     result.arabicname ?? '';
+      ItemMasterCloneControllers.cbarCodeController.text =
+          result.items?.barcode ?? '';
+      ItemMasterControllers.barCodeController.text =
+          result.items?.barcode ?? '';
+      ItemMasterCloneControllers.crackNoController.text =
+          result.items?.rackNo ?? '';
+      ItemMasterCloneControllers.cshelfNoController.text =
+          result.items?.shelfNo ?? '';
       ItemMasterCloneControllers.ccostPriceController.text =
-          result.costPrice.toString();
-      log(ItemMasterCloneControllers.ccostPriceController.text);
+          result.items?.costPrice.toString() ?? '';
+      // log(ItemMasterCloneControllers.ccostPriceController.text);
       ItemMasterCloneControllers.csellingPController.text =
-          result.sellingPrice.toString();
-      ItemMasterCloneControllers.ccostWithTaxController.text =
-          result.basePrice.toString();
+          result.items?.sellingPrice.toString() ?? '';
+      // ItemMasterCloneControllers.ccostWithTaxController.text =
+      //     result.basePrice.toString();
 
       final departmentName = getDepNameById(
-          result.departmentId, state!.itemGetConfig!.departmentList!);
+          result.items?.departmentId, state!.itemGetConfig!.departmentList!);
       ItemMasterCloneControllers.cdepartmentNameController.text =
           departmentName;
 
       final categoryName = getCategoryNameById(
-          result.categoryId, state!.itemGetConfig!.categoryList!);
+          result.items?.categoryId, state!.itemGetConfig!.categoryList!);
       ItemMasterCloneControllers.ccategoryNameController.text = categoryName;
 
-      final scategoryName = getSecondCategoryId(
-          result.secondCategoryid, state!.itemGetConfig!.secondCategoryList);
+      final scategoryName = getSecondCategoryId(result.items?.secondCategoryid,
+          state!.itemGetConfig!.secondCategoryList);
       ItemMasterCloneControllers.csubCategoryNameController.text =
           scategoryName;
 
-      final supplierName = getSupplierNameById(result.supplierItemCode ?? '',
+      final supplierName = getSupplierNameById(
+          result.items?.supplierItemCode ?? '',
           state!.itemGetConfig!.supplierMasterList!);
 
       ItemMasterCloneControllers.csupplierNameController.text = supplierName;
 
       final taxName =
-          getTaxNameById(result.taxId ?? '', state!.itemGetConfig!.taxList!);
+          getTaxNameById(result.items?.taxId, state!.itemGetConfig!.taxList!);
       ItemMasterCloneControllers.cdefTaxName.text = taxName;
 
       return Right(result);
@@ -185,10 +197,12 @@ class ItemImp implements ItemServices {
       // log(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = ItemViewById.fromJson(jsonResponse);
-        PrintControllers.name.text = result.name ?? '';
+        PrintControllers.name.text = result.items?.name ?? '';
         // PrintControllers.barcode.text = result.name ?? '';
-        PrintControllers.sellingPrice.text = result.sellingPrice.toString();
-        PrintControllers.costPrice.text = result.costPrice.toString();
+        PrintControllers.sellingPrice.text =
+            result.items?.sellingPrice.toString() ?? '';
+        PrintControllers.costPrice.text =
+            result.items?.costPrice.toString() ?? '';
         return Right(result);
       } else {
         return const Left(MainFailure.serverFailure());

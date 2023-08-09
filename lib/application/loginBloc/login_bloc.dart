@@ -355,29 +355,33 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         var jsonResponse = jsonDecode(response.body);
         log(response.body);
         final result = ItemViewById.fromJson(jsonResponse);
-        ItemMasterControllers.barCodeController2.text = result.barcode ?? '';
-        ItemMasterControllers.nameController.text = result.name ?? '';
-        ItemMasterControllers.shortNameController.text = result.shortName ?? '';
-        ItemMasterControllers.arabicController.text = result.arabicname ?? '';
-        ItemMasterControllers.rackNoController.text = result.rackNo ?? '';
-        ItemMasterControllers.shelfNoController.text = result.shelfNo ?? '';
+        ItemMasterControllers.barCodeController2.text =
+            result.items?.barcode ?? '';
+        ItemMasterControllers.nameController.text = result.items?.name ?? '';
+        ItemMasterControllers.shortNameController.text =
+            result.items?.shortName ?? '';
+        // ItemMasterControllers.arabicController.text = result.arabicname ?? '';
+        ItemMasterControllers.rackNoController.text =
+            result.items?.rackNo ?? '';
+        ItemMasterControllers.shelfNoController.text =
+            result.items?.shelfNo ?? '';
         ItemMasterControllers.departmentController.text =
-            result.departmentId.toString();
+            result.items?.departmentId.toString() ?? '';
         ItemMasterControllers.categoryController.text =
-            result.categoryId.toString();
+            result.items?.categoryId.toString() ?? '';
         ItemMasterControllers.subCategoryController.text =
-            result.secondCategoryid.toString();
+            result.items?.secondCategoryid.toString() ?? '';
         ItemMasterControllers.supplierController.text =
-            result.supplierItemCode.toString();
+            result.items?.supplierItemCode.toString() ?? '';
         ItemMasterControllers.costPriceController.text =
-            result.costPrice.toString();
+            result.items?.costPrice.toString() ?? '';
         ItemMasterControllers.sellingPController.text =
-            result.sellingPrice.toString();
-        ItemMasterControllers.costWithTaxController.text =
-            result.basePrice.toString();
+            result.items?.sellingPrice.toString() ?? '';
+        // ItemMasterControllers.costWithTaxController.text =
+        //     result.basePrice.toString();
         ItemMasterControllers.supplierCodeController.text =
-            result.suppliercode ?? '';
-        ItemMasterControllers.itemId.text = result.id.toString();
+            result.items?.suppliercode ?? '';
+        ItemMasterControllers.itemId.text = result.items?.id.toString() ?? '';
         ItemMasterControllers.barCodeController.text =
             ItemMasterControllers.barCodeController2.text;
         //
@@ -391,24 +395,26 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         // "active": (ItemMasterControllers.activeController.text.toLowerCase() ==
         //     'true'),
         //
-        ItemMasterCloneControllers.cdefTaxId.text = result.taxId.toString();
+        ItemMasterCloneControllers.cdefTaxId.text =
+            result.items?.taxId.toString() ?? '';
 
         if (cuState is OptionPageState) {
-          final departmentName = getDepNameById(
-              result.departmentId, cuState.itemGetConfig!.departmentList!);
+          final departmentName = getDepNameById(result.items?.departmentId,
+              cuState.itemGetConfig!.departmentList!);
           ItemMasterControllers.departmentNameController.text = departmentName;
 
           final categoryName = getCategoryNameById(
-              result.categoryId, cuState.itemGetConfig!.categoryList!);
+              result.items?.categoryId, cuState.itemGetConfig!.categoryList!);
           ItemMasterControllers.categoryNameController.text = categoryName;
 
-          final subcategoryName = getSecondCategoryId(result.secondCategoryid,
+          final subcategoryName = getSecondCategoryId(
+              result.items?.secondCategoryid,
               cuState.itemGetConfig!.secondCategoryList!);
           ItemMasterControllers.subCategoryNameController.text =
               subcategoryName;
 
           final supplierName = getSupplierNameById(
-              result.supplierItemCode ?? '',
+              result.items?.supplierItemCode ?? '',
               cuState.itemGetConfig!.supplierMasterList!);
           ItemMasterControllers.supplierNameController.text = supplierName;
           emit(OptionPageState(
@@ -455,29 +461,34 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         var jsonResponse = jsonDecode(response.body);
         log(response.body);
         final result = ItemViewById.fromJson(jsonResponse);
-        ItemMasterControllers.barCodeController2.text = result.barcode ?? '';
-        ItemMasterControllers.nameController.text = result.name ?? '';
-        ItemMasterControllers.shortNameController.text = result.shortName ?? '';
-        ItemMasterControllers.arabicController.text = result.arabicname ?? '';
-        ItemMasterControllers.rackNoController.text = result.rackNo ?? '';
-        ItemMasterControllers.shelfNoController.text = result.shelfNo ?? '';
+        print(result.items?.barcode);
+        ItemMasterControllers.barCodeController2.text =
+            result.items?.barcode ?? '';
+        ItemMasterControllers.nameController.text = result.items?.name ?? '';
+        ItemMasterControllers.shortNameController.text =
+            result.items?.shortName ?? '';
+        // ItemMasterControllers.arabicController.text = result.arabicname ?? '';
+        ItemMasterControllers.rackNoController.text =
+            result.items?.rackNo ?? '';
+        ItemMasterControllers.shelfNoController.text =
+            result.items?.shelfNo ?? '';
         ItemMasterControllers.departmentController.text =
-            result.departmentId.toString();
+            result.items?.departmentId.toString() ?? '';
         ItemMasterControllers.categoryController.text =
-            result.categoryId.toString();
+            result.items?.categoryId.toString() ?? '';
         ItemMasterControllers.subCategoryController.text =
-            result.secondCategoryid.toString();
+            result.items?.secondCategoryid.toString() ?? '';
         ItemMasterControllers.supplierController.text =
-            result.supplierItemCode.toString();
+            result.items?.supplierItemCode.toString() ?? '';
         ItemMasterControllers.costPriceController.text =
-            result.costPrice.toString();
+            result.items?.costPrice.toString() ?? '';
         ItemMasterControllers.sellingPController.text =
-            result.sellingPrice.toString();
-        ItemMasterControllers.costWithTaxController.text =
-            result.basePrice.toString();
+            result.items?.sellingPrice.toString() ?? '';
+        // ItemMasterControllers.costWithTaxController.text =
+        //     result.basePrice.toString();
         ItemMasterControllers.supplierCodeController.text =
-            result.suppliercode ?? '';
-        ItemMasterControllers.itemId.text = result.id.toString();
+            result.items?.suppliercode ?? '';
+        ItemMasterControllers.itemId.text = result.items?.id.toString() ?? '';
         ItemMasterControllers.barCodeController.text =
             ItemMasterControllers.barCodeController2.text;
         //
@@ -491,24 +502,26 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         // "active": (ItemMasterControllers.activeController.text.toLowerCase() ==
         //     'true'),
         //
-        ItemMasterCloneControllers.cdefTaxId.text = result.taxId.toString();
+        ItemMasterCloneControllers.cdefTaxId.text =
+            result.items?.taxId.toString() ?? '';
 
         if (cuState is OptionPageState) {
-          final departmentName = getDepNameById(
-              result.departmentId, cuState.itemGetConfig!.departmentList!);
+          final departmentName = getDepNameById(result.items?.departmentId,
+              cuState.itemGetConfig!.departmentList!);
           ItemMasterControllers.departmentNameController.text = departmentName;
 
           final categoryName = getCategoryNameById(
-              result.categoryId, cuState.itemGetConfig!.categoryList!);
+              result.items?.categoryId, cuState.itemGetConfig!.categoryList!);
           ItemMasterControllers.categoryNameController.text = categoryName;
 
-          final subcategoryName = getSecondCategoryId(result.secondCategoryid,
+          final subcategoryName = getSecondCategoryId(
+              result.items?.secondCategoryid,
               cuState.itemGetConfig!.secondCategoryList!);
           ItemMasterControllers.subCategoryNameController.text =
               subcategoryName;
 
           final supplierName = getSupplierNameById(
-              result.supplierItemCode ?? '',
+              result.items?.supplierItemCode ?? '',
               cuState.itemGetConfig!.supplierMasterList!);
           ItemMasterControllers.supplierNameController.text = supplierName;
           emit(OptionPageState(

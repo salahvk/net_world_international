@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
@@ -8,6 +9,7 @@ import 'package:net_world_international/domain/add_items_model.dart';
 import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/domain/failures/main_failures.dart';
 import 'package:net_world_international/domain/services/add_item_services.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 import 'package:http/http.dart' as http;
 
 @LazySingleton(as: AddItemServices)
@@ -19,6 +21,12 @@ class AddItemImp implements AddItemServices {
   @override
   Future<Either<MainFailure, AddItems>> addToItemMaster() async {
     try {
+      String? deviceId;
+      try {
+        deviceId = await PlatformDeviceId.getDeviceId;
+      } on PlatformException {
+        deviceId = 'Failed to get deviceId.';
+      }
       final endPoint = Hive.box("url").get('endpoint');
       final apiUrl = "$endPoint${ApiEndPoint.addItems}";
       final url = Uri.parse(apiUrl);
@@ -34,6 +42,7 @@ class AddItemImp implements AddItemServices {
         barcode = ItemMasterControllers.barCodeController2.text;
       }
       final body = jsonEncode({
+        "deviceName": deviceId,
         "itemMasterCode": '',
         "name": ItemMasterControllers.nameController.text,
         "shortName": ItemMasterControllers.shortNameController.text,
