@@ -92,53 +92,111 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [],
                       )),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(25, 0, 25, 10),
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Text(
-                        //   " Id",
-                        //   style: getRegularStyle(
-                        //     color: Colormanager.mainTextColor,
-                        //   ),
-                        // ),
-                        SizedBox(
-                          width: w * .2,
-                          child: Text(
-                            "Name",
-                            style: getRegularStyle(
-                              color: Colormanager.mainTextColor,
+                  Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(25, 0, 25, 10),
+                        child: Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Text(
+                            //   " Id",
+                            //   style: getRegularStyle(
+                            //     color: Colormanager.mainTextColor,
+                            //   ),
+                            // ),
+                            SizedBox(
+                              width: w * .2,
+                              child: Text(
+                                "Name",
+                                style: getRegularStyle(
+                                  color: Colormanager.mainTextColor,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: w * .3,
-                          child: Text(
-                            " Department",
-                            style: getRegularStyle(
-                              color: Colormanager.mainTextColor,
+                            SizedBox(
+                              width: w * .3,
+                              child: Text(
+                                " Department",
+                                style: getRegularStyle(
+                                  color: Colormanager.mainTextColor,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: w * .2,
-                          child: Text(
-                            "Cost",
-                            style: getRegularStyle(
-                              color: Colormanager.mainTextColor,
+                            SizedBox(
+                              width: w * .2,
+                              child: Text(
+                                "Cost",
+                                style: getRegularStyle(
+                                  color: Colormanager.mainTextColor,
+                                ),
+                              ),
                             ),
-                          ),
+                            Text(
+                              "Selling",
+                              style: getRegularStyle(
+                                color: Colormanager.mainTextColor,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Selling",
-                          style: getRegularStyle(
-                            color: Colormanager.mainTextColor,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                      // Material(
+                      //   color: Colormanager.teritiory,
+                      //   borderRadius: BorderRadius.circular(5),
+                      //   child: InkWell(
+                      //     splashColor: Colormanager.primary,
+                      //     borderRadius: BorderRadius.circular(5),
+                      //     onTap: () {
+                      //       Navigator.push(context,
+                      //           MaterialPageRoute(builder: (ctx) {
+                      //         return const ItemMasterScreen();
+                      //       }));
+                      //     },
+                      //     child: Container(
+                      //       width: 30,
+                      //       height: 30,
+                      //       decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(5),
+                      //       ),
+                      //       child: Center(
+                      //           child: Row(
+                      //         mainAxisAlignment: MainAxisAlignment.center,
+                      //         children: const [
+                      //           Icon(Icons.filter_alt),
+                      //         ],
+                      //       )),
+                      //     ),
+                      //   ),
+                      // ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                    ],
                   ),
+                  // SizedBox(
+                  //   height: 50,
+                  //   width: 150,
+                  //   child: TextField(
+                  //     decoration: InputDecoration(
+                  //         hintText: 'Enter name',
+                  //         hintStyle:
+                  //             getRegularStyle(color: Colors.grey, fontSize: 15),
+                  //         filled: true,
+                  //         fillColor: Colors.white,
+                  //         enabledBorder: OutlineInputBorder(
+                  //           borderSide: const BorderSide(
+                  //               color: Colors.black, width: .3),
+                  //           borderRadius: BorderRadius.circular(10),
+                  //         ),
+                  //         focusedBorder: OutlineInputBorder(
+                  //           borderSide: const BorderSide(color: Colors.black),
+                  //           borderRadius: BorderRadius.circular(10),
+                  //         ),
+                  //         isDense: true),
+                  //   ),
+                  // ),
                   const Divider(),
                   Expanded(
                     child: BlocBuilder<LoginBloc, LoginState>(
@@ -161,7 +219,7 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                                         context, Routes.viewPageLoading);
                                     final s = await ItemImp(
                                             itemId: state
-                                                .getItems?.items?[index].id
+                                                .getItems?.items?[index].barcode
                                                 .toString(),
                                             state: cuState)
                                         .getItemById();
@@ -195,7 +253,7 @@ class _ItemMasterScreenState extends State<ItemMasterScreen> {
                                             width: w * .2,
                                             child: Text(
                                               state.getItems?.items?[index]
-                                                      .name ??
+                                                      .itemName ??
                                                   '',
                                               style: getRegularStyle(
                                                   color: Colors.black,

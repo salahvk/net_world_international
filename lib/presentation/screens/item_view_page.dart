@@ -1,4 +1,5 @@
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:net_world_international/application/loginBloc/login_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:net_world_international/core/color_manager.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:net_world_international/core/util/animated_snackbar.dart';
+import 'package:net_world_international/domain/item_get_config/item_get_config/unit_list.dart';
 import 'package:net_world_international/infrastructure/add_item_imp.dart';
 import 'package:net_world_international/infrastructure/item_imp.dart';
 import 'package:net_world_international/presentation/screens/add_item_screen.dart';
@@ -22,6 +24,7 @@ class ItemViewPage extends StatefulWidget {
 class _ItemViewPageState extends State<ItemViewPage> {
   bool isAlterBarCodeVisible = false;
   bool isPrint = false;
+  String? unit;
   @override
   void initState() {
     super.initState();
@@ -35,6 +38,7 @@ class _ItemViewPageState extends State<ItemViewPage> {
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -745,6 +749,231 @@ class _ItemViewPageState extends State<ItemViewPage> {
                                       ],
                                     ),
                                   )
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: BlocBuilder<LoginBloc, LoginState>(
+                                      builder: (context, state) {
+                                        if (state is OptionPageState) {
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Unit",
+                                                    style: getRegularStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 10),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              SizedBox(
+                                                width: size.width * .35,
+                                                height: 40,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          0, 0, 0, 0),
+                                                  child: Container(
+                                                    // width: size.width * .44,
+                                                    decoration: BoxDecoration(
+                                                        color: Colormanager
+                                                            .primary,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        border: Border.all(
+                                                            color: Colormanager
+                                                                .primary)),
+                                                    child:
+                                                        DropdownButtonHideUnderline(
+                                                      child: DropdownButton2<
+                                                              UnitList>(
+                                                          isExpanded: true,
+                                                          iconStyleData:
+                                                              const IconStyleData(),
+                                                          hint: Text("Unit",
+                                                              style: getRegularStyle(
+                                                                  color:
+                                                                      Colormanager
+                                                                          .white,
+                                                                  fontSize:
+                                                                      12)),
+                                                          items: state
+                                                              .itemGetConfig
+                                                              ?.unitList!
+                                                              .map((item) =>
+                                                                  DropdownMenuItem<
+                                                                      UnitList>(
+                                                                    value: item,
+                                                                    child: Text(
+                                                                        item.name ??
+                                                                            '',
+                                                                        style: getRegularStyle(
+                                                                            color:
+                                                                                Colormanager.mainTextColor,
+                                                                            fontSize: 12)),
+                                                                  ))
+                                                              .toList(),
+                                                          // value: defTaxName,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              unit =
+                                                                  value?.name ??
+                                                                      '';
+                                                            });
+                                                          },
+                                                          customButton:
+                                                              // ItemMasterCloneControllers
+                                                              //         .cdefTaxName
+                                                              //         .text
+                                                              //         .isEmpty
+                                                              //     ? null
+                                                              //     :
+                                                              Row(
+                                                            children: [
+                                                              Center(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .fromLTRB(
+                                                                          10,
+                                                                          0,
+                                                                          0,
+                                                                          0),
+                                                                  child: Text(
+                                                                      unit ??
+                                                                          'Unit',
+                                                                      style: getRegularStyle(
+                                                                          color: Colormanager
+                                                                              .white,
+                                                                          fontSize:
+                                                                              12)),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          //This to clear the search value when you close the menu
+                                                          // onMenuStateChange: (isOpen) {
+                                                          //   if (!isOpen) {
+                                                          //     AddressEditControllers
+                                                          //         .searchController
+                                                          //         .clear();
+                                                          //   }
+                                                          // }
+                                                          menuItemStyleData:
+                                                              const MenuItemStyleData(
+                                                            height: 40,
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(12, 0,
+                                                                    12, 0),
+                                                          ),
+                                                          dropdownStyleData:
+                                                              DropdownStyleData(
+                                                            maxHeight:
+                                                                size.height *
+                                                                    .5,
+                                                          ),
+                                                          dropdownSearchData:
+                                                              DropdownSearchData(
+                                                            searchInnerWidgetHeight:
+                                                                20,
+                                                            searchController:
+                                                                ItemMasterControllers
+                                                                    .searchUnitController,
+                                                            searchInnerWidget:
+                                                                Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                top: 8,
+                                                                bottom: 4,
+                                                                right: 8,
+                                                                left: 8,
+                                                              ),
+                                                              child:
+                                                                  TextFormField(
+                                                                controller:
+                                                                    ItemMasterControllers
+                                                                        .searchUnitController,
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  isDense: true,
+                                                                  contentPadding:
+                                                                      const EdgeInsets
+                                                                          .symmetric(
+                                                                    horizontal:
+                                                                        10,
+                                                                    vertical: 8,
+                                                                  ),
+                                                                  hintText:
+                                                                      "Search Unit",
+                                                                  hintStyle:
+                                                                      const TextStyle(
+                                                                          fontSize:
+                                                                              12),
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(8),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            searchMatchFn: (item,
+                                                                searchValue) {
+                                                              return (item
+                                                                  .value!.name
+                                                                  .toString()
+                                                                  .toLowerCase()
+                                                                  .contains(
+                                                                      searchValue));
+                                                            },
+                                                          ),
+                                                          onMenuStateChange:
+                                                              (isOpen) {
+                                                            if (!isOpen) {
+                                                              ItemMasterControllers
+                                                                  .searchUnitController
+                                                                  .clear();
+                                                            }
+                                                          }
+                                                          //This to clear the search value when you close the menu
+                                                          // onMenuStateChange: (isOpen) {
+                                                          //   if (!isOpen) {
+                                                          //     AddressEditControllers
+                                                          //         .searchController
+                                                          //         .clear();
+                                                          //   }
+                                                          // }
+                                                          ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        } else {
+                                          return Container();
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
                                 ],
                               ),
                               const SizedBox(

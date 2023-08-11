@@ -232,7 +232,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                           final endPoint =
                                               Hive.box("url").get('endpoint');
                                           final apiUrl =
-                                              "$endPoint${ApiEndPoint.itemByBarcode}${ItemMasterControllers.barCodeController.text}";
+                                              "$endPoint${ApiEndPoint.getEachItem}${ItemMasterControllers.barCodeController.text}";
                                           final url = Uri.parse(apiUrl);
                                           final accessToken = Hive.box("token")
                                               .get('api_token');
@@ -256,6 +256,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                 .barCodeController.text;
                                             ItemMasterControllers
                                                 .cleanControllers();
+                                            setState(() {});
                                             ItemMasterControllers
                                                 .barCodeController.text = bar;
                                           }
@@ -300,6 +301,61 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                         keyboardType: TextInputType.number,
                                         controller: ItemMasterControllers
                                             .barCodeController,
+                                        onSubmitted: (value) async {
+                                          setState(() {
+                                            isBarCodeGen = true;
+                                            ItemMasterControllers
+                                                .barCodeController2
+                                                .clear();
+                                            if (ItemMasterControllers
+                                                .barCodeController
+                                                .text
+                                                .isEmpty) {
+                                              ItemMasterControllers
+                                                  .barCodeController
+                                                  .text = state.barCode1 ?? '';
+                                            } else {}
+                                          });
+                                          if (ItemMasterControllers
+                                              .barCodeController
+                                              .text
+                                              .isNotEmpty) {
+                                            final endPoint =
+                                                Hive.box("url").get('endpoint');
+                                            final apiUrl =
+                                                "$endPoint${ApiEndPoint.getEachItem}${ItemMasterControllers.barCodeController.text}&Condition=g";
+                                            final url = Uri.parse(apiUrl);
+                                            final accessToken =
+                                                Hive.box("token")
+                                                    .get('api_token');
+                                            final headers = {
+                                              'Content-Type':
+                                                  'application/json',
+                                              'Authorization':
+                                                  'Bearer $accessToken'
+                                            };
+                                            final response = await http.get(
+                                              url,
+                                              headers: headers,
+                                            );
+                                            print("sdfdf");
+                                            print(response.statusCode);
+                                            if (response.statusCode == 200) {
+                                              BlocProvider.of<LoginBloc>(
+                                                      context)
+                                                  .add(
+                                                SearchBarcodeEvent(),
+                                              );
+                                            } else {
+                                              final bar = ItemMasterControllers
+                                                  .barCodeController.text;
+                                              ItemMasterControllers
+                                                  .cleanControllers();
+                                              ItemMasterControllers
+                                                  .barCodeController.text = bar;
+                                            }
+                                          }
+                                        },
                                         decoration: InputDecoration(
                                             hintText: "Barcode",
                                             hintStyle: getRegularStyle(
@@ -343,61 +399,16 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                           borderRadius:
                                               BorderRadius.circular(5),
                                           onTap: () async {
+                                            ItemMasterControllers
+                                                .barCodeController
+                                                .text = state.barCode1 ?? '';
+
+                                            ItemMasterControllers
+                                                .barCodeController2
+                                                .text = state.barCode1 ?? '';
                                             setState(() {
                                               isBarCodeGen = true;
-                                              ItemMasterControllers
-                                                  .barCodeController2
-                                                  .clear();
-                                              if (ItemMasterControllers
-                                                  .barCodeController
-                                                  .text
-                                                  .isEmpty) {
-                                                ItemMasterControllers
-                                                        .barCodeController
-                                                        .text =
-                                                    state.barCode1 ?? '';
-                                              } else {}
                                             });
-                                            if (ItemMasterControllers
-                                                .barCodeController
-                                                .text
-                                                .isNotEmpty) {
-                                              final endPoint = Hive.box("url")
-                                                  .get('endpoint');
-                                              final apiUrl =
-                                                  "$endPoint${ApiEndPoint.itemByBarcode}${ItemMasterControllers.barCodeController.text}";
-                                              final url = Uri.parse(apiUrl);
-                                              final accessToken =
-                                                  Hive.box("token")
-                                                      .get('api_token');
-                                              final headers = {
-                                                'Content-Type':
-                                                    'application/json',
-                                                'Authorization':
-                                                    'Bearer $accessToken'
-                                              };
-                                              final response = await http.get(
-                                                url,
-                                                headers: headers,
-                                              );
-
-                                              if (response.statusCode == 200) {
-                                                BlocProvider.of<LoginBloc>(
-                                                        context)
-                                                    .add(
-                                                  SearchBarcodeEvent(),
-                                                );
-                                              } else {
-                                                final bar =
-                                                    ItemMasterControllers
-                                                        .barCodeController.text;
-                                                ItemMasterControllers
-                                                    .cleanControllers();
-                                                ItemMasterControllers
-                                                    .barCodeController
-                                                    .text = bar;
-                                              }
-                                            }
                                           },
                                           child: Container(
                                             width: 80,
@@ -469,8 +480,12 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                       context)
                                                   .add(
                                                 NextBarCodeEvent(
-                                                    selectedThrow: 'previous',
-                                                    barcode: barc),
+                                                    selectedThrow:
+                                                        'previousItem',
+                                                    barcode: barc,
+                                                    itemCode:
+                                                        ItemMasterControllers
+                                                            .itemId.text),
                                               );
 
                                               await Future.delayed(
@@ -561,7 +576,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                           context)
                                                       .add(
                                                     NextBarCodeEvent(
-                                                        selectedThrow: 'next',
+                                                        selectedThrow:
+                                                            'NextItem',
                                                         barcode: barc),
                                                   );
                                                   await Future.delayed(
@@ -664,7 +680,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             final endPoint =
                                                 Hive.box("url").get('endpoint');
                                             final apiUrl =
-                                                "$endPoint${ApiEndPoint.itemByBarcode}${ItemMasterControllers.barCodeController.text}";
+                                                "$endPoint${ApiEndPoint.getEachItem}${ItemMasterControllers.barCodeController.text}";
                                             final url = Uri.parse(apiUrl);
                                             final accessToken =
                                                 Hive.box("token")
@@ -1924,7 +1940,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                     ScreenBoxes.boxh10,
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.center,
                                       children: [
                                         Expanded(
                                           child: BlocBuilder<LoginBloc,
@@ -1950,191 +1966,191 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                     const SizedBox(
                                                       height: 5,
                                                     ),
-                                                    SizedBox(
-                                                      width: size.width * .35,
-                                                      height: 40,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .fromLTRB(
-                                                                0, 0, 0, 0),
-                                                        child: Container(
-                                                          // width: size.width * .44,
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  Colormanager
-                                                                      .primary,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                              border: Border.all(
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SizedBox(
+                                                          width:
+                                                              size.width * .35,
+                                                          height: 40,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0, 0, 0, 0),
+                                                            child: Container(
+                                                              // width: size.width * .44,
+                                                              decoration: BoxDecoration(
                                                                   color: Colormanager
-                                                                      .primary)),
-                                                          child:
-                                                              DropdownButtonHideUnderline(
-                                                            child: DropdownButton2<
-                                                                    UnitList>(
-                                                                isExpanded:
-                                                                    true,
-                                                                iconStyleData:
-                                                                    const IconStyleData(),
-                                                                hint: Text(
-                                                                    "Unit",
-                                                                    style: getRegularStyle(
-                                                                        color: Colormanager
-                                                                            .white,
-                                                                        fontSize:
-                                                                            12)),
-                                                                items: state
-                                                                    .itemGetConfig
-                                                                    ?.unitList!
-                                                                    .map((item) =>
-                                                                        DropdownMenuItem<
-                                                                            UnitList>(
-                                                                          value:
-                                                                              item,
-                                                                          child: Text(
-                                                                              item.name ?? '',
-                                                                              style: getRegularStyle(color: Colormanager.mainTextColor, fontSize: 12)),
-                                                                        ))
-                                                                    .toList(),
-                                                                // value: defTaxName,
-                                                                onChanged:
-                                                                    (value) {
-                                                                  setState(() {
-                                                                    unit = value
-                                                                            ?.name ??
-                                                                        '';
-                                                                  });
-                                                                },
-                                                                customButton:
-                                                                    // ItemMasterCloneControllers
-                                                                    //         .cdefTaxName
-                                                                    //         .text
-                                                                    //         .isEmpty
-                                                                    //     ? null
-                                                                    //     :
-                                                                    Row(
-                                                                  children: [
-                                                                    Center(
-                                                                      child:
-                                                                          Padding(
-                                                                        padding: const EdgeInsets.fromLTRB(
-                                                                            10,
-                                                                            0,
-                                                                            0,
-                                                                            0),
-                                                                        child: Text(
-                                                                            unit ??
-                                                                                'Unit',
-                                                                            style:
-                                                                                getRegularStyle(color: Colormanager.white, fontSize: 12)),
-                                                                      ),
+                                                                      .primary,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5),
+                                                                  border: Border.all(
+                                                                      color: Colormanager
+                                                                          .primary)),
+                                                              child:
+                                                                  DropdownButtonHideUnderline(
+                                                                child: DropdownButton2<
+                                                                        UnitList>(
+                                                                    isExpanded:
+                                                                        true,
+                                                                    iconStyleData:
+                                                                        const IconStyleData(),
+                                                                    hint: Text(
+                                                                        "Unit",
+                                                                        style: getRegularStyle(
+                                                                            color: Colormanager
+                                                                                .white,
+                                                                            fontSize:
+                                                                                12)),
+                                                                    items: state
+                                                                        .itemGetConfig
+                                                                        ?.unitList!
+                                                                        .map((item) =>
+                                                                            DropdownMenuItem<
+                                                                                UnitList>(
+                                                                              value: item,
+                                                                              child: Text(item.name ?? '', style: getRegularStyle(color: Colormanager.mainTextColor, fontSize: 12)),
+                                                                            ))
+                                                                        .toList(),
+                                                                    // value: defTaxName,
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      setState(
+                                                                          () {
+                                                                        unit = value?.name ??
+                                                                            '';
+                                                                      });
+                                                                    },
+                                                                    customButton:
+                                                                        // ItemMasterCloneControllers
+                                                                        //         .cdefTaxName
+                                                                        //         .text
+                                                                        //         .isEmpty
+                                                                        //     ? null
+                                                                        //     :
+                                                                        Row(
+                                                                      children: [
+                                                                        Center(
+                                                                          child:
+                                                                              Padding(
+                                                                            padding: const EdgeInsets.fromLTRB(
+                                                                                10,
+                                                                                0,
+                                                                                0,
+                                                                                0),
+                                                                            child:
+                                                                                Text(unit ?? 'Unit', style: getRegularStyle(color: Colormanager.white, fontSize: 12)),
+                                                                          ),
+                                                                        ),
+                                                                      ],
                                                                     ),
-                                                                  ],
-                                                                ),
-                                                                //This to clear the search value when you close the menu
-                                                                // onMenuStateChange: (isOpen) {
-                                                                //   if (!isOpen) {
-                                                                //     AddressEditControllers
-                                                                //         .searchController
-                                                                //         .clear();
-                                                                //   }
-                                                                // }
-                                                                menuItemStyleData:
-                                                                    const MenuItemStyleData(
-                                                                  height: 40,
-                                                                  padding: EdgeInsets
-                                                                      .fromLTRB(
-                                                                          12,
-                                                                          0,
-                                                                          12,
-                                                                          0),
-                                                                ),
-                                                                dropdownStyleData:
-                                                                    DropdownStyleData(
-                                                                  maxHeight:
-                                                                      size.height *
-                                                                          .5,
-                                                                ),
-                                                                dropdownSearchData:
-                                                                    DropdownSearchData(
-                                                                  searchInnerWidgetHeight:
-                                                                      20,
-                                                                  searchController:
-                                                                      ItemMasterControllers
-                                                                          .searchUnitController,
-                                                                  searchInnerWidget:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .only(
-                                                                      top: 8,
-                                                                      bottom: 4,
-                                                                      right: 8,
-                                                                      left: 8,
+                                                                    //This to clear the search value when you close the menu
+                                                                    // onMenuStateChange: (isOpen) {
+                                                                    //   if (!isOpen) {
+                                                                    //     AddressEditControllers
+                                                                    //         .searchController
+                                                                    //         .clear();
+                                                                    //   }
+                                                                    // }
+                                                                    menuItemStyleData:
+                                                                        const MenuItemStyleData(
+                                                                      height:
+                                                                          40,
+                                                                      padding: EdgeInsets
+                                                                          .fromLTRB(
+                                                                              12,
+                                                                              0,
+                                                                              12,
+                                                                              0),
                                                                     ),
-                                                                    child:
-                                                                        TextFormField(
-                                                                      controller:
+                                                                    dropdownStyleData:
+                                                                        DropdownStyleData(
+                                                                      maxHeight:
+                                                                          size.height *
+                                                                              .5,
+                                                                    ),
+                                                                    dropdownSearchData:
+                                                                        DropdownSearchData(
+                                                                      searchInnerWidgetHeight:
+                                                                          20,
+                                                                      searchController:
                                                                           ItemMasterControllers
                                                                               .searchUnitController,
-                                                                      decoration:
-                                                                          InputDecoration(
-                                                                        isDense:
-                                                                            true,
-                                                                        contentPadding:
-                                                                            const EdgeInsets.symmetric(
-                                                                          horizontal:
-                                                                              10,
-                                                                          vertical:
+                                                                      searchInnerWidget:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(
+                                                                          top:
+                                                                              8,
+                                                                          bottom:
+                                                                              4,
+                                                                          right:
+                                                                              8,
+                                                                          left:
                                                                               8,
                                                                         ),
-                                                                        hintText:
-                                                                            "Search Unit",
-                                                                        hintStyle:
-                                                                            const TextStyle(fontSize: 12),
-                                                                        border:
-                                                                            OutlineInputBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(8),
+                                                                        child:
+                                                                            TextFormField(
+                                                                          controller:
+                                                                              ItemMasterControllers.searchUnitController,
+                                                                          decoration:
+                                                                              InputDecoration(
+                                                                            isDense:
+                                                                                true,
+                                                                            contentPadding:
+                                                                                const EdgeInsets.symmetric(
+                                                                              horizontal: 10,
+                                                                              vertical: 8,
+                                                                            ),
+                                                                            hintText:
+                                                                                "Search Unit",
+                                                                            hintStyle:
+                                                                                const TextStyle(fontSize: 12),
+                                                                            border:
+                                                                                OutlineInputBorder(
+                                                                              borderRadius: BorderRadius.circular(8),
+                                                                            ),
+                                                                          ),
                                                                         ),
                                                                       ),
+                                                                      searchMatchFn:
+                                                                          (item,
+                                                                              searchValue) {
+                                                                        return (item
+                                                                            .value!
+                                                                            .name
+                                                                            .toString()
+                                                                            .toLowerCase()
+                                                                            .contains(searchValue));
+                                                                      },
                                                                     ),
-                                                                  ),
-                                                                  searchMatchFn:
-                                                                      (item,
-                                                                          searchValue) {
-                                                                    return (item
-                                                                        .value!
-                                                                        .name
-                                                                        .toString()
-                                                                        .toLowerCase()
-                                                                        .contains(
-                                                                            searchValue));
-                                                                  },
-                                                                ),
-                                                                onMenuStateChange:
-                                                                    (isOpen) {
-                                                                  if (!isOpen) {
-                                                                    ItemMasterControllers
-                                                                        .searchUnitController
-                                                                        .clear();
-                                                                  }
-                                                                }
-                                                                //This to clear the search value when you close the menu
-                                                                // onMenuStateChange: (isOpen) {
-                                                                //   if (!isOpen) {
-                                                                //     AddressEditControllers
-                                                                //         .searchController
-                                                                //         .clear();
-                                                                //   }
-                                                                // }
-                                                                ),
+                                                                    onMenuStateChange:
+                                                                        (isOpen) {
+                                                                      if (!isOpen) {
+                                                                        ItemMasterControllers
+                                                                            .searchUnitController
+                                                                            .clear();
+                                                                      }
+                                                                    }
+                                                                    //This to clear the search value when you close the menu
+                                                                    // onMenuStateChange: (isOpen) {
+                                                                    //   if (!isOpen) {
+                                                                    //     AddressEditControllers
+                                                                    //         .searchController
+                                                                    //         .clear();
+                                                                    //   }
+                                                                    // }
+                                                                    ),
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
+                                                      ],
                                                     ),
                                                   ],
                                                 );
@@ -2858,6 +2874,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
   }
 
   saveItemMasterdata() async {
+    print(ItemMasterControllers.itemId);
     if (ItemMasterControllers.barCodeController.text.isEmpty &&
         ItemMasterControllers.barCodeController2.text.isEmpty) {
       showAnimatedSnackBar(context, "Generate a BarCode");

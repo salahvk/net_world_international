@@ -39,7 +39,7 @@ Future<String> genBarcode(ItemGetConfig itemGetConfig) async {
   // }
   // log(barcode1);
   final endPoint = Hive.box("url").get('endpoint');
-  final apiUrl = "$endPoint${ApiEndPoint.genBarcode}";
+  final apiUrl = "$endPoint${ApiEndPoint.genBarcode}MainItem";
   final url = Uri.parse(apiUrl);
   final accessToken = Hive.box("token").get('api_token');
   final headers = {
@@ -97,7 +97,7 @@ Future<String> genBarcode2(ItemGetConfig itemGetConfig) async {
   //   }
   // }
   final endPoint = Hive.box("url").get('endpoint');
-  final apiUrl = "$endPoint${ApiEndPoint.genBarcode}";
+  final apiUrl = "$endPoint${ApiEndPoint.genBarcode}Alternative";
   final url = Uri.parse(apiUrl);
   final accessToken = Hive.box("token").get('api_token');
   final headers = {

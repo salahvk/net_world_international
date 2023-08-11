@@ -38,6 +38,10 @@ class AddItemImp implements AddItemServices {
 
       // values
       String userId = Hive.box("token").get('user_id');
+
+      String depInput = ItemMasterCloneControllers.cdepartmentController.text;
+      int departmentId = depInput.isNotEmpty ? int.parse(depInput) : 0;
+
       String categoryInput = ItemMasterControllers.categoryController.text;
       int categoryId = categoryInput.isNotEmpty ? int.parse(categoryInput) : 0;
 
@@ -78,8 +82,7 @@ class AddItemImp implements AddItemServices {
           "barcode": barcode,
           "supplierItemCode":
               ItemMasterCloneControllers.csupplierController.text,
-          "departmentId":
-              int.parse(ItemMasterCloneControllers.cdepartmentController.text),
+          "departmentId": departmentId,
           "firstcategoryId": categoryId,
           "secondCategoryid": scategoryId,
           "colorId": 0,
@@ -109,7 +112,7 @@ class AddItemImp implements AddItemServices {
           "sellingpricePackingUnit": 0,
           "discount": 0,
           "weighingwCount": 0,
-          "delFlag": true,
+          "delFlag": false,
           "itemGroup": "string",
           "loadItems": true,
           "createDate": "2023-08-10T06:21:49.807Z",
@@ -185,7 +188,7 @@ class AddItemImp implements AddItemServices {
           "discount": 0,
 
           "weighingwCount": 0,
-          "delFlag": true,
+          "delFlag": false,
           "itemGroup": "string",
           "loadItems": true,
           "createDate": "2023-08-10T06:21:49.807Z",

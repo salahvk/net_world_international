@@ -10,10 +10,11 @@ class ApiEndPoint {
   static String getItems = "$api/Item/Getitems";
   static String saveItems = "$api/Item/SaveItem";
   static String getNextItem = "$api/Item/GetNextItem";
-  static String addAlterItems = "$api/Item/AddItemsinAlterUnit";
-  static String getItemById = "$api/Item/";
-  static String itemUpdateById = "$api/Item/UpdateItem/";
-  static String itemByBarcode = "$api/Item/barcode/";
+  static String getEachItem = "$api/Item/barcodeorid?barcode=";
+  // static String addAlterItems = "$api/Item/AddItemsinAlterUnit";
+  // static String getItemById = "$api/Item/";
+  // static String itemUpdateById = "$api/Item/UpdateItem/";
+  // static String itemByBarcode = "$api/Item/barcode/";
   // static String genBarcode = "$api/Item/generateBarcode?StarChar=1&MaxId=1";
-  static String genBarcode = "$api/ItemBarcodeGenerate/MainItem";
+  static String genBarcode = "$api/Item/ItemBarcodeGenrate?Type=";
 }
