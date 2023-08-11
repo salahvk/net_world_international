@@ -2632,8 +2632,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                 isNextVisible ||
                                                         widget.isUpdating
                                                     ? updateItemMasterdata(
-                                                        ItemMasterControllers
-                                                            .itemId.text)
+                                                        int.tryParse(
+                                                            ItemMasterControllers
+                                                                .itemId.text))
                                                     : saveItemMasterdata();
                                               },
                                               child: Container(
@@ -2892,7 +2893,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
       // ItemMasterControllers.barCodeController.text = barcode ?? '';
       // return;
 
-      final s = await AddItemImp().addToItemMaster();
+      final s = await AddItemImp(isAlter: false).saveToItemMaster();
 
       s.fold((falure) {
         return setState(() {
@@ -2916,7 +2917,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
     }
   }
 
-  updateItemMasterdata(String id) async {
+  updateItemMasterdata(int? id) async {
     if (ItemMasterControllers.barCodeController.text.isEmpty &&
         ItemMasterControllers.barCodeController2.text.isEmpty) {
       showAnimatedSnackBar(context, "Generate a BarCode");
@@ -2952,7 +2953,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
       // ItemMasterControllers.barCodeController.text = barcode ?? '';
       // return;
 
-      final s = await AddItemImp(id: id).updateToItemMaster();
+      final s = await AddItemImp(id: id, isAlter: false).saveToItemMaster();
 
       s.fold((falure) {
         return setState(() {

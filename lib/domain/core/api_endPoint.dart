@@ -8,7 +8,7 @@ class ApiEndPoint {
   static String uploadImage = "$api/User/UploadImage";
   static String getItemConfig = "$api/Item/GetConfig";
   static String getItems = "$api/Item/Getitems";
-  static String addItems = "$api/Item/addItem";
+  static String saveItems = "$api/Item/SaveItem";
   static String getNextItem = "$api/Item/GetNextItem";
   static String addAlterItems = "$api/Item/AddItemsinAlterUnit";
   static String getItemById = "$api/Item/";

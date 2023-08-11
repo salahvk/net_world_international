@@ -46,6 +46,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           emit(Error());
         } else {
           Hive.box("token").put('api_token', loginModel.result?.token ?? '');
+          Hive.box("token").put('user_id', loginModel.userId ?? '');
           Either<MainFailure, ItemGetConfig> result1 =
               await ItemImp().getItemConfig();
           ItemGetConfig itemGetConfig =

@@ -784,7 +784,8 @@ class _ItemViewPageState extends State<ItemViewPage> {
     } else if (AlterUnitControllers.refcode.text.isEmpty) {
       showAnimatedSnackBar(context, "Enter Ref Code");
     } else {
-      final s = await AddItemImp().addAlterBarCode();
+      // final s = await AddItemImp().addAlterBarCode();
+      final s = await AddItemImp(isAlter: true).saveToItemMaster();
       s.fold(
           (falure) => setState(() {
                 showAnimatedSnackBar(context, "Barcode Already Exists");
