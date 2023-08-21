@@ -40,6 +40,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             userData.getOrElse(() => UserDetailsModel());
 
         Either<MainFailure, GetitemsModel> items = await ItemImp().getItems();
+        print("That");
         GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
         if (loginModel.result?.message == 'Invalid user') {
           emit(Error());
@@ -182,8 +183,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               result1.getOrElse(() => ItemGetConfig());
 
           Either<MainFailure, GetitemsModel> items = await ItemImp().getItems();
-          GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
 
+          print("Home screen event");
+          GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
+          print(getItems);
           await Future.delayed(const Duration(seconds: 3));
           String barcode1 = await genBarcode(itemGetConfig);
           String barcode2 = await genBarcode2(itemGetConfig);
@@ -257,6 +260,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       Either<MainFailure, GetitemsModel> items = await ItemImp().getItems();
       GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
+      print("Option event");
 
       String barcode1 = await genBarcode(itemGetConfig);
       String barcode2 = await genBarcode2(itemGetConfig);
@@ -297,11 +301,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     });
     on<GetNewItemsEvent>((event, emit) async {
       final cuState = state;
-
+      final depid = ItemMasterControllers.viewitemdepController.text;
+      final name = ItemMasterControllers.viewitemnameController.text;
       String? pageNumber = event.pageNumber.toString();
       final endPoint = Hive.box("url").get('endpoint');
-      final apiUrl = "$endPoint${ApiEndPoint.getItems}?page=$pageNumber";
+      final apiUrl =
+          "$endPoint${ApiEndPoint.getItems}?page=$pageNumber&DepartmentId=$depid&Name=$name";
       final url = Uri.parse(apiUrl);
+      print(url);
+      print("page event");
       final accessToken = Hive.box("token").get('api_token');
       final headers = {
         'Content-Type': 'application/json',
@@ -549,6 +557,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               getItems: cuState.getItems,
               itemGetConfig: cuState.itemGetConfig));
         }
+      }
+    });
+    on<SearchItemMasterEvent>((event, emit) async {
+      final cuState = state;
+      Either<MainFailure, GetitemsModel> items = await ItemImp().getItems();
+      GetitemsModel getItems = items.getOrElse(() => GetitemsModel());
+      print("search");
+      print("ssssssssssssssssssss");
+      if (cuState is OptionPageState) {
+        emit(OptionPageState(
+            loginModel: cuState.loginModel,
+            userModel: cuState.userModel,
+            barCode1: cuState.barCode1,
+            barCode2: cuState.barCode2,
+            getItems: getItems,
+            itemGetConfig: cuState.itemGetConfig));
       }
     });
   }

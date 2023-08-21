@@ -16,6 +16,7 @@ import 'package:http/http.dart' as http;
 @LazySingleton(as: ItemServices)
 class ItemImp implements ItemServices {
   final String? itemId;
+
   dynamic state;
   ItemImp({this.itemId, this.state});
   @override
@@ -54,10 +55,14 @@ class ItemImp implements ItemServices {
   @override
   Future<Either<MainFailure, GetitemsModel>> getItems() async {
     try {
+      final depid = ItemMasterControllers.viewitemdepController.text;
+      final name = ItemMasterControllers.viewitemnameController.text;
       final endPoint = Hive.box("url").get('endpoint');
-      final apiUrl = "$endPoint${ApiEndPoint.getItems}";
+      final apiUrl =
+          "$endPoint${ApiEndPoint.getItems}?DepartmentId=$depid&Name=$name";
       final url = Uri.parse(apiUrl);
       final accessToken = Hive.box("token").get('api_token');
+      print(url);
       final headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
@@ -73,6 +78,7 @@ class ItemImp implements ItemServices {
         print("1");
         print(result.items);
         print("1");
+
         return Right(result);
       } else {
         return const Left(MainFailure.serverFailure());
@@ -103,8 +109,8 @@ class ItemImp implements ItemServices {
       var jsonResponse = jsonDecode(response.body);
 
       final result = Items.fromJson(jsonResponse);
-      // log(response.body);
-      print(result.barcode);
+      log(response.body);
+      print(result.toJson());
       ItemMasterCloneControllers.cdepartmentController.text =
           result.departmentId.toString() ?? '';
       ItemMasterCloneControllers.ccategoryController.text =
@@ -138,6 +144,10 @@ class ItemImp implements ItemServices {
           result.sellingPrice.toString() ?? '';
       // ItemMasterCloneControllers.ccostWithTaxController.text =
       //     result.basePrice.toString();
+      ItemMasterControllers.selectedunitController.text =
+          result.unitId.toString();
+      ItemMasterControllers.itemId.text = result.itemMasterId.toString();
+      print(result.unitId.toString());
 
       final departmentName = getDepNameById(
           result.departmentId ?? 0, state!.itemGetConfig!.departmentList!);

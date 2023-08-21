@@ -477,281 +477,6 @@ class _ItemViewPageState extends State<ItemViewPage> {
                                 height: 15,
                               ),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Selling Price",
-                                              style: getRegularStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 5.0, right: 5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4.5),
-                                            border: Border.all(
-                                              color: Colormanager.primary,
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          child: TextField(
-                                            controller:
-                                                ItemMasterCloneControllers
-                                                    .csellingPController,
-                                            keyboardType: TextInputType.none,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Cost Price",
-                                              style: getRegularStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 5.0, right: 5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4.5),
-                                            border: Border.all(
-                                              color: Colormanager.primary,
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          child: TextField(
-                                            controller:
-                                                ItemMasterCloneControllers
-                                                    .ccostPriceController,
-                                            keyboardType: TextInputType.none,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Contain",
-                                              style: getRegularStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 5.0, right: 5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4.5),
-                                            border: Border.all(
-                                              color: Colormanager.primary,
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          child: TextField(
-                                            controller:
-                                                AlterUnitControllers.contain,
-                                            keyboardType: TextInputType.number,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Alt Name",
-                                              style: getRegularStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 5.0, right: 5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4.5),
-                                            border: Border.all(
-                                              color: Colormanager.primary,
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          child: TextField(
-                                            controller:
-                                                AlterUnitControllers.altName,
-                                            // keyboardType: TextInputType.none,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Pluno",
-                                              style: getRegularStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 5.0, right: 5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4.5),
-                                            border: Border.all(
-                                              color: Colormanager.primary,
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          child: TextField(
-                                            controller:
-                                                AlterUnitControllers.pluno,
-                                            // keyboardType: TextInputType.none,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Ref Code",
-                                              style: getRegularStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 5.0, right: 5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4.5),
-                                            border: Border.all(
-                                              color: Colormanager.primary,
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          child: TextField(
-                                            controller:
-                                                AlterUnitControllers.refcode,
-                                            // keyboardType: TextInputType.none,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Expanded(
@@ -974,6 +699,281 @@ class _ItemViewPageState extends State<ItemViewPage> {
                                   const SizedBox(
                                     width: 10,
                                   ),
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Contain",
+                                              style: getRegularStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 5.0, right: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(4.5),
+                                            border: Border.all(
+                                              color: Colormanager.primary,
+                                              width: 1.0,
+                                            ),
+                                          ),
+                                          child: TextField(
+                                            controller:
+                                                AlterUnitControllers.contain,
+                                            keyboardType: TextInputType.number,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Selling Price",
+                                              style: getRegularStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 5.0, right: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(4.5),
+                                            border: Border.all(
+                                              color: Colormanager.primary,
+                                              width: 1.0,
+                                            ),
+                                          ),
+                                          child: TextField(
+                                            controller:
+                                                ItemMasterCloneControllers
+                                                    .csellingPController,
+                                            keyboardType: TextInputType.none,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Cost Price",
+                                              style: getRegularStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 5.0, right: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(4.5),
+                                            border: Border.all(
+                                              color: Colormanager.primary,
+                                              width: 1.0,
+                                            ),
+                                          ),
+                                          child: TextField(
+                                            controller:
+                                                ItemMasterCloneControllers
+                                                    .ccostPriceController,
+                                            keyboardType: TextInputType.none,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Alt Name",
+                                              style: getRegularStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 5.0, right: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(4.5),
+                                            border: Border.all(
+                                              color: Colormanager.primary,
+                                              width: 1.0,
+                                            ),
+                                          ),
+                                          child: TextField(
+                                            controller:
+                                                AlterUnitControllers.altName,
+                                            // keyboardType: TextInputType.none,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Pluno",
+                                              style: getRegularStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 5.0, right: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(4.5),
+                                            border: Border.all(
+                                              color: Colormanager.primary,
+                                              width: 1.0,
+                                            ),
+                                          ),
+                                          child: TextField(
+                                            controller:
+                                                AlterUnitControllers.pluno,
+                                            // keyboardType: TextInputType.none,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Ref Code",
+                                              style: getRegularStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 5.0, right: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(4.5),
+                                            border: Border.all(
+                                              color: Colormanager.primary,
+                                              width: 1.0,
+                                            ),
+                                          ),
+                                          child: TextField(
+                                            controller:
+                                                AlterUnitControllers.refcode,
+                                            // keyboardType: TextInputType.none,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
                               const SizedBox(
@@ -1017,7 +1017,7 @@ class _ItemViewPageState extends State<ItemViewPage> {
       final s = await AddItemImp(isAlter: true).saveToItemMaster();
       s.fold(
           (falure) => setState(() {
-                showAnimatedSnackBar(context, "Barcode Already Exists");
+                showAnimatedSnackBar(context, "Something went wrong");
               }),
           (success) => setState(() {
                 showSuccessAnimatedSnackBar(context, "Alternate Barcode Saved");

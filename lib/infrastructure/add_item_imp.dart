@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
+import 'package:net_world_international/core/util/currenttime.dart';
+import 'package:net_world_international/core/util/print_controllers.dart';
 import 'package:net_world_international/domain/add_items_model.dart';
 import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/domain/failures/main_failures.dart';
@@ -23,6 +25,7 @@ class AddItemImp implements AddItemServices {
   Future<Either<MainFailure, AddItems>> saveToItemMaster() async {
     print(ItemMasterCloneControllers.cnameController.text);
     print(ItemMasterControllers.nameController.text);
+    getCurrentDateTimeAndStore();
     try {
       print("save");
       String? deviceId;
@@ -41,7 +44,7 @@ class AddItemImp implements AddItemServices {
 
       String depInput = ItemMasterCloneControllers.cdepartmentController.text;
       int departmentId = depInput.isNotEmpty ? int.parse(depInput) : 0;
-
+      print("save2");
       String categoryInput = ItemMasterControllers.categoryController.text;
       int categoryId = categoryInput.isNotEmpty ? int.parse(categoryInput) : 0;
 
@@ -52,10 +55,13 @@ class AddItemImp implements AddItemServices {
       String sCode = supplierCode.isEmpty
           ? "String"
           : ItemMasterControllers.supplierCodeController.text;
+      print("save5");
 
       String scategoryInput = ItemMasterControllers.subCategoryController.text;
-      int scategoryId =
-          scategoryInput.isNotEmpty ? int.parse(scategoryInput) : 0;
+      print(ItemMasterControllers.subCategoryController.text);
+      int scategoryId = scategoryInput.isNotEmpty && scategoryInput != 'null'
+          ? int.parse(scategoryInput)
+          : 0;
       final headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
@@ -67,6 +73,7 @@ class AddItemImp implements AddItemServices {
         barcode = ItemMasterControllers.barCodeController2.text;
       }
       String body = '';
+      print("save4");
       if (isAlter) {
         body = jsonEncode({
           "itemMasterCode": "",
@@ -115,9 +122,9 @@ class AddItemImp implements AddItemServices {
           "delFlag": false,
           "itemGroup": "string",
           "loadItems": true,
-          "createDate": "2023-08-10T06:21:49.807Z",
+          "createDate": ItemMasterControllers.createddateController.text,
           "createUser": "string",
-          "modDate": "2023-08-10T06:21:49.807Z",
+          "modDate": ItemMasterControllers.moddateController.text,
           "modUser": "string",
           // "taxId": 0,
           "basePrice": 0,
@@ -125,7 +132,7 @@ class AddItemImp implements AddItemServices {
           "arabicBarcodeName": "string",
           "weighingItemType": 0,
           "itemMasterId": id ?? 0,
-          "unitId": 0,
+          "unitId": ItemMasterControllers.selectedunitController.text,
           "deviceName": deviceId,
           "userId": userId,
           "lstAlterUnitDTO": [
@@ -191,9 +198,9 @@ class AddItemImp implements AddItemServices {
           "delFlag": false,
           "itemGroup": "string",
           "loadItems": true,
-          "createDate": "2023-08-10T06:21:49.807Z",
+          "createDate": ItemMasterControllers.createddateController.text,
           "createUser": "string",
-          "modDate": "2023-08-10T06:21:49.807Z",
+          "modDate": ItemMasterControllers.moddateController.text,
           "modUser": "string",
 
           // "taxId": 0,
@@ -202,12 +209,12 @@ class AddItemImp implements AddItemServices {
           "arabicBarcodeName": "string",
           "weighingItemType": 0,
           "itemMasterId": id ?? 0,
-          "unitId": 0,
+          "unitId": ItemMasterControllers.selectedunitController.text,
           "deviceName": deviceId,
           "userId": userId,
         });
       }
-
+      print("save3");
       log(body);
 
       final response = await http.post(url, headers: headers, body: body);
@@ -231,6 +238,7 @@ class AddItemImp implements AddItemServices {
         return const Left(MainFailure.serverFailure());
       }
     } catch (e) {
+      printAllControllerText();
       log(e.toString());
       return const Left(MainFailure.clientFailure());
     }

@@ -39,3 +39,5 @@ class ItemViewByIdEvent extends LoginEvent {
 }
 
 class SearchBarcodeEvent extends LoginEvent {}
+
+class SearchItemMasterEvent extends LoginEvent {}

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/domain/item_get_config/item_get_config/item_get_config.dart';
@@ -39,8 +41,10 @@ Future<String> genBarcode(ItemGetConfig itemGetConfig) async {
   // }
   // log(barcode1);
   final endPoint = Hive.box("url").get('endpoint');
+
   final apiUrl = "$endPoint${ApiEndPoint.genBarcode}MainItem";
   final url = Uri.parse(apiUrl);
+  print(url);
   final accessToken = Hive.box("token").get('api_token');
   final headers = {
     'Content-Type': 'application/json',
@@ -50,7 +54,7 @@ Future<String> genBarcode(ItemGetConfig itemGetConfig) async {
     url,
     headers: headers,
   );
-  // log(response.body);
+  log(response.body);
 
   // if (response.statusCode == 200 || response.statusCode == 201) {
   //   final result = ItemGetConfig.fromJson(jsonResponse);

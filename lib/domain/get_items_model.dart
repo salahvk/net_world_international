@@ -290,7 +290,7 @@ class Items {
     arabicBarcodeName = json['arabicBarcodeName'];
     weighingItemType = json['weighingItemType'];
     itemMasterId = json['itemmasterid'];
-    unitId = json['unitId'];
+    unitId = json['UnitId'];
     deviceName = json['deviceName'];
     userId = json['userId'];
   }
@@ -339,7 +339,7 @@ class Items {
     data['arabicBarcodeName'] = arabicBarcodeName;
     data['weighingItemType'] = weighingItemType;
     data['itemMasterId'] = itemMasterId;
-    data['unitId'] = unitId;
+    data['UnitId'] = unitId;
     data['deviceName'] = deviceName;
     data['userId'] = userId;
     return data;

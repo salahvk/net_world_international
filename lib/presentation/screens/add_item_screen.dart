@@ -1806,7 +1806,10 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                             width: size.width * .35,
                                             height: 40,
                                             decoration: BoxDecoration(
-                                                color: Colormanager.primary,
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  color: Colormanager.primary,
+                                                ),
                                                 borderRadius:
                                                     BorderRadius.circular(5)),
                                             child: Padding(
@@ -1818,10 +1821,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                   Text(
                                                     deftax?.taxRate
                                                             .toString() ??
-                                                        'Unit',
+                                                        '',
                                                     style: getRegularStyle(
-                                                        color:
-                                                            Colormanager.white,
+                                                        color: Colors.black,
                                                         fontSize: 12),
                                                   ),
                                                 ],
@@ -2020,6 +2022,12 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                                                     // value: defTaxName,
                                                                     onChanged:
                                                                         (value) {
+                                                                      ItemMasterControllers
+                                                                          .selectedunitController
+                                                                          .text = value
+                                                                              ?.id
+                                                                              .toString() ??
+                                                                          "";
                                                                       setState(
                                                                           () {
                                                                         unit = value?.name ??

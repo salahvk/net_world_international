@@ -50,6 +50,15 @@ class ItemMasterControllers {
   static TextEditingController searchCatController = TextEditingController();
   static TextEditingController searchdepController = TextEditingController();
   static TextEditingController searchUnitController = TextEditingController();
+  static TextEditingController selectedunitController = TextEditingController();
+  static TextEditingController createddateController = TextEditingController();
+  static TextEditingController moddateController = TextEditingController();
+  static TextEditingController viewitemnameController = TextEditingController();
+  static TextEditingController viewitemdepnameController =
+      TextEditingController();
+  static TextEditingController viewitemdepController = TextEditingController();
+  static TextEditingController viewitemSearchdepController =
+      TextEditingController();
   static cleanControllers() {
     departmentNameController.clear();
     supplierController.clear();
