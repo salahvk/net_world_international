@@ -6,7 +6,6 @@ import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/util/currenttime.dart';
-import 'package:net_world_international/core/util/print_controllers.dart';
 import 'package:net_world_international/domain/add_items_model.dart';
 import 'package:net_world_international/domain/core/api_endpoint.dart';
 import 'package:net_world_international/domain/failures/main_failures.dart';
@@ -23,11 +22,8 @@ class AddItemImp implements AddItemServices {
 
   @override
   Future<Either<MainFailure, AddItems>> saveToItemMaster() async {
-    print(ItemMasterCloneControllers.cnameController.text);
-    print(ItemMasterControllers.nameController.text);
     getCurrentDateTimeAndStore();
     try {
-      print("save");
       String? deviceId;
       try {
         deviceId = await PlatformDeviceId.getDeviceId;
@@ -44,7 +40,7 @@ class AddItemImp implements AddItemServices {
 
       String depInput = ItemMasterCloneControllers.cdepartmentController.text;
       int departmentId = depInput.isNotEmpty ? int.parse(depInput) : 0;
-      print("save2");
+
       String categoryInput = ItemMasterControllers.categoryController.text;
       int categoryId = categoryInput.isNotEmpty ? int.parse(categoryInput) : 0;
 
@@ -55,13 +51,21 @@ class AddItemImp implements AddItemServices {
       String sCode = supplierCode.isEmpty
           ? "String"
           : ItemMasterControllers.supplierCodeController.text;
-      print("save5");
 
       String scategoryInput = ItemMasterControllers.subCategoryController.text;
-      print(ItemMasterControllers.subCategoryController.text);
+
       int scategoryId = scategoryInput.isNotEmpty && scategoryInput != 'null'
           ? int.parse(scategoryInput)
           : 0;
+
+      //  is Alter variables
+
+      String categoryInputA =
+          ItemMasterCloneControllers.ccategoryController.text;
+
+      int categoryIdA =
+          categoryInputA.isNotEmpty ? int.parse(categoryInputA) : 0;
+
       final headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
@@ -73,15 +77,12 @@ class AddItemImp implements AddItemServices {
         barcode = ItemMasterControllers.barCodeController2.text;
       }
       String body = '';
-      print("save4");
+
       if (isAlter) {
         body = jsonEncode({
-          "itemMasterCode": "",
           "name": ItemMasterCloneControllers.cnameController.text,
           "shortName": ItemMasterCloneControllers.cshortNameController.text,
-          "categoryId": categoryId,
-          "reorderLevel": 0,
-          "reorderQty": 0,
+          "categoryId": categoryIdA,
           "sellingPrice":
               num.parse(ItemMasterCloneControllers.csellingPController.text),
           "costPrice":
@@ -92,55 +93,49 @@ class AddItemImp implements AddItemServices {
           "departmentId": departmentId,
           "firstcategoryId": categoryId,
           "secondCategoryid": scategoryId,
-          "colorId": 0,
-          "sizeid": 0,
-          // "nonStockItem":
-          //     (ItemMasterCloneControllers.nonStockController.text.toLowerCase() ==
-          //         'true'),
-          // "counterStock": (ItemMasterControllers.counterStockController.text
-          //         .toLowerCase() ==
-          //     'true'),
-          // "active":
-          //     (ItemMasterControllers.activeController.text.toLowerCase() ==
-          //         'true'),
+          "nonStockItem":
+              (ItemMasterControllers.nonStockController.text.toLowerCase() ==
+                  'true'),
+          "counterStock": (ItemMasterControllers.counterStockController.text
+                  .toLowerCase() ==
+              'true'),
+          "active":
+              (ItemMasterControllers.activeController.text.toLowerCase() ==
+                  'true'),
           "weighingScaleItem": true,
           "shelfNo": ItemMasterCloneControllers.cshelfNoController.text,
           "rackNo": ItemMasterCloneControllers.crackNoController.text,
-          // "supplierCode": sCode,
+          "supplierCode": sCode,
           "arabicname": ItemMasterCloneControllers.carabicController.text,
           "remarks": ItemMasterControllers.remarksController.text,
-          // "arabicBarcodeName": "d",
           "taxId": taxId,
-          // "basePrice":
-          //     num.parse(ItemMasterControllers.costWithTaxController.text),
+          "delFlag": false,
+          "modDate": ItemMasterControllers.moddateController.text,
+          "modUser": UserControllers.nameController.text,
+          "createUser": UserControllers.nameController.text,
+          "itemMasterId": ItemMasterControllers.itemId.text,
+          "unitId": ItemMasterControllers.selectedunitController.text,
+          "deviceName": deviceId,
+          "userId": userId,
+          "basePrice": 0,
+          "weighingItemType": 0,
+          "loadItems": true,
+          "itemGroup": "",
           "foCitem": true,
           "sellingUnitId": 0,
           "leadtime": 0,
           "sellingpricePackingUnit": 0,
           "discount": 0,
           "weighingwCount": 0,
-          "delFlag": false,
-          "itemGroup": "string",
-          "loadItems": true,
-          "createDate": ItemMasterControllers.createddateController.text,
-          "createUser": "string",
-          "modDate": ItemMasterControllers.moddateController.text,
-          "modUser": "string",
-          // "taxId": 0,
-          "basePrice": 0,
-
-          "arabicBarcodeName": "string",
-          "weighingItemType": 0,
-          "itemMasterId": id ?? 0,
-          "unitId": ItemMasterControllers.selectedunitController.text,
-          "deviceName": deviceId,
-          "userId": userId,
+          "arabicBarcodeName":
+              ItemMasterCloneControllers.carabicController.text,
+          "itemMasterCode": "",
           "lstAlterUnitDTO": [
             {
-              "altBarcode": AlterUnitControllers.barcodeAlt.text,
-              "altUnitId": 0,
+              "altBarcode": AlterUnitControllers.barcodeAltText.text,
+              "altUnitId": int.parse(AlterUnitControllers.unitId.text),
               "altName": AlterUnitControllers.altName.text,
-              "altContain": 0,
+              "altContain": AlterUnitControllers.contain.text,
               "altCost": 0,
               "altSellingPrice": 0,
               "altRefCode": AlterUnitControllers.refcode.text,
@@ -154,8 +149,6 @@ class AddItemImp implements AddItemServices {
           "name": ItemMasterControllers.nameController.text,
           "shortName": ItemMasterControllers.shortNameController.text,
           "categoryId": categoryId,
-          "reorderLevel": 0,
-          "reorderQty": 0,
           "sellingPrice":
               num.parse(ItemMasterControllers.sellingPController.text),
           "costPrice":
@@ -177,55 +170,46 @@ class AddItemImp implements AddItemServices {
           "active":
               (ItemMasterControllers.activeController.text.toLowerCase() ==
                   'true'),
-          "weighingScaleItem": true,
           "shelfNo": ItemMasterControllers.shelfNoController.text,
           "rackNo": ItemMasterControllers.rackNoController.text,
           "supplierCode": sCode,
           "arabicname": ItemMasterControllers.arabicController.text,
+          "arabicBarcodeName": ItemMasterControllers.arabicController.text,
           "remarks": ItemMasterControllers.remarksController.text,
-          // "arabicBarcodeName": "d",
           "taxId": taxId,
-          // "basePrice":
-          //     num.parse(ItemMasterControllers.costWithTaxController.text),
-          "foCitem": true,
-          "sellingUnitId": 0,
-          "leadtime": 0,
-          "sellingpricePackingUnit": 0,
-
-          "discount": 0,
-
-          "weighingwCount": 0,
-          "delFlag": false,
-          "itemGroup": "string",
-          "loadItems": true,
           "createDate": ItemMasterControllers.createddateController.text,
-          "createUser": "string",
+          "createUser": UserControllers.nameController.text,
           "modDate": ItemMasterControllers.moddateController.text,
-          "modUser": "string",
-
-          // "taxId": 0,
-          "basePrice": 0,
-
-          "arabicBarcodeName": "string",
-          "weighingItemType": 0,
+          "modUser": UserControllers.nameController.text,
           "itemMasterId": id ?? 0,
           "unitId": ItemMasterControllers.selectedunitController.text,
           "deviceName": deviceId,
           "userId": userId,
+          "reorderLevel": 0,
+          "reorderQty": 0,
+          "weighingScaleItem": true,
+          "basePrice": 0,
+          "weighingItemType": 0,
+          "foCitem": true,
+          "sellingpricePackingUnit": 0,
+          "discount": 0,
+          "weighingwCount": 0,
+          "delFlag": false,
+          "itemGroup": "string",
+          "loadItems": true,
         });
       }
-      print("save3");
+
       log(body);
 
       final response = await http.post(url, headers: headers, body: body);
       var jsonResponse = jsonDecode(response.body);
-      print(jsonResponse);
+
       if (response.statusCode == 200 && jsonResponse["result"] == true) {
         final result = AddItems.fromJson(jsonResponse);
         log(response.body);
         return Right(result);
       } else if (response.statusCode == 400) {
-        print("fail");
         return const Left(MainFailure.serverFailure());
       } else {
         return const Left(MainFailure.serverFailure());
@@ -238,7 +222,7 @@ class AddItemImp implements AddItemServices {
         return const Left(MainFailure.serverFailure());
       }
     } catch (e) {
-      printAllControllerText();
+      // printAllControllerText();
       log(e.toString());
       return const Left(MainFailure.clientFailure());
     }

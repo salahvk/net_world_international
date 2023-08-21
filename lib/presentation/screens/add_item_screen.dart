@@ -80,6 +80,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
       getSellingTax();
       ItemMasterControllers.marginController.clear();
       ItemMasterControllers.marginPerController.clear();
+      getMarginValues();
       isBarCodeGen = true;
     } else {
       ItemMasterControllers.cleanControllers();
@@ -2882,6 +2883,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
   }
 
   saveItemMasterdata() async {
+    ItemMasterControllers.itemId.clear();
     print(ItemMasterControllers.itemId);
     if (ItemMasterControllers.barCodeController.text.isEmpty &&
         ItemMasterControllers.barCodeController2.text.isEmpty) {

@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:net_world_international/application/loginBloc/login_bloc.dart';
 import 'package:net_world_international/core/asset_manager.dart';
 import 'package:net_world_international/core/color_manager.dart';
+import 'package:net_world_international/core/controllers/controllers.dart';
 import 'package:net_world_international/core/routes_manager.dart';
 import 'package:net_world_international/core/styles_manager.dart';
 import 'package:net_world_international/presentation/screens/add_item_screen.dart';
@@ -48,6 +49,8 @@ class _OptionScreenState extends State<OptionScreen> {
                   BlocBuilder<LoginBloc, LoginState>(
                     builder: (context, state) {
                       if (state is OptionPageState) {
+                        UserControllers.nameController.text =
+                            state.userModel?.username ?? '';
                         return Padding(
                           padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
                           child: SizedBox(

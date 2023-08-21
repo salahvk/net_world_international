@@ -131,8 +131,8 @@ class ItemImp implements ItemServices {
       ItemMasterCloneControllers.cnameController.text = result.itemName ?? '';
       ItemMasterCloneControllers.cshortNameController.text =
           result.shortName ?? '';
-      // ItemMasterCloneControllers.carabicController.text =
-      //     result.arabicname ?? '';
+      ItemMasterCloneControllers.carabicController.text =
+          result.arabicname ?? '';
       ItemMasterCloneControllers.cbarCodeController.text = result.barcode ?? '';
       ItemMasterControllers.barCodeController.text = result.barcode ?? '';
       ItemMasterCloneControllers.crackNoController.text = result.rackNo ?? '';
@@ -147,7 +147,9 @@ class ItemImp implements ItemServices {
       ItemMasterControllers.selectedunitController.text =
           result.unitId.toString();
       ItemMasterControllers.itemId.text = result.itemMasterId.toString();
-      print(result.unitId.toString());
+      ItemMasterControllers.nonStockController.text =
+          result.nonStockItem.toString();
+      print(result.nonStockItem.toString());
 
       final departmentName = getDepNameById(
           result.departmentId ?? 0, state!.itemGetConfig!.departmentList!);

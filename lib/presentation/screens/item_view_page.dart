@@ -558,6 +558,12 @@ class _ItemViewPageState extends State<ItemViewPage> {
                                                                   value?.name ??
                                                                       '';
                                                             });
+                                                            AlterUnitControllers
+                                                                .unitId
+                                                                .text = value
+                                                                    ?.id
+                                                                    .toString() ??
+                                                                '0';
                                                           },
                                                           customButton:
                                                               // ItemMasterCloneControllers

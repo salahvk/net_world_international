@@ -5,6 +5,10 @@ class LoginControllers {
   static TextEditingController passWordController = TextEditingController();
 }
 
+class UserControllers {
+  static TextEditingController nameController = TextEditingController();
+}
+
 class EditProfileControllers {
   static TextEditingController firstController = TextEditingController();
   static TextEditingController lastController = TextEditingController();
