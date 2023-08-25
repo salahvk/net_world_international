@@ -1014,6 +1014,8 @@ class _ItemViewPageState extends State<ItemViewPage> {
       showAnimatedSnackBar(context, "Enter Contain");
     } else if (AlterUnitControllers.altName.text.isEmpty) {
       showAnimatedSnackBar(context, "Enter Alternate Name");
+    } else if (AlterUnitControllers.unitId.text.isEmpty) {
+      showAnimatedSnackBar(context, "Select a unit");
     } else if (AlterUnitControllers.pluno.text.isEmpty) {
       showAnimatedSnackBar(context, "Enter Pluno");
     } else if (AlterUnitControllers.refcode.text.isEmpty) {

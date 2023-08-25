@@ -76,6 +76,7 @@ class AddItemImp implements AddItemServices {
       } else {
         barcode = ItemMasterControllers.barCodeController2.text;
       }
+
       String body = '';
 
       if (isAlter) {
